@@ -240,16 +240,17 @@ android {
 
     defaultConfig {
         versionCode 354
-        versionName "4.18.3"
+        versionName "4.18.3.1-JW"
 
         minSdkVersion 14
         targetSdkVersion 25
         multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true
-        project.ext.set("archivesBaseName", "Signal");
+        project.ext.set("archivesBaseName", "Signal-Android"); /* JW: change basename */
 
-        buildConfigField "long", "BUILD_TIMESTAMP", getLastCommitTimestamp() + "L"
+        /* JW: change back to old code, timestamp is not used anyway */
+        buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
         buildConfigField "String", "SIGNAL_URL", "\"https://textsecure-service.whispersystems.org\""
         buildConfigField "String", "SIGNAL_CDN_URL", "\"https://cdn.signal.org\""
         buildConfigField "String", "GIPHY_PROXY_HOST", "\"giphy-proxy-production.whispersystems.org\""
@@ -356,6 +357,7 @@ android {
 
      lintOptions {
         abortOnError false
+        disable "ResourceType" /* JW: Add option to disable error in ContactSelectionListAdapter.java line 128 */
     }
 }
 
@@ -400,18 +402,6 @@ tasks.whenTaskAdded { task ->
         task.name.equals("assembleWebsiteRelease"))
     {
          task.finalizedBy assembleWebsiteDescriptor
-    }
-}
-
-def getLastCommitTimestamp() {
-    new ByteArrayOutputStream().withStream { os ->
-        def result = exec {
-            executable = 'git'
-            args = ['log', '-1', '--pretty=format:%ct']
-            standardOutput = os
-        }
-
-        return os.toString() + "000"
     }
 }
 
