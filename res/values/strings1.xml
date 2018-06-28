@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- arrays.xml -->
+    <string name="arrays__import_export_orig">Import / export</string>
+    <!-- ImportFragment -->
+    <string name="ImportFragment_restore_encrypted_backup">Restore encrypted backup?</string>
+    <string name="ImportFragment_restoring_an_encrypted_backup_will_completely_replace_your_existing_keys">
+        Restoring an encrypted backup will completely replace your existing keys, preferences, and
+        messages. You will lose any information that\'s in your current Signal install but not
+        in the backup.
+    </string>
+    <string name="ImportFragment_restore">Restore</string>
+    <string name="ImportFragment_restoring">Restoring</string>
+    <string name="ImportFragment_restoring_encrypted_backup">Restoring encrypted backup...</string>
+    <string name="ImportFragment_no_encrypted_backup_found">No encrypted backup found!</string>
+    <string name="ImportFragment_restore_complete">Restore complete!</string>
+    <!-- ExportFragment -->
+    <string name="ExportFragment_export_to_sd_card">Export To SD Card?</string>
+    <string name="ExportFragment_this_will_export_your_encrypted_keys_settings_and_messages">This will export your encrypted keys, settings, and messages to the SD card.</string>
+    <string name="ExportFragment_exporting_keys_settings_and_messages">Exporting encrypted keys, settings, and messages...</string>
+    <!-- database_upgrade_activity -->
+    <string name="import_fragment__restore_encrypted_backup">Restore encrypted backup</string>
+    <string name="import_fragment__restore_a_previously_exported_encrypted_signal_backup">Restore a previously exported encrypted Signal backup</string>
+    <string name="export_fragment__export_encrypted_backup">Export encrypted backup</string>
+    <string name="export_fragment__export_an_encrypted_backup_to_the_sd_card">Export an encrypted backup to the SD card.</string>
+</resources>
