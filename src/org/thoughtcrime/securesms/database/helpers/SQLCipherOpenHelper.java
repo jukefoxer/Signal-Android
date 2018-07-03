@@ -185,7 +185,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
 
         db.execSQL("ALTER TABLE part ADD COLUMN quote INTEGER DEFAULT 0");
       }
-
+/*
       if (oldVersion < SHARED_CONTACTS) {
         db.execSQL("ALTER TABLE mms ADD COLUMN shared_contacts TEXT");
       }
@@ -211,7 +211,7 @@ public class SQLCipherOpenHelper extends SQLiteOpenHelper {
         Log.i(TAG, "Indexing MMS completed in " + (mmsFinished - smsFinished) + " ms");
         Log.i(TAG, "Indexing finished. Total time: " + (mmsFinished - start) + " ms");
       }
-
+*/
       if (oldVersion < BAD_IMPORT_CLEANUP) {
         String trimmedCondition = " NOT IN (SELECT _id FROM mms)";
 
