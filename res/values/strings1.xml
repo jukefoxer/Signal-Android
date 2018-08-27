@@ -3,6 +3,10 @@
     <!-- arrays.xml -->
     <string name="arrays__import_export_orig">Import / export</string>
 
+    <!--app protection-->
+    <string name="preferences_app_protection__method_passphrase">Use a passphrase</string>
+    <string name="preferences_app_protection__method_passphrase_summary">Use a passphrase to protect Signal instead of the Android screenlock or fingerprint</string>
+
     <!-- ImportExportActivity -->
     <string name="ImportExportActivity_import">Import</string>
     <string name="ImportExportActivity_export">Export</string>

@@ -53,6 +53,9 @@ public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment
 
     disablePassphrase = (CheckBoxPreference) this.findPreference("pref_enable_passphrase_temporary");
 
+    // JW:
+    this.findPreference(TextSecurePreferences.PROTECTION_METHOD_PREF).setOnPreferenceChangeListener(new ProtectionMethodToggleListener());
+
     this.findPreference(TextSecurePreferences.REGISTRATION_LOCK_PREF).setOnPreferenceClickListener(new AccountLockClickListener());
     this.findPreference(TextSecurePreferences.SCREEN_LOCK).setOnPreferenceChangeListener(new ScreenLockListener());
     this.findPreference(TextSecurePreferences.SCREEN_LOCK_TIMEOUT).setOnPreferenceClickListener(new ScreenLockTimeoutListener());
@@ -100,7 +103,8 @@ public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment
   }
 
   private void initializeVisibility() {
-    if (TextSecurePreferences.isPasswordDisabled(getContext())) {
+    //if (TextSecurePreferences.isPasswordDisabled(getContext())) {
+    if (!TextSecurePreferences.isProtectionMethodPassphrase(getContext())) {
       findPreference("pref_enable_passphrase_temporary").setVisible(false);
       findPreference(TextSecurePreferences.CHANGE_PASSPHRASE_PREF).setVisible(false);
       findPreference(TextSecurePreferences.PASSPHRASE_TIMEOUT_INTERVAL_PREF).setVisible(false);
@@ -112,6 +116,11 @@ public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment
         findPreference(TextSecurePreferences.SCREEN_LOCK).setEnabled(false);
       }
     } else {
+      findPreference("pref_enable_passphrase_temporary").setVisible(true); // JW
+      findPreference(TextSecurePreferences.CHANGE_PASSPHRASE_PREF).setVisible(true);
+      findPreference(TextSecurePreferences.PASSPHRASE_TIMEOUT_INTERVAL_PREF).setVisible(true);
+      findPreference(TextSecurePreferences.PASSPHRASE_TIMEOUT_PREF).setVisible(true);
+
       findPreference(TextSecurePreferences.SCREEN_LOCK).setVisible(false);
       findPreference(TextSecurePreferences.SCREEN_LOCK_TIMEOUT).setVisible(false);
     }
@@ -144,6 +153,21 @@ public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment
 
         initializeScreenLockTimeoutSummary();
       }, 0).show();
+
+      return true;
+    }
+  }
+
+  // JW: switch between passphrase protection and Android screenprotection
+  private class ProtectionMethodToggleListener implements Preference.OnPreferenceChangeListener {
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+      boolean usePassphraseProtection = (boolean)newValue;
+      // JW: debug
+      TextSecurePreferences.setProtectionMethod(getContext(), usePassphraseProtection);
+      TextSecurePreferences.setBooleanPreference(getContext(), "pref_enable_passphrase_temporary", usePassphraseProtection);
+      TextSecurePreferences.setPasswordDisabled(getContext(), !usePassphraseProtection);
+      initializeVisibility();
 
       return true;
     }

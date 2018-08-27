@@ -2,6 +2,9 @@
 <resources>
   <!--arrays.xml-->
   <string name="arrays__import_export_orig">Importeren / exporteren</string>
+  <!--app protection-->
+  <string name="preferences_app_protection__method_passphrase">Gebruik een wachtwoord</string>
+  <string name="preferences_app_protection__method_passphrase_summary">Gebruik een wachtwoord om Signal te beveiligen in plaats van de standaard Android schermbeveiliging of vingerafdruk</string>
   <!--ImportFragment-->
   <string name="ImportFragment_restore_encrypted_backup">Versleutelde back-up herstellen?</string>
   <string name="ImportFragment_restoring_an_encrypted_backup_will_completely_replace_your_existing_keys">
