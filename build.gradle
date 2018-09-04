@@ -251,7 +251,7 @@ android {
 
     defaultConfig {
         versionCode 401
-        versionName "4.25.7.1-JW"
+        versionName "4.25.7.2-JW"
 
         minSdkVersion 14
         targetSdkVersion 25
