@@ -29,4 +29,31 @@
 
     <color name="conversation_grey">#757575</color>
     <color name="conversation_grey_shade">#494949</color>
+// JW: added
+    <color name="conversation_deep_purple">#512DA8</color>
+    <color name="conversation_deep_purple_shade">#311B92</color>
+
+    <color name="conversation_light_blue">#0288D1</color>
+    <color name="conversation_light_blue_shade">#01579B</color>
+
+    <color name="conversation_light_green">#689F38</color>
+    <color name="conversation_light_green_shade">#33691E</color>
+
+    <color name="conversation_lime">#AFB42B</color>
+    <color name="conversation_lime_shade">#827717</color>
+
+    <color name="conversation_yellow">#FBC02D</color>
+    <color name="conversation_yellow_shade">#F57F17</color>
+
+    <color name="conversation_amber">#FFA000</color>
+    <color name="conversation_amber_shade">#FF6F00</color>
+
+    <color name="conversation_deep_orange">#E64A19</color>
+    <color name="conversation_deep_orange_shade">#BF360C</color>
+
+    <color name="conversation_brown">#5D4037</color>
+    <color name="conversation_brown_shade">#3E2723</color>
+
+    <color name="conversation_blue_grey">#455A64</color>
+    <color name="conversation_blue_grey_shade">#263238</color>
 </resources>
