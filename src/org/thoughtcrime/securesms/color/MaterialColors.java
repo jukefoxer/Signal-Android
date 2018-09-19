@@ -19,7 +19,16 @@ public class MaterialColors {
     MaterialColor.BLUE,
     MaterialColor.GREEN,
     MaterialColor.TEAL,
-    MaterialColor.CYAN
+    MaterialColor.CYAN,
+    MaterialColor.DEEP_PURPLE,
+    MaterialColor.LIGHT_BLUE,
+    MaterialColor.LIGHT_GREEN,
+    MaterialColor.LIME,
+    MaterialColor.YELLOW,
+    MaterialColor.AMBER,
+    MaterialColor.DEEP_ORANGE,
+    MaterialColor.BROWN,
+    MaterialColor.BLUE_GREY
   )));
 
   public static class MaterialColorList {
