@@ -21,27 +21,38 @@ public enum MaterialColor {
   TEAL       (R.color.conversation_teal,   R.color.conversation_teal_shade,   "teal"),
   GREEN      (R.color.conversation_green,  R.color.conversation_green_shade,  "green"),
   ORANGE     (R.color.conversation_orange, R.color.conversation_orange_shade, "orange"),
-  GREY       (R.color.conversation_grey,   R.color.conversation_grey_shade,   "grey");
+  GREY       (R.color.conversation_grey,   R.color.conversation_grey_shade,   "grey"),
+  // JW: added
+  DEEP_PURPLE(R.color.conversation_deep_purple, R.color.conversation_deep_purple_shade, "deep_purple"),
+  LIGHT_BLUE (R.color.conversation_light_blue,  R.color.conversation_light_blue,    "light_blue"),
+  LIGHT_GREEN(R.color.conversation_light_green, R.color.conversation_light_green,   "light_green"),
+  LIME       (R.color.conversation_lime,        R.color.conversation_lime,          "lime"),
+  YELLOW     (R.color.conversation_yellow,      R.color.conversation_yellow,        "yellow"),
+  AMBER      (R.color.conversation_amber,       R.color.conversation_amber,         "amber"),
+  DEEP_ORANGE(R.color.conversation_deep_orange, R.color.conversation_deep_orange,   "deep_orange"),
+  BROWN      (R.color.conversation_brown,       R.color.conversation_brown,         "brown"),
+  BLUE_GREY  (R.color.conversation_blue_grey,   R.color.conversation_blue_grey,     "blue_grey");
 
+  // JW: no translation of colors
   private static final Map<String, MaterialColor> COLOR_MATCHES = new HashMap<String, MaterialColor>() {{
     put("red", RED);
-    put("brown", RED);
+    put("brown", BROWN);
     put("pink", PINK);
     put("purple", PURPLE);
-    put("deep_purple", PURPLE);
+    put("deep_purple", DEEP_PURPLE);
     put("indigo", INDIGO);
     put("blue", BLUE);
-    put("light_blue", BLUE);
+    put("light_blue", LIGHT_BLUE);
     put("cyan", CYAN);
-    put("blue_grey", CYAN);
+    put("blue_grey", BLUE_GREY);
     put("teal", TEAL);
     put("green", GREEN);
-    put("light_green", GREEN);
-    put("lime", GREEN);
+    put("light_green", LIGHT_GREEN);
+    put("lime", LIME);
     put("orange", ORANGE);
-    put("amber", ORANGE);
-    put("deep_orange", ORANGE);
-    put("yellow", ORANGE);
+    put("amber", AMBER);
+    put("deep_orange", DEEP_ORANGE);
+    put("yellow", YELLOW);
     put("grey", GREY);
     put("group_color", BLUE);
   }};
