@@ -32,7 +32,7 @@ public class ContactColors {
     MaterialColor.DEEP_ORANGE,
     MaterialColor.BROWN,
     MaterialColor.AMBER,
-    //MaterialColor.GREY,
+    MaterialColor.GREY,
     MaterialColor.BLUE_GREY
   ));
 
