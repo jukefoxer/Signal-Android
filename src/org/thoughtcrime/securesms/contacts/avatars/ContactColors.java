@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ContactColors {
 
-  public static final MaterialColor UNKNOWN_COLOR = MaterialColor.BLUE_GREY; // JW: change color
+  public static final MaterialColor UNKNOWN_COLOR = MaterialColor.GREY; // JW: change color
 
   // JW: change colors
   private static final List<MaterialColor> CONVERSATION_PALETTE = new ArrayList<>(Arrays.asList(
@@ -32,8 +32,8 @@ public class ContactColors {
     MaterialColor.DEEP_ORANGE,
     MaterialColor.BROWN,
     MaterialColor.AMBER,
-    MaterialColor.GREY,
-    MaterialColor.BLUE_GREY
+    MaterialColor.BLUE_GREY,
+    MaterialColor.GREY
   ));
 
   public static MaterialColor generateFor(@NonNull String name) {
