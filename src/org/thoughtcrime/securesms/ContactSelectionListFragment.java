@@ -135,8 +135,11 @@ public class ContactSelectionListFragment extends    Fragment
     showContactsProgress    = view.findViewById(R.id.progress);
     recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+    // JW: Swipe works on ICS
+    //swipeRefresh.setEnabled(getActivity().getIntent().getBooleanExtra(REFRESHABLE, true) &&
+    //                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN);
     swipeRefresh.setEnabled(getActivity().getIntent().getBooleanExtra(REFRESHABLE, true) &&
-                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN);
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH);
 
     return view;
   }
