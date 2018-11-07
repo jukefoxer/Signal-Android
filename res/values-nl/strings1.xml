@@ -14,6 +14,7 @@ Herstellen van een versleutelde back-up zal je bestaande sleutels, voorkeuren en
   <string name="ImportFragment_restoring_encrypted_backup">Versleutelde back-up herstellen...</string>
   <string name="ImportFragment_no_encrypted_backup_found">Geen versleutelde back-up gevonden!</string>
   <string name="ImportFragment_restore_complete">Herstellen voltooid!</string>
+  <string name="ImportFragment_restore_ok">OK</string>
   <!--ExportFragment-->
   <string name="ExportFragment_export_to_sd_card">Opslaan op SD-kaart?</string>
   <string name="ExportFragment_this_will_export_your_encrypted_keys_settings_and_messages">Dit exporteert je keys, instellingen en berichten versleuteld naar de SD-kaart</string>

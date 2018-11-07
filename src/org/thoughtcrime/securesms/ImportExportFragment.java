@@ -4,22 +4,23 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import org.thoughtcrime.securesms.database.EncryptedBackupExporter; // JW
+import org.thoughtcrime.securesms.database.EncryptedBackupExporter;
 import org.thoughtcrime.securesms.database.NoExternalStorageException;
 import org.thoughtcrime.securesms.database.PlaintextBackupExporter;
 import org.thoughtcrime.securesms.database.PlaintextBackupImporter;
+import org.thoughtcrime.securesms.logging.Log;
 import org.thoughtcrime.securesms.permissions.Permissions;
 import org.thoughtcrime.securesms.service.ApplicationMigrationService;
 
@@ -310,11 +311,17 @@ public class ImportExportFragment extends Fragment {
           //intent.setAction(KeyCachingService.CLEAR_KEY_ACTION);
           //context.startService(intent);
 
-          Toast.makeText(context,
-                         context.getString(R.string.ImportFragment_restore_complete),
-                         Toast.LENGTH_LONG).show();
-          // JW: Just restart
-          ExitActivity.exitAndRemoveFromRecentApps(getActivity());
+          // JW: Restart after OK press
+          AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+          builder.setMessage(context.getString(R.string.ImportFragment_restore_complete))
+                  .setCancelable(false)
+                  .setPositiveButton(context.getString(R.string.ImportFragment_restore_ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                      ExitActivity.exitAndRemoveFromRecentApps(getActivity());
+                    }
+                  });
+          AlertDialog alert = builder.create();
+          alert.show();
       }
     }
 

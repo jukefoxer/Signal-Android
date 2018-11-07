@@ -77,7 +77,7 @@ public class DatabaseSecretProvider {
   }
 
   // JW: store an existing DatabaseSecret. Used for restore of an encrypted backup
-  public DatabaseSecret storeOrOverwriteDatabaseSecret(@NonNull Context context, DatabaseSecret databaseSecret) {
+  public DatabaseSecret storeOrOverwriteDatabaseSecret(@NonNull Context context, @NonNull DatabaseSecret databaseSecret) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
       KeyStoreHelper.SealedData encryptedSecret = KeyStoreHelper.seal(databaseSecret.asBytes());
       TextSecurePreferences.setDatabaseEncryptedSecret(context, encryptedSecret.serialize());

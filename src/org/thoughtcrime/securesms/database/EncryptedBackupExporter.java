@@ -20,9 +20,12 @@ import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 
+import org.thoughtcrime.securesms.crypto.AttachmentSecret;
+import org.thoughtcrime.securesms.crypto.AttachmentSecretProvider;
 import org.thoughtcrime.securesms.crypto.DatabaseSecret;
 import org.thoughtcrime.securesms.crypto.DatabaseSecretProvider;
 import org.thoughtcrime.securesms.logging.Log;
+import org.thoughtcrime.securesms.util.JsonUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,42 +41,58 @@ public class EncryptedBackupExporter {
   
   private static final String TAG = EncryptedBackupExporter.class.getSimpleName();
 
-  // File used to store the DatabaseSecret, required after the transfer to SQLCipher in Signal 4.16
+  // File used to store the DatabaseSecret and AttachmentSecret, required after the transfer to SQLCipher in Signal 4.16
   private static final String databaseSecretFile = "databasesecret.txt";
+  private static final String attachmentSecretFile = "attachmentsecret.txt";
+  private static final String exportDirectory = "SignalExport";
+  private static final String secretsExportDirectory = "SignalSecrets";
 
   public static void exportToSd(Context context) throws NoExternalStorageException, IOException {
     verifyExternalStorageForExport();
     DatabaseSecretProvider dsp = new DatabaseSecretProvider(context);
+    AttachmentSecretProvider asp = AttachmentSecretProvider.getInstance(context);
     DatabaseSecret dbs = dsp.getOrCreateDatabaseSecret();
+    AttachmentSecret ats = asp.getOrCreateAttachmentSecret();
     exportDirectory(context, "");
-    exportDatabaseSecret(context, dbs);
+    exportSecrets(context, dbs, ats);
   }
 
   public static void importFromSd(Context context) throws NoExternalStorageException, IOException {
     verifyExternalStorageForImport();
     DatabaseSecret dbs = getDatabaseSecretFromBackup();
+    AttachmentSecret ats = getAttachmentSecretFromBackup();
     importDirectory(context, "");
     if (dbs != null) {
-      importAndOverwriteDatabaseSecret(context, dbs);
+      new DatabaseSecretProvider(context).storeOrOverwriteDatabaseSecret(context, dbs);
+    }
+    if (ats != null) {
+      AttachmentSecretProvider.getInstance(context).storeOrOverwriteAttachmentSecret(context, ats);
     }
   }
 
   private static String getExportDatabaseSecretFullName() {
     File sdDirectory  = Environment.getExternalStorageDirectory();
     return sdDirectory.getAbsolutePath() +
-           File.separator + "TextSecureExportDatabaseSecret" +
+           File.separator + secretsExportDirectory +
            File.separator + databaseSecretFile;
   }
 
-  private static String getExportDatabaseSecretDirectory() {
+    private static String getExportAttachmentSecretFullName() {
     File sdDirectory  = Environment.getExternalStorageDirectory();
     return sdDirectory.getAbsolutePath() +
-            File.separator + "TextSecureExportDatabaseSecret" + File.separator;
+           File.separator + secretsExportDirectory +
+           File.separator + attachmentSecretFile;
+  }
+
+  private static String getExportSecretsDirectory() {
+    File sdDirectory  = Environment.getExternalStorageDirectory();
+    return sdDirectory.getAbsolutePath() +
+            File.separator + secretsExportDirectory + File.separator;
   }
 
   private static String getExportDirectoryPath() {
     File sdDirectory  = Environment.getExternalStorageDirectory();
-    return sdDirectory.getAbsolutePath() + File.separator + "TextSecureExport";
+    return sdDirectory.getAbsolutePath() + File.separator + exportDirectory;
   }
 
   private static void verifyExternalStorageForExport() throws NoExternalStorageException {
@@ -109,7 +128,7 @@ public class EncryptedBackupExporter {
   }
 
   private static void exportDirectory(Context context, String directoryName) throws IOException {
-    if (!directoryName.equals("/lib")) {  
+    if (!directoryName.equals("/lib") && !directoryName.equals("/code_cache") && !directoryName.equals("/cache")) {
       File directory       = new File(context.getFilesDir().getParent() + File.separatorChar + directoryName);
       File exportDirectory = new File(getExportDirectoryPath() + File.separatorChar + directoryName);
 
@@ -163,15 +182,17 @@ public class EncryptedBackupExporter {
     }
   }
 
-  // Store the DatabaseSecret in a file
-  private static void exportDatabaseSecret(Context context, DatabaseSecret dbs) {
-    File exportDirectory = new File(getExportDatabaseSecretDirectory());
+  // Store the DatabaseSecret and AttachmentSecret in a file
+  private static void exportSecrets(Context context, DatabaseSecret dbs, AttachmentSecret ats) {
+    File exportDirectory = new File(getExportSecretsDirectory());
     if (!exportDirectory.exists()) {
       exportDirectory.mkdir();
     }
     File databaseSecretExportFile = new File(getExportDatabaseSecretFullName());
+    File attachmentSecretExportFile = new File(getExportAttachmentSecretFullName());
 
     try {
+      // Database secret
       databaseSecretExportFile.createNewFile();
       FileOutputStream fOut = new FileOutputStream(databaseSecretExportFile);
       OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fOut);
@@ -179,6 +200,14 @@ public class EncryptedBackupExporter {
       outputStreamWriter.close();
       fOut.flush();
       fOut.close();
+      // Attachment secret
+      attachmentSecretExportFile.createNewFile();
+      FileOutputStream faOut = new FileOutputStream(attachmentSecretExportFile);
+      OutputStreamWriter aOutputStreamWriter = new OutputStreamWriter(faOut);
+      aOutputStreamWriter.write(ats.serialize());
+      aOutputStreamWriter.close();
+      faOut.flush();
+      faOut.close();
     }
     catch (IOException e) {
       Log.v(TAG, "File write failed: " + e.toString());
@@ -206,12 +235,39 @@ public class EncryptedBackupExporter {
         dbs = new DatabaseSecret(encoded);
       }
     } catch (IOException e) {
-      Log.v(TAG, "File read failed: " + e.toString());
+      Log.v(TAG, "getDatabaseSecretFromBackup file read failed: " + e.toString());
     }
     return dbs;
   }
 
-  private static void importAndOverwriteDatabaseSecret(@NonNull Context context, DatabaseSecret dbs) {
-    new DatabaseSecretProvider(context).storeOrOverwriteDatabaseSecret(context, dbs);
+  private static AttachmentSecret getAttachmentSecretFromBackup() {
+    AttachmentSecret ats = null;
+    File attachmentSecretExportFile = new File(getExportAttachmentSecretFullName());
+
+    try {
+      if (attachmentSecretExportFile.exists()) {
+        String encoded = "";
+        FileInputStream fIn = new FileInputStream(attachmentSecretExportFile);
+        InputStreamReader inputStreamReader = new InputStreamReader(fIn);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(bufferedReader.readLine());
+        encoded = stringBuilder.toString();
+
+        inputStreamReader.close();
+        fIn.close();
+
+        ats = new AttachmentSecret();
+        try {
+          ats = JsonUtils.fromJson(encoded, AttachmentSecret.class);
+        } catch (IOException e) {
+          throw new AssertionError(e);
+        }
+      }
+    } catch (IOException e) {
+      Log.v(TAG, "getAttachmentSecretFromBackup file read failed: " + e.toString());
+    }
+    return ats;
   }
 }
