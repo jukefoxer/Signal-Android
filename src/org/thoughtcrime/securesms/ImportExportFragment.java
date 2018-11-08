@@ -256,7 +256,7 @@ public class ImportExportFragment extends Fragment {
   }
 
   // JW: Encrypted backup import/export.
-  private void handleImportEncryptedBackup() {
+  public void handleImportEncryptedBackup() {
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
     builder.setIconAttribute(R.attr.dialog_alert_icon);
     builder.setTitle(getActivity().getString(R.string.ImportFragment_restore_encrypted_backup));
