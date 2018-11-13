@@ -17,6 +17,7 @@
 package org.thoughtcrime.securesms.database;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 
@@ -24,8 +25,11 @@ import org.thoughtcrime.securesms.crypto.AttachmentSecret;
 import org.thoughtcrime.securesms.crypto.AttachmentSecretProvider;
 import org.thoughtcrime.securesms.crypto.DatabaseSecret;
 import org.thoughtcrime.securesms.crypto.DatabaseSecretProvider;
+import org.thoughtcrime.securesms.crypto.KeyStoreHelper;
 import org.thoughtcrime.securesms.logging.Log;
+import org.thoughtcrime.securesms.util.Base64;
 import org.thoughtcrime.securesms.util.JsonUtils;
+import org.thoughtcrime.securesms.util.TextSecurePreferences;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,6 +40,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.String;
 import java.nio.channels.FileChannel;
+import java.security.SecureRandom;
 
 public class EncryptedBackupExporter {
   
@@ -44,6 +49,7 @@ public class EncryptedBackupExporter {
   // File used to store the DatabaseSecret and AttachmentSecret, required after the transfer to SQLCipher in Signal 4.16
   private static final String databaseSecretFile = "databasesecret.txt";
   private static final String attachmentSecretFile = "attachmentsecret.txt";
+  private static final String logSecretFile = "logsecret.txt";
   private static final String exportDirectory = "SignalExport";
   private static final String secretsExportDirectory = "SignalSecrets";
 
@@ -53,20 +59,25 @@ public class EncryptedBackupExporter {
     AttachmentSecretProvider asp = AttachmentSecretProvider.getInstance(context);
     DatabaseSecret dbs = dsp.getOrCreateDatabaseSecret();
     AttachmentSecret ats = asp.getOrCreateAttachmentSecret();
+    byte[] lgs = getOrCreateLogSecret(context);
     exportDirectory(context, "");
-    exportSecrets(context, dbs, ats);
+    exportSecrets(context, dbs, ats, lgs);
   }
 
   public static void importFromSd(Context context) throws NoExternalStorageException, IOException {
     verifyExternalStorageForImport();
     DatabaseSecret dbs = getDatabaseSecretFromBackup();
     AttachmentSecret ats = getAttachmentSecretFromBackup();
+    byte[] lgs = getLogSecretFromBackup(context);
     importDirectory(context, "");
     if (dbs != null) {
-      new DatabaseSecretProvider(context).storeOrOverwriteDatabaseSecret(context, dbs);
+      overwriteDatabaseSecret(context, dbs);
     }
     if (ats != null) {
-      AttachmentSecretProvider.getInstance(context).storeOrOverwriteAttachmentSecret(context, ats);
+      overwriteAttachmentSecret(context, ats);
+    }
+    if (lgs != null) {
+      overwriteLogSecret(context, lgs);
     }
   }
 
@@ -82,6 +93,13 @@ public class EncryptedBackupExporter {
     return sdDirectory.getAbsolutePath() +
            File.separator + secretsExportDirectory +
            File.separator + attachmentSecretFile;
+  }
+
+  private static String getExportLogSecretFullName() {
+    File sdDirectory  = Environment.getExternalStorageDirectory();
+    return sdDirectory.getAbsolutePath() +
+            File.separator + secretsExportDirectory +
+            File.separator + logSecretFile;
   }
 
   private static String getExportSecretsDirectory() {
@@ -183,33 +201,26 @@ public class EncryptedBackupExporter {
   }
 
   // Store the DatabaseSecret and AttachmentSecret in a file
-  private static void exportSecrets(Context context, DatabaseSecret dbs, AttachmentSecret ats) {
+  private static void exportSecrets(Context context, DatabaseSecret dbs, AttachmentSecret ats, byte[] lgs) {
     File exportDirectory = new File(getExportSecretsDirectory());
     if (!exportDirectory.exists()) {
       exportDirectory.mkdir();
     }
-    File databaseSecretExportFile = new File(getExportDatabaseSecretFullName());
-    File attachmentSecretExportFile = new File(getExportAttachmentSecretFullName());
+    writeStringToFile(new File(getExportDatabaseSecretFullName()), dbs.asString());
+    writeStringToFile(new File(getExportAttachmentSecretFullName()), ats.serialize());
+    writeStringToFile(new File(getExportLogSecretFullName()), Base64.encodeBytes(lgs));
+  }
 
+  private static void writeStringToFile(File file, String str) {
     try {
-      // Database secret
-      databaseSecretExportFile.createNewFile();
-      FileOutputStream fOut = new FileOutputStream(databaseSecretExportFile);
+      file.createNewFile();
+      FileOutputStream fOut = new FileOutputStream(file);
       OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fOut);
-      outputStreamWriter.write(dbs.asString());
+      outputStreamWriter.write(str);
       outputStreamWriter.close();
       fOut.flush();
       fOut.close();
-      // Attachment secret
-      attachmentSecretExportFile.createNewFile();
-      FileOutputStream faOut = new FileOutputStream(attachmentSecretExportFile);
-      OutputStreamWriter aOutputStreamWriter = new OutputStreamWriter(faOut);
-      aOutputStreamWriter.write(ats.serialize());
-      aOutputStreamWriter.close();
-      faOut.flush();
-      faOut.close();
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
       Log.v(TAG, "File write failed: " + e.toString());
     }
   }
@@ -235,7 +246,7 @@ public class EncryptedBackupExporter {
         dbs = new DatabaseSecret(encoded);
       }
     } catch (IOException e) {
-      Log.v(TAG, "getDatabaseSecretFromBackup file read failed: " + e.toString());
+      Log.w(TAG, "getDatabaseSecretFromBackup file read failed: " + e.toString());
     }
     return dbs;
   }
@@ -266,8 +277,105 @@ public class EncryptedBackupExporter {
         }
       }
     } catch (IOException e) {
-      Log.v(TAG, "getAttachmentSecretFromBackup file read failed: " + e.toString());
+      Log.w(TAG, "getAttachmentSecretFromBackup file read failed: " + e.toString());
     }
     return ats;
+  }
+
+  private static byte[] getLogSecretFromBackup(Context context) {
+    byte[] lgs = null;
+    File logSecretExportFile = new File(getExportLogSecretFullName());
+
+    try {
+      if (logSecretExportFile.exists()) {
+        String encoded = "";
+        FileInputStream fIn = new FileInputStream(logSecretExportFile);
+        InputStreamReader inputStreamReader = new InputStreamReader(fIn);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append(bufferedReader.readLine());
+        encoded = stringBuilder.toString();
+
+        inputStreamReader.close();
+        fIn.close();
+
+        lgs = new byte[32];
+        lgs = Base64.decode(encoded);
+      }
+    } catch (IOException e) {
+      Log.w(TAG, "getLogSecretFromBackup file read failed: " + e.toString());
+    }
+    return lgs;
+  }
+
+  // JW: store an existing DatabaseSecret in the settingsfile.
+  private static void overwriteDatabaseSecret(@NonNull Context context, @NonNull DatabaseSecret databaseSecret) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      KeyStoreHelper.SealedData encryptedSecret = KeyStoreHelper.seal(databaseSecret.asBytes());
+      TextSecurePreferences.setDatabaseEncryptedSecret(context, encryptedSecret.serialize());
+    } else {
+      TextSecurePreferences.setDatabaseUnencryptedSecret(context, databaseSecret.asString());
+    }
+  }
+
+  private static void overwriteAttachmentSecret(@NonNull Context context, @NonNull AttachmentSecret attachmentSecret) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      KeyStoreHelper.SealedData encryptedSecret = KeyStoreHelper.seal(attachmentSecret.serialize().getBytes());
+      TextSecurePreferences.setAttachmentEncryptedSecret(context, encryptedSecret.serialize());
+    } else {
+      TextSecurePreferences.setAttachmentUnencryptedSecret(context, attachmentSecret.serialize());
+    }
+  }
+
+  private static void overwriteLogSecret(@NonNull Context context, @NonNull byte[] lgs) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      KeyStoreHelper.SealedData encryptedSecret = KeyStoreHelper.seal(lgs);
+      TextSecurePreferences.setLogEncryptedSecret(context, encryptedSecret.serialize());
+    } else {
+      TextSecurePreferences.setLogUnencryptedSecret(context, Base64.encodeBytes(lgs));
+    }
+  }
+
+  // LogSecretProvider class functions. Copied here because they are all private
+  static byte[] getOrCreateLogSecret(@NonNull Context context) {
+    String unencryptedSecret = TextSecurePreferences.getLogUnencryptedSecret(context);
+    String encryptedSecret   = TextSecurePreferences.getLogEncryptedSecret(context);
+
+    if      (unencryptedSecret != null) return parseUnencryptedSecret(unencryptedSecret);
+    else if (encryptedSecret != null)   return parseEncryptedSecret(encryptedSecret);
+    else                                return createAndStoreSecret(context);
+  }
+
+  private static byte[] parseUnencryptedSecret(String secret) {
+    try {
+      return Base64.decode(secret);
+    } catch (IOException e) {
+      throw new AssertionError("Failed to decode the unecrypted secret.");
+    }
+  }
+
+  private static byte[] parseEncryptedSecret(String secret) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      KeyStoreHelper.SealedData encryptedSecret = KeyStoreHelper.SealedData.fromString(secret);
+      return KeyStoreHelper.unseal(encryptedSecret);
+    } else {
+      throw new AssertionError("OS downgrade not supported. KeyStore sealed data exists on platform < M!");
+    }
+  }
+
+  private static byte[] createAndStoreSecret(@NonNull Context context) {
+    SecureRandom random = new SecureRandom();
+    byte[]       secret = new byte[32];
+    random.nextBytes(secret);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+      KeyStoreHelper.SealedData encryptedSecret = KeyStoreHelper.seal(secret);
+      TextSecurePreferences.setLogEncryptedSecret(context, encryptedSecret.serialize());
+    } else {
+      TextSecurePreferences.setLogUnencryptedSecret(context, Base64.encodeBytes(secret));
+    }
+
+    return secret;
   }
 }

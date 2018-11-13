@@ -100,9 +100,4 @@ public class AttachmentSecretProvider {
     }
   }
 
-  // JW: store an existing AttachmentSecret. Used for restore of an encrypted backup
-  public void storeOrOverwriteAttachmentSecret(@NonNull Context context, @NonNull AttachmentSecret attachmentSecret) {
-    storeAttachmentSecret(context, attachmentSecret);
-  }
-
 }
