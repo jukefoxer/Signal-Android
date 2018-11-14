@@ -177,6 +177,25 @@
                     android:layout_marginTop="20dp"
                     android:layout_gravity="center_horizontal"/>
 
+            <!-- JW: import encrypted backup -->
+            <!-- JW: this doesn't work yet so we make the button invisible for now. Remove the visibility tag to activate -->
+            <com.dd.CircularProgressButton
+                android:id="@+id/restore_encrypted_backup_button"
+                app:cpb_textIdle="@string/registration_activity__restore_encrypted_backup"
+                app:cpb_selectorIdle="@drawable/progress_button_state"
+                app:cpb_colorIndicator="@color/white"
+                app:cpb_colorProgress="@color/textsecure_primary"
+                app:cpb_cornerRadius="50dp"
+                android:background="@color/signal_primary"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="20dp"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal"/>
+
             <TextView android:id="@+id/skip_button"
                       android:layout_gravity="center_horizontal"
                       android:layout_width="wrap_content"
