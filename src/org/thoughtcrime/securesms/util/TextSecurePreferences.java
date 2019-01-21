@@ -31,6 +31,8 @@ public class TextSecurePreferences {
 
   private static final String TAG = TextSecurePreferences.class.getSimpleName();
 
+  // JW: added: true = passphrase, false = Android lock or fingerprint
+  public  static final String PROTECTION_METHOD_PREF           = "pref_signal_protection_method";
   public  static final String IDENTITY_PREF                    = "pref_choose_identity";
   public  static final String CHANGE_PASSPHRASE_PREF           = "pref_change_passphrase";
   public  static final String DISABLE_PASSPHRASE_PREF          = "pref_disable_passphrase";
@@ -172,6 +174,16 @@ public class TextSecurePreferences {
   private static final String UNIDENTIFIED_DELIVERY_ENABLED                      = "pref_unidentified_delivery_enabled";
 
   public static final String TYPING_INDICATORS = "pref_typing_indicators";
+
+  // JW: added for PROTECTION_METHOD_PREF
+  public static boolean isProtectionMethodPassphrase(@NonNull Context context) {
+    return getBooleanPreference(context, PROTECTION_METHOD_PREF, false);
+  }
+
+  // JW added
+  public static void setProtectionMethod(@NonNull Context context, boolean value) {
+    setBooleanPreference(context, PROTECTION_METHOD_PREF, value);
+  }
 
   public static boolean isScreenLockEnabled(@NonNull Context context) {
     return getBooleanPreference(context, SCREEN_LOCK, false);
