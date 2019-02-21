@@ -176,6 +176,19 @@ public class TextSecurePreferences {
 
   public static final String LINK_PREVIEWS = "pref_link_previews";
 
+  // JW: added: true = passphrase, false = Android lock or fingerprint
+  public static final String PROTECTION_METHOD_PREF = "pref_signal_protection_method";
+  
+  // JW: added for PROTECTION_METHOD_PREF
+  public static boolean isProtectionMethodPassphrase(@NonNull Context context) {
+    return getBooleanPreference(context, PROTECTION_METHOD_PREF, false);
+  }
+
+  // JW added
+  public static void setProtectionMethod(@NonNull Context context, boolean value) {
+    setBooleanPreference(context, PROTECTION_METHOD_PREF, value);
+  }
+
   public static boolean isScreenLockEnabled(@NonNull Context context) {
     return getBooleanPreference(context, SCREEN_LOCK, false);
   }
