@@ -2,6 +2,12 @@
 <resources>
   <!--arrays.xml-->
   <string name="arrays__import_export_orig">Datensicherung</string>
+  <!--app protection-->
+  <string name="preferences_app_protection__method_passphrase">Passphrase Verwenden</string>
+  <string name="preferences_app_protection__method_passphrase_summary">Passphrase zum Schutz von Signal verwenden anstatt Androids Bildschirmsperre oder Fingerabdruck</string>
+  <!--backup location-->
+  <string name="preferences_chats__chat_backups_removable">Speicherort für Datensicherungen</string>
+  <string name="preferences_chats__backup_chats_to_removable_storage">Unterhaltungen auf SD-Karte sichern (falls vorhanden)</string>
   <!--ImportFragment-->
   <string name="ImportFragment_restore_encrypted_backup">Verschlüsselte Sicherung wiederherstellen?</string>
   <string name="ImportFragment_restoring_an_encrypted_backup_will_completely_replace_your_existing_keys">

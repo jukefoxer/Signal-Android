@@ -7,6 +7,10 @@
     <string name="preferences_app_protection__method_passphrase">Use a passphrase</string>
     <string name="preferences_app_protection__method_passphrase_summary">Use a passphrase to protect Signal instead of the Android screen lock or fingerprint</string>
 
+    <!--backup location-->
+    <string name="preferences_chats__chat_backups_removable">Backup location</string>
+    <string name="preferences_chats__backup_chats_to_removable_storage">Backup chats to removable storage (if available)</string>
+
     <!-- ImportExportActivity -->
     <string name="ImportExportActivity_import">Import</string>
     <string name="ImportExportActivity_export">Export</string>

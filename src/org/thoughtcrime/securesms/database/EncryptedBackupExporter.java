@@ -20,7 +20,6 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import org.thoughtcrime.securesms.crypto.AttachmentSecret;
 import org.thoughtcrime.securesms.crypto.AttachmentSecretProvider;
@@ -44,6 +43,9 @@ import java.lang.String;
 import java.nio.channels.FileChannel;
 import java.security.SecureRandom;
 
+import com.annimon.stream.Stream;
+
+
 public class EncryptedBackupExporter {
   
   private static final String TAG = EncryptedBackupExporter.class.getSimpleName();
@@ -57,7 +59,7 @@ public class EncryptedBackupExporter {
   private static final String secretsExportDirectory = "SignalSecrets";
 
   public static void exportToSd(Context context) throws NoExternalStorageException, IOException {
-    verifyExternalStorageForExport();
+    verifyExternalStorageForExport(context);
     DatabaseSecretProvider dsp = new DatabaseSecretProvider(context);
     AttachmentSecretProvider asp = AttachmentSecretProvider.getInstance(context);
     DatabaseSecret dbs = dsp.getOrCreateDatabaseSecret();
@@ -69,9 +71,9 @@ public class EncryptedBackupExporter {
   }
 
   public static void importFromSd(Context context) throws NoExternalStorageException, IOException {
-    verifyExternalStorageForImport();
-    DatabaseSecret dbs = getDatabaseSecretFromBackup();
-    AttachmentSecret ats = getAttachmentSecretFromBackup();
+    verifyExternalStorageForImport(context);
+    DatabaseSecret dbs = getDatabaseSecretFromBackup(context);
+    AttachmentSecret ats = getAttachmentSecretFromBackup(context);
     byte[] lgs = getLogSecretFromBackup(context);
     String bks = getBackupKeyFromBackup(context);
     importDirectory(context, "");
@@ -89,59 +91,69 @@ public class EncryptedBackupExporter {
     }
   }
 
-  private static String getExportDatabaseSecretFullName() {
-    File sdDirectory  = Environment.getExternalStorageDirectory();
-    return sdDirectory.getAbsolutePath() +
-           File.separator + secretsExportDirectory +
-           File.separator + databaseSecretFile;
+  private static String getExportDatabaseSecretFullName(Context context) {
+    return getExportSecretsDirectory(context) + databaseSecretFile;
   }
 
-    private static String getExportAttachmentSecretFullName() {
-    File sdDirectory  = Environment.getExternalStorageDirectory();
-    return sdDirectory.getAbsolutePath() +
-           File.separator + secretsExportDirectory +
-           File.separator + attachmentSecretFile;
+  private static String getExportAttachmentSecretFullName(Context context) {
+    return getExportSecretsDirectory(context) + attachmentSecretFile;
   }
 
-  private static String getExportLogSecretFullName() {
-    File sdDirectory  = Environment.getExternalStorageDirectory();
-    return sdDirectory.getAbsolutePath() +
-            File.separator + secretsExportDirectory +
-            File.separator + logSecretFile;
+  private static String getExportLogSecretFullName(Context context) {
+    return getExportSecretsDirectory(context) + logSecretFile;
   }
   
-  private static String getExportBackupKeyFullName() {
-    File sdDirectory  = Environment.getExternalStorageDirectory();
-    return sdDirectory.getAbsolutePath() +
-            File.separator + secretsExportDirectory +
-            File.separator + backupKeyFile;
+  private static String getExportBackupKeyFullName(Context context) {
+    return getExportSecretsDirectory(context) + backupKeyFile;
   }
 
-  private static String getExportSecretsDirectory() {
-    File sdDirectory  = Environment.getExternalStorageDirectory();
-    return sdDirectory.getAbsolutePath() +
-            File.separator + secretsExportDirectory + File.separator;
+  private static String getExportBaseDirectory(Context context) {
+//    File sdDirectory  = Environment.getExternalStorageDirectory();
+//    return sdDirectory.getAbsolutePath();
+    File storage = null;
+
+    if (TextSecurePreferences.isBackupLocationRemovable(context)) {
+      if (Build.VERSION.SDK_INT >= 19) {
+        File[] directories = context.getExternalFilesDirs(null);
+
+        if (directories != null) {
+          storage = Stream.of(directories)
+                          .withoutNulls()
+                          .filterNot(f -> f.getAbsolutePath().contains("emulated"))
+                          .limit(1)
+                          .findSingle()
+                          .orElse(null);
+        }
+      }
+    }
+    if (storage == null) {
+      storage = Environment.getExternalStorageDirectory();
+    }
+    return storage.getAbsolutePath();
   }
 
-  private static String getExportDirectoryPath() {
-    File sdDirectory  = Environment.getExternalStorageDirectory();
-    return sdDirectory.getAbsolutePath() + File.separator + exportDirectory;
+  private static String getExportSecretsDirectory(Context context) {
+    return getExportBaseDirectory(context) + File.separator + secretsExportDirectory + File.separator;
   }
 
-  private static void verifyExternalStorageForExport() throws NoExternalStorageException {
+  private static String getExportDirectoryPath(Context context) {
+    return getExportBaseDirectory(context) + File.separator + exportDirectory;
+  }
+
+  private static void verifyExternalStorageForExport(Context context) throws NoExternalStorageException {
     if (!Environment.getExternalStorageDirectory().canWrite())
       throw new NoExternalStorageException();
 
-    String exportDirectoryPath = getExportDirectoryPath();
+    String exportDirectoryPath = getExportDirectoryPath(context);
     File exportDirectory       = new File(exportDirectoryPath);
 
     if (!exportDirectory.exists())
       exportDirectory.mkdir();
   }
 
-  private static void verifyExternalStorageForImport() throws NoExternalStorageException {
+  private static void verifyExternalStorageForImport(Context context) throws NoExternalStorageException {
     if (!Environment.getExternalStorageDirectory().canRead() ||
-        !(new File(getExportDirectoryPath()).exists()))
+        !(new File(getExportDirectoryPath(context)).exists()))
         throw new NoExternalStorageException();
   }
 
@@ -163,7 +175,7 @@ public class EncryptedBackupExporter {
   private static void exportDirectory(Context context, String directoryName) throws IOException {
     if (!directoryName.equals("/lib") && !directoryName.equals("/code_cache") && !directoryName.equals("/cache")) {
       File directory       = new File(context.getFilesDir().getParent() + File.separatorChar + directoryName);
-      File exportDirectory = new File(getExportDirectoryPath() + File.separatorChar + directoryName);
+      File exportDirectory = new File(getExportDirectoryPath(context) + File.separatorChar + directoryName);
 
       if (directory.exists()) {
         exportDirectory.mkdirs();
@@ -196,7 +208,7 @@ public class EncryptedBackupExporter {
   }
 
   private static void importDirectory(Context context, String directoryName) throws IOException {
-    File directory       = new File(getExportDirectoryPath() + File.separator + directoryName);
+    File directory       = new File(getExportDirectoryPath(context) + File.separator + directoryName);
     File importDirectory = new File(context.getFilesDir().getParent() + File.separator + directoryName);
 
     if (directory.exists() && directory.isDirectory()) {
@@ -217,15 +229,15 @@ public class EncryptedBackupExporter {
 
   // Store the encrypted secrets in a file
   private static void exportSecrets(Context context, DatabaseSecret dbs, AttachmentSecret ats, byte[] lgs, String bks) {
-    File exportDirectory = new File(getExportSecretsDirectory());
+    File exportDirectory = new File(getExportSecretsDirectory(context));
     if (!exportDirectory.exists()) {
       exportDirectory.mkdir();
     }
-    writeStringToFile(new File(getExportDatabaseSecretFullName()), dbs.asString());
-    writeStringToFile(new File(getExportAttachmentSecretFullName()), ats.serialize());
-    writeStringToFile(new File(getExportLogSecretFullName()), Base64.encodeBytes(lgs));
+    writeStringToFile(new File(getExportDatabaseSecretFullName(context)), dbs.asString());
+    writeStringToFile(new File(getExportAttachmentSecretFullName(context)), ats.serialize());
+    writeStringToFile(new File(getExportLogSecretFullName(context)), Base64.encodeBytes(lgs));
     if (bks != null) { // Backupkey is optional
-      writeStringToFile(new File(getExportBackupKeyFullName()), bks);
+      writeStringToFile(new File(getExportBackupKeyFullName(context)), bks);
     }
   }
 
@@ -243,9 +255,9 @@ public class EncryptedBackupExporter {
     }
   }
 
-  private static DatabaseSecret getDatabaseSecretFromBackup() {
+  private static DatabaseSecret getDatabaseSecretFromBackup(Context context) {
     DatabaseSecret dbs = null;
-    File databaseSecretExportFile = new File(getExportDatabaseSecretFullName());
+    File databaseSecretExportFile = new File(getExportDatabaseSecretFullName(context));
 
     try {
       if (databaseSecretExportFile.exists()) {
@@ -269,9 +281,9 @@ public class EncryptedBackupExporter {
     return dbs;
   }
 
-  private static AttachmentSecret getAttachmentSecretFromBackup() {
+  private static AttachmentSecret getAttachmentSecretFromBackup(Context context) {
     AttachmentSecret ats = null;
-    File attachmentSecretExportFile = new File(getExportAttachmentSecretFullName());
+    File attachmentSecretExportFile = new File(getExportAttachmentSecretFullName(context));
 
     try {
       if (attachmentSecretExportFile.exists()) {
@@ -302,7 +314,7 @@ public class EncryptedBackupExporter {
 
   private static byte[] getLogSecretFromBackup(Context context) {
     byte[] lgs = null;
-    File logSecretExportFile = new File(getExportLogSecretFullName());
+    File logSecretExportFile = new File(getExportLogSecretFullName(context));
 
     try {
       if (logSecretExportFile.exists()) {
@@ -330,7 +342,7 @@ public class EncryptedBackupExporter {
   private static String getBackupKeyFromBackup(Context context) {
 	  String bks = null;
     // Standard backup is optional, so it can be quite normal if the file does not exist
-    File backupPasswordExportFile = new File(getExportBackupKeyFullName());
+    File backupPasswordExportFile = new File(getExportBackupKeyFullName(context));
 
     try {
       if (backupPasswordExportFile.exists()) {
