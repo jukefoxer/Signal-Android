@@ -302,16 +302,17 @@ android {
 
     defaultConfig {
         versionCode 464
-        versionName "4.35.0"
+        versionName "4.35.0.0-JW"
 
         minSdkVersion 14
         targetSdkVersion 26
         multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true
-        project.ext.set("archivesBaseName", "Signal");
+        project.ext.set("archivesBaseName", "Signal-Android"); /* JW: change basename */
 
-        buildConfigField "long", "BUILD_TIMESTAMP", getLastCommitTimestamp() + "L"
+        /* JW: change back to old code that works without having Git in the path, timestamp is not used anyway */
+        buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
         buildConfigField "String", "SIGNAL_URL", "\"https://textsecure-service.whispersystems.org\""
         buildConfigField "String", "SIGNAL_CDN_URL", "\"https://cdn.signal.org\""
         buildConfigField "String", "SIGNAL_CONTACT_DISCOVERY_URL", "\"https://api.directory.signal.org\""
@@ -481,7 +482,7 @@ tasks.whenTaskAdded { task ->
     if (task.name.equals("lint")) {
         task.enabled = false
     }
-
+/* JW: Disable extra apk signing steps, Android Studio does the signing already
     if (task.name.equals("assemblePlayRelease")) {
         task.finalizedBy signProductionPlayRelease
     }
@@ -489,6 +490,7 @@ tasks.whenTaskAdded { task ->
     if (task.name.equals("assembleWebsiteRelease")) {
         task.finalizedBy signProductionWebsiteRelease
     }
+*/
 }
 
 def getLastCommitTimestamp() {
