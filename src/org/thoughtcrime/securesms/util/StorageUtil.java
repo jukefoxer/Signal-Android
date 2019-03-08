@@ -12,10 +12,34 @@ import org.thoughtcrime.securesms.database.NoExternalStorageException;
 
 import java.io.File;
 
+import static org.webrtc.ContextUtils.getApplicationContext;
+
 public class StorageUtil {
 
   public static File getBackupDirectory() throws NoExternalStorageException {
-    File storage = Environment.getExternalStorageDirectory();
+    // JW: changed. We now check if the removable storage is prefered. If it is
+    // and it is not available we fallback to internal storage.
+    Context context = getApplicationContext(); // Ugly but this prevents me from changing some other files as well.
+    File storage = null;
+
+    if (TextSecurePreferences.isBackupLocationRemovable(context)) {
+      // For now we only support the application directory on the removable storage.
+      if (Build.VERSION.SDK_INT >= 19) {
+        File[] directories = context.getExternalFilesDirs(null);
+
+        if (directories != null) {
+          storage = Stream.of(directories)
+                  .withoutNulls()
+                  .filterNot(f -> f.getAbsolutePath().contains("emulated"))
+                  .limit(1)
+                  .findSingle()
+                  .orElse(null);
+        }
+      }
+    }
+    if (storage == null) {
+      storage = Environment.getExternalStorageDirectory();
+    }
 
     if (!storage.canWrite()) {
       throw new NoExternalStorageException();
@@ -29,12 +53,32 @@ public class StorageUtil {
         throw new NoExternalStorageException("Unable to create backup directory...");
       }
     }
-
     return backups;
   }
 
   public static File getBackupCacheDirectory(Context context) {
+    // JW: changed.
+    if (TextSecurePreferences.isBackupLocationRemovable(context)) {
+      if (Build.VERSION.SDK_INT >= 19) {
+        File[] directories = context.getExternalCacheDirs();
+
+        if (directories != null) {
+          File result = getNonEmulated(directories);
+          if (result != null) return result;
+        }
+      }
+    }
     return context.getExternalCacheDir();
+  }
+
+  // JW: re-added
+  private static @Nullable File getNonEmulated(File[] directories) {
+    return Stream.of(directories)
+            .withoutNulls()
+            .filterNot(f -> f.getAbsolutePath().contains("emulated"))
+            .limit(1)
+            .findSingle()
+            .orElse(null);
   }
 
   private static File getSignalStorageDir() throws NoExternalStorageException {
