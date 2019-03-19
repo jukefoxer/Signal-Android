@@ -395,12 +395,8 @@ public class Util {
   }
 
   public static int getDaysTillBuildExpiry() {
-    if (Build.VERSION.SDK_INT < 19) {
-      return Integer.MAX_VALUE;
-    } else {
-      int age = (int) TimeUnit.MILLISECONDS.toDays(System.currentTimeMillis() - BuildConfig.BUILD_TIMESTAMP);
-      return 90 - age;
-    }
+    // JW never expire builds. This is an ugly hack but it prevents me from making changes all over the code with each new release.
+    return Integer.MAX_VALUE;
   }
 
   @TargetApi(VERSION_CODES.LOLLIPOP)
