@@ -60,6 +60,8 @@ public class ChatsPreferenceFragment extends ListSummaryPreferenceFragment {
         .setOnPreferenceClickListener(new BackupClickListener());
     findPreference(TextSecurePreferences.BACKUP_NOW)
         .setOnPreferenceClickListener(new BackupCreateListener());
+    findPreference(TextSecurePreferences.BACKUP_LOCATION_REMOVABLE_PREF) // JW: added
+        .setOnPreferenceChangeListener(new BackupLocationListener());
 
     initializeListSummary((ListPreference) findPreference(TextSecurePreferences.MESSAGE_BODY_TEXT_SIZE_PREF));
 
@@ -148,6 +150,17 @@ public class ChatsPreferenceFragment extends ListSummaryPreferenceFragment {
                  .withPermanentDenialDialog(getString(R.string.ChatsPreferenceFragment_signal_requires_external_storage_permission_in_order_to_create_backups))
                  .execute();
 
+      return true;
+    }
+  }
+
+  // JW: added
+  private class BackupLocationListener implements Preference.OnPreferenceChangeListener {
+    @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
+      // Set the new preference ourself before calling setBackupSummary() to make it use
+      // the correct backup directory.
+      TextSecurePreferences.setBackupLocationRemovable(getActivity(), (boolean)newValue);
+      setBackupSummary();
       return true;
     }
   }
