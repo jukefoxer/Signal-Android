@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface; // JW
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button; // JW
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -60,6 +62,7 @@ import org.thoughtcrime.securesms.crypto.SessionUtil;
 import org.thoughtcrime.securesms.crypto.UnidentifiedAccessUtil;
 import org.thoughtcrime.securesms.database.Address;
 import org.thoughtcrime.securesms.database.DatabaseFactory;
+import org.thoughtcrime.securesms.database.EncryptedBackupExporter; // JW
 import org.thoughtcrime.securesms.database.IdentityDatabase;
 import org.thoughtcrime.securesms.database.NoExternalStorageException;
 import org.thoughtcrime.securesms.gcm.FcmUtil;
@@ -196,6 +199,7 @@ public class RegistrationActivity extends BaseActionBarActivity implements Verif
   private void initializeResources() {
     TextView skipButton        = findViewById(R.id.skip_button);
     TextView restoreSkipButton = findViewById(R.id.skip_restore_button);
+    Button   importButton      = findViewById(R.id.restore_encrypted_backup_button); // JW
 
     this.countrySpinner        = findViewById(R.id.country_spinner);
     this.countryCode           = findViewById(R.id.country_code);
@@ -243,6 +247,8 @@ public class RegistrationActivity extends BaseActionBarActivity implements Verif
       if (key >= 0) verificationCodeView.append(key);
       else          verificationCodeView.delete();
     });
+
+    importButton.setOnClickListener(new ImportButtonListener()); // JW
 
     this.verificationCodeView.setOnCompleteListener(this);
     EventBus.getDefault().register(this);
@@ -1121,4 +1127,31 @@ public class RegistrationActivity extends BaseActionBarActivity implements Verif
   private enum BackupImportResult {
     SUCCESS, FAILURE_VERSION_DOWNGRADE, FAILURE_UNKNOWN
   }
+
+  // JW: respond to the button
+  private class ImportButtonListener implements View.OnClickListener {
+    @Override
+    public void onClick(View v) {
+      //ImportExportFragment fr = new ImportExportFragment();
+      //fr.handleImportEncryptedBackup();
+      try {
+        EncryptedBackupExporter.importFromSd(getApplicationContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        builder.setMessage(getApplicationContext().getString(R.string.ImportFragment_restore_complete))
+                .setCancelable(false)
+                .setPositiveButton(getApplicationContext().getString(R.string.ImportFragment_restore_ok), new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int id) {
+                    ExitActivity.exitAndRemoveFromRecentApps(RegistrationActivity.this);
+                  }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+      } catch (NoExternalStorageException e) {
+        Log.w("ImportFragment", e);
+      } catch (IOException e) {
+        Log.w("ImportFragment", e);
+      }
+    }
+  }
 }
+
