@@ -34,6 +34,7 @@ public enum MaterialColor {
   BROWN      (R.color.brown_700,       R.color.brown_500,       R.color.brown_900,       "brown"),
   GREY       (R.color.grey_700,        R.color.grey_500,        R.color.grey_900,        "grey"),
   BLUE_GREY  (R.color.blue_grey_700,   R.color.blue_grey_500,   R.color.blue_grey_900,   "blue_grey"),
+  BLACK      (R.color.black,           R.color.black,           R.color.black,           "black"),
   GROUP      (R.color.blue_700,        R.color.blue_500,        R.color.blue_900,        "blue");
 
   // JW: no translation of colors
@@ -57,6 +58,7 @@ public enum MaterialColor {
     put("deep_orange", DEEP_ORANGE);
     put("yellow", YELLOW);
     put("grey", GREY);
+    put("black", BLACK);
     put("group_color", GROUP);
   }};
 

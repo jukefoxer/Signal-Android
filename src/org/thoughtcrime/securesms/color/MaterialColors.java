@@ -30,7 +30,8 @@ public class MaterialColors {
     MaterialColor.BROWN,
     MaterialColor.AMBER,
     MaterialColor.GREY,
-    MaterialColor.BLUE_GREY
+    MaterialColor.BLUE_GREY,
+    MaterialColor.BLACK
   )));
 
   public static class MaterialColorList {
