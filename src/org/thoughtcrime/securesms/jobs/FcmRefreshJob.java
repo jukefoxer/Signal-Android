@@ -32,6 +32,7 @@ import org.thoughtcrime.securesms.jobmanager.Data;
 import org.thoughtcrime.securesms.jobmanager.Job;
 import org.thoughtcrime.securesms.jobmanager.impl.NetworkConstraint;
 import org.thoughtcrime.securesms.logging.Log;
+import org.thoughtcrime.securesms.util.TextSecurePreferences; // JW: added
 
 import org.thoughtcrime.securesms.PlayServicesProblemActivity;
 import org.thoughtcrime.securesms.R;
@@ -99,6 +100,7 @@ public class FcmRefreshJob extends BaseJob implements InjectableType {
         if (!token.get().equals(oldToken)) {
           int oldLength = oldToken != null ? oldToken.length() : -1;
           Log.i(TAG, "Token changed. oldLength: " + oldLength + "  newLength: " + token.get().length());
+          Log.i(TAG, "oldToken: " + TextSecurePreferences.getRawFcmToken(context) + ", newToken: " + token.get()); // JW: added for debugging registration loss
         } else {
           Log.i(TAG, "Token didn't change.");
         }
