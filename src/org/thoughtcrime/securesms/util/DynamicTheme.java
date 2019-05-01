@@ -9,6 +9,7 @@ public class DynamicTheme {
 
   public static final String DARK  = "dark";
   public static final String LIGHT = "light";
+  public static final String OLED = "oled"; // JW: added
 
   private int currentTheme;
 
@@ -31,6 +32,7 @@ public class DynamicTheme {
     String theme = TextSecurePreferences.getTheme(activity);
 
     if (theme.equals(DARK)) return R.style.TextSecure_DarkTheme;
+    else if (theme.equals(OLED)) return R.style.TextSecure_DarkThemeOled; // JW: added
 
     return R.style.TextSecure_LightTheme;
   }
