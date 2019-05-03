@@ -61,6 +61,12 @@
         <item name="android:textColorSecondary">@color/white</item>
     </style>
 
+    <!-- JW: added -->
+    <style name="TextSecure.LightActionBarGreen"
+        parent="@style/TextSecure.LightActionBar">
+        <item name="background">@color/green_600</item>
+    </style>
+
     <style name="TextSecure.LightActionBar.DarkText"
            parent="TextSecure.LightActionBar">
         <item name="android:textColorPrimary">@color/black</item>
