@@ -92,6 +92,25 @@
                 app:cpb_selectorIdle="@drawable/progress_button_state"
                 app:cpb_textIdle="@string/registration_activity__restore_backup" />
 
+            <!-- JW: import encrypted backup -->
+            <!-- JW: this doesn't work yet so we make the button invisible for now. Remove the visibility tag to activate -->
+            <com.dd.CircularProgressButton
+                android:id="@+id/restore_encrypted_backup_button"
+                app:cpb_textIdle="@string/registration_activity__restore_encrypted_backup"
+                app:cpb_selectorIdle="@drawable/progress_button_state"
+                app:cpb_colorIndicator="@color/white"
+                app:cpb_colorProgress="@color/textsecure_primary"
+                app:cpb_cornerRadius="50dp"
+                android:background="@color/signal_primary"
+                android:textColor="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="20dp"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal"/>
+
             <Button
                 android:id="@+id/skip_restore_button"
                 android:layout_width="wrap_content"
@@ -187,7 +206,7 @@
 
         </LinearLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/verification_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -239,7 +258,7 @@
                 android:layout_alignParentBottom="true"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </android.support.constraint.ConstraintLayout>
 
 
         <LinearLayout
@@ -281,14 +300,14 @@
             </LinearLayout>
 
 
-            <com.google.android.material.textfield.TextInputLayout
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:paddingStart="100dp"
                 android:paddingEnd="100dp">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/pin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -296,7 +315,7 @@
                     android:imeOptions="actionDone"
                     android:inputType="numberPassword" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </android.support.design.widget.TextInputLayout>
 
             <com.dd.CircularProgressButton
                 android:id="@+id/pinButton"
