@@ -294,7 +294,7 @@ dependencyVerification {
 }
 
 def canonicalVersionCode = 507
-def canonicalVersionName = "4.43.8"
+def canonicalVersionName = "4.43.8.0-JW"
 
 def postFixSize = 10
 def abiPostFix = ['armeabi-v7a' : 1,
@@ -322,9 +322,10 @@ android {
         multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true
-        project.ext.set("archivesBaseName", "Signal");
+        project.ext.set("archivesBaseName", "Signal-Android"); /* JW: change basename */
 
-        buildConfigField "long", "BUILD_TIMESTAMP", getLastCommitTimestamp() + "L"
+        /* JW: change back to old code that works without having Git in the path, timestamp is not used anyway */
+        buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
         buildConfigField "String", "SIGNAL_URL", "\"https://textsecure-service.whispersystems.org\""
         buildConfigField "String", "SIGNAL_CDN_URL", "\"https://cdn.signal.org\""
         buildConfigField "String", "SIGNAL_CONTACT_DISCOVERY_URL", "\"https://api.directory.signal.org\""
@@ -519,6 +520,7 @@ task signProductionWebsiteRelease {
 }
 
 tasks.whenTaskAdded { task ->
+/* JW: Disable extra apk signing steps, does not work andAndroid Studio does the signing already anyway
     if (task.name.equals("assemblePlayRelease")) {
         task.finalizedBy signProductionPlayRelease
     }
@@ -526,6 +528,7 @@ tasks.whenTaskAdded { task ->
     if (task.name.equals("assembleWebsiteRelease")) {
         task.finalizedBy signProductionWebsiteRelease
     }
+*/
 }
 
 def getLastCommitTimestamp() {
