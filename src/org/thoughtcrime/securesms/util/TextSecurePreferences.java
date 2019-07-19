@@ -183,6 +183,18 @@ public class TextSecurePreferences {
 
   private static final String MEDIA_KEYBOARD_MODE = "pref_media_keyboard_mode";
 
+  public static final String PROTECTION_METHOD_PREF = "pref_signal_protection_method";
+
+  public static final String BACKUP_LOCATION_REMOVABLE_PREF = "pref_backup_location_external";
+  
+  public static boolean isProtectionMethodPassphrase(@NonNull Context context) {
+    return getBooleanPreference(context, PROTECTION_METHOD_PREF, false);
+  }
+
+  public static void setProtectionMethod(@NonNull Context context, boolean value) {
+    setBooleanPreference(context, PROTECTION_METHOD_PREF, value);
+  }
+
   public static boolean isScreenLockEnabled(@NonNull Context context) {
     return getBooleanPreference(context, SCREEN_LOCK, false);
   }
