@@ -1332,6 +1332,8 @@
     <string name="preferences_communication__sealed_sender_learn_more">Learn more</string>
     <string name="preferences_app_protection__method_passphrase">Use a passphrase</string>
     <string name="preferences_app_protection__method_passphrase_summary">Use a passphrase to protect Signal instead of the Android screenlock or fingerprint</string>
+    <string name="preferences_app_protection__screenlock_requires_lollipop">Using the system screenlock requires Android 5.0 (Lollipop) or higher.</string>
+    <string name="preferences_app_protection__android_version_too_low">Android version too low</string>
 
     <!-- **************************************** -->
     <!-- menus -->
