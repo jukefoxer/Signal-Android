@@ -242,6 +242,7 @@ public class PassphrasePromptActivity extends PassphraseActivity {
   private void setLockTypeVisibility() {
     if (TextSecurePreferences.isScreenLockEnabled(this)) {
       passphraseAuthContainer.setVisibility(View.GONE);
+      getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
       if (fingerprintManager.isHardwareDetected() && fingerprintManager.hasEnrolledFingerprints()) {
         fingerprintPrompt.setVisibility(View.VISIBLE);
@@ -252,6 +253,7 @@ public class PassphrasePromptActivity extends PassphraseActivity {
       }
     } else {
       passphraseAuthContainer.setVisibility(View.VISIBLE);
+      getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
       fingerprintPrompt.setVisibility(View.GONE);
       lockScreenButton.setVisibility(View.GONE);
     }
