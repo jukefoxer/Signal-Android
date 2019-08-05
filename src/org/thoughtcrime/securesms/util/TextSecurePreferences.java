@@ -187,6 +187,10 @@ public class TextSecurePreferences {
   
   public static final String ENABLE_PASSWORD = "pref_enable_passphrase_temporary";
 
+  private static final String REVEALABLE_MESSAGE_DEFAULT = "pref_revealable_message_default";
+
+  private static final String SEEN_CAMERA_FIRST_TOOLTIP = "pref_seen_camera_first_tooltip";
+
   public static boolean isScreenLockEnabled(@NonNull Context context) {
     return getBooleanPreference(context, SCREEN_LOCK, false);
   }
@@ -474,7 +478,7 @@ public class TextSecurePreferences {
   }
 
   public static boolean isRatingEnabled(Context context) {
-    return getBooleanPreference(context, RATING_ENABLED_PREF, true);
+    return getBooleanPreference(context, RATING_ENABLED_PREF, false);
   }
 
   public static void setRatingEnabled(Context context, boolean enabled) {
@@ -874,7 +878,7 @@ public class TextSecurePreferences {
   }
 
   public static boolean hasPromptedDefaultSmsProvider(Context context) {
-    return getBooleanPreference(context, PROMPTED_DEFAULT_SMS_PREF, false);
+    return getBooleanPreference(context, PROMPTED_DEFAULT_SMS_PREF, true);
   }
 
   public static void setPromptedDefaultSmsProvider(Context context, boolean value) {
@@ -1100,6 +1104,22 @@ public class TextSecurePreferences {
   public static MediaKeyboardMode getMediaKeyboardMode(Context context) {
     String name = getStringPreference(context, MEDIA_KEYBOARD_MODE, MediaKeyboardMode.EMOJI.name());
     return MediaKeyboardMode.valueOf(name);
+  }
+
+  public static void setIsRevealableMessageEnabled(Context context, boolean value) {
+    setBooleanPreference(context, REVEALABLE_MESSAGE_DEFAULT, value);
+  }
+
+  public static boolean isRevealableMessageEnabled(Context context) {
+    return getBooleanPreference(context, REVEALABLE_MESSAGE_DEFAULT, false);
+  }
+
+  public static void setHasSeenCameraFirstTooltip(Context context, boolean value) {
+    setBooleanPreference(context, SEEN_CAMERA_FIRST_TOOLTIP, value);
+  }
+
+  public static boolean hasSeendCameraFirstTooltip(Context context) {
+    return getBooleanPreference(context, SEEN_CAMERA_FIRST_TOOLTIP, false);
   }
 
   public static boolean isProtectionMethodPassphrase(@NonNull Context context) {

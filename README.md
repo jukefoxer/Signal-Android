@@ -1,69 +1,47 @@
-# Signal Android 
+# sig4a
 
-Signal is a messaging app for simple private communication with friends.
+[![Build Status](https://travis-ci.com/sigx/sig4a.svg?branch=master)](https://travis-ci.com/sigx/sig4a)
 
-Signal uses your phone's data connection (WiFi/3G/4G) to communicate securely, optionally supports plain SMS/MMS to function as a unified messenger, and can also encrypt the stored messages on your phone.
+> sig4a is a staging-version of [Signal](https://github.com/signalapp/Signal-Android) for Android, the fast simple secure private-messenger app by [Signal Foundation](https://signal.org).
 
-Currently available on the Play store.
+## About
 
-<a href='https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height='80px'/></a>
+This project is built by friendly volunteer quality-assurance and collaborative [loose-team](https://en.wikipedia.org/wiki/History_of_Wikipedia#Formulation_of_the_concept) skunkworks. It is an unofficial third-party effort aimed to create complete and well-tested solutions ready to submit upstream to Signal Foundation.
 
-## Contributing Bug reports
-We use GitHub for bug tracking. Please search the existing issues for your bug and create a new one if the issue is not yet tracked!
+**Here be dragons**! Although we believe they are super-awesome, contributors to sigX are not necessarily leading experts in their field, and are often enough anonymous people on the internet. This sig4a repository, sigX, and sigGesT alpha-testing-binaries *SHOULD NOT* be regarded as secure. 🐉🐉🐉
 
-https://github.com/signalapp/Signal-Android/issues
+*WIP: the following sections are work-in-progress*
 
-## Joining the Beta
-Want to live life on the bleeding edge and help out with testing?
+## Get Involved
 
-You can subscribe to Signal Android Beta releases here:
-https://play.google.com/apps/testing/org.thoughtcrime.securesms
- 
-If you're interested in a life of peace and tranquility, stick with the standard releases.
+The best way to get started in this early-phase is reading our [FAQ](https://github.com/sigx/sigX.github.io/wiki/FAQ) and participating in the unofficial forum https://community.signalusers.org.
 
-## Contributing Translations
-Interested in helping to translate Signal? Contribute here:
+## Continuous Integration
 
-https://www.transifex.com/projects/p/signal-android/
+This version is CI-ready. Sign up in travis-ci.com to enable automatic builds for sig4a in your personal repo.
 
-## Contributing Code
-Instructions on how to setup your development environment and build Signal can be found in  [BUILDING.md](https://github.com/signalapp/Signal-Android/blob/master/BUILDING.md).
+### Automatic Releases
 
-If you're new to the Signal codebase, we recommend going through our issues and picking out a simple bug to fix (check the "easy" label in our issues) in order to get yourself familiar. Also please have a look at the [CONTRIBUTING.md](https://github.com/signalapp/Signal-Android/blob/master/CONTRIBUTING.md), that might answer some of your questions.
+Tagged commits triggers a new release job in Travis CI. This job will build the APK and deploy it automatically to GitHub. The APK will be identified by the tag name, ready to be downloaded by you or your fellow testers, in the release page.
 
-For larger changes and feature ideas, we ask that you propose it on the [unofficial Community Forum](https://community.signalusers.org) for a high-level discussion with the wider community before implementation.
+This way it is not necessary anymore to install Android Studio or run gradle to start developing a new feature or bugfix.
 
-## Contributing Ideas
-Have something you want to say about Open Whisper Systems projects or want to be part of the conversation? Get involved in the [community forum](https://community.signalusers.org).
+Be sure to be set `GITHUB_TOKEN`  environment variable in Travis CI to grant write permissions to your repo to Travis.
 
-Help
-====
-## Support
-For troubleshooting and questions, please visit our support center!
+### Gradle Scans
 
-https://support.signal.org/
+To enable [build scans](https://scans.gradle.com/) for your builds, set `BUILD_SCAN=1` as an environment variable in Travis CI.
 
-## Documentation
-Looking for documentation? Check out the wiki!
+## Bugs
 
-https://github.com/signalapp/Signal-Android/wiki
+Report bugs in sig4a itself to [Issues](https://github.com/sigx/sig4a/issues).
 
-# Legal things
-## Cryptography Notice
+If you are reporting a bug for an experimental branch, written by one of the sigX participants and included in the sigGesT release, please try to read the appropriate thread in https://community.signalUsers.org forum where the participants discuss their branch.
 
-This distribution includes cryptographic software. The country in which you currently reside may have restrictions on the import, possession, use, and/or re-export to another country, of encryption software.
-BEFORE using any encryption software, please check your country's laws, regulations and policies concerning the import, possession, or use, and re-export of encryption software, to see if this is permitted.
-See <http://www.wassenaar.org/> for more information.
+If in doubt, the forum is the correct place to try first.
 
-The U.S. Government Department of Commerce, Bureau of Industry and Security (BIS), has classified this software as Export Commodity Control Number (ECCN) 5D002.C.1, which includes information security software using or performing cryptographic functions with asymmetric algorithms.
-The form and manner of this distribution makes it eligible for export under the License Exception ENC Technology Software Unrestricted (TSU) exception (see the BIS Export Administration Regulations, Section 740.13) for both object code and source code.
+## Disclaimer
 
-## License
+This project is *NOT* sponsored by Signal Messenger LLC. or Signal Foundation.
 
-Copyright 2011 Whisper Systems
-
-Copyright 2013-2017 Open Whisper Systems
-
-Licensed under the GPLv3: http://www.gnu.org/licenses/gpl-3.0.html
-
-Google Play and the Google Play logo are trademarks of Google Inc.
+The software is produced independently of Signal Messenger and carries no guarantee about quality, security or anything else. Use at your own risk.
