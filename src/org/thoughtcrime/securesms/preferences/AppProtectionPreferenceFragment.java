@@ -58,7 +58,7 @@ public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment
 
     protectionMethod = (CheckBoxPreference) this.findPreference(TextSecurePreferences.PROTECTION_METHOD_PREF);
     enableScreenLock = (CheckBoxPreference) this.findPreference(TextSecurePreferences.SCREEN_LOCK);
-    disablePassphrase = (CheckBoxPreference) this.findPreference("pref_enable_passphrase_temporary");
+    disablePassphrase = (CheckBoxPreference) this.findPreference(TextSecurePreferences.ENABLE_PASSWORD);
 
     this.findPreference(TextSecurePreferences.REGISTRATION_LOCK_PREF).setOnPreferenceClickListener(new AccountLockClickListener());
     this.findPreference(TextSecurePreferences.SCREEN_LOCK).setOnPreferenceChangeListener(new ScreenLockListener());
@@ -85,6 +85,14 @@ public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment
     addPreferencesFromResource(R.xml.preferences_app_protection);
   }
 
+  private boolean isPassphraseSelected() {
+    // Because this preference may be undefined when this app is first ran we also check if there is a passphrase
+    // defined, if so, we assume passphrase protection:
+    return TextSecurePreferences.isProtectionMethodPassphrase(getContext()) ||
+      (TextSecurePreferences.getBooleanPreference(getContext(), TextSecurePreferences.ENABLE_PASSWORD, false) &&
+       !TextSecurePreferences.isPasswordDisabled(getContext()));
+  }
+
   @Override
   public void onResume() {
     super.onResume();
@@ -94,13 +102,7 @@ public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment
     else                                                         initializeScreenLockTimeoutSummary();
 
     disablePassphrase.setChecked(!TextSecurePreferences.isPasswordDisabled(getActivity()));
-    // Set the choice between passphrase and Android screenlock. Because this preference
-    // may be undefined when this app is first ran we also check if there is a passphrase
-    // defined, if so, we assume passphrase protection:
-    boolean selectPassphrase = TextSecurePreferences.isProtectionMethodPassphrase(getContext()) ||
-      (TextSecurePreferences.getBooleanPreference(getContext(), "pref_enable_passphrase_temporary", false) &&
-       !TextSecurePreferences.isPasswordDisabled(getContext()));
-    protectionMethod.setChecked(selectPassphrase);
+    protectionMethod.setChecked(isPassphraseSelected());
   }
 
   private void initializePassphraseTimeoutSummary() {
@@ -121,16 +123,11 @@ public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment
   }
 
   private void initializeVisibility() {
-    // JW:
-    boolean selectPassphrase = TextSecurePreferences.isProtectionMethodPassphrase(getContext()) ||
-      (TextSecurePreferences.getBooleanPreference(getContext(), "pref_enable_passphrase_temporary", false) &&
-       !TextSecurePreferences.isPasswordDisabled(getContext()));
-
-    if (!selectPassphrase) {
+    if (!isPassphraseSelected()) {
       findPreference(TextSecurePreferences.SCREEN_LOCK).setVisible(true);
       findPreference(TextSecurePreferences.SCREEN_LOCK_TIMEOUT).setVisible(true);
 
-      findPreference("pref_enable_passphrase_temporary").setVisible(false);
+      findPreference(TextSecurePreferences.ENABLE_PASSWORD).setVisible(false);
       findPreference(TextSecurePreferences.CHANGE_PASSPHRASE_PREF).setVisible(false);
       findPreference(TextSecurePreferences.PASSPHRASE_TIMEOUT_INTERVAL_PREF).setVisible(false);
       findPreference(TextSecurePreferences.PASSPHRASE_TIMEOUT_PREF).setVisible(false);
@@ -141,7 +138,7 @@ public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment
         findPreference(TextSecurePreferences.SCREEN_LOCK).setEnabled(false);
       }
     } else {
-      findPreference("pref_enable_passphrase_temporary").setVisible(true); // JW
+      findPreference(TextSecurePreferences.ENABLE_PASSWORD).setVisible(true);
       findPreference(TextSecurePreferences.CHANGE_PASSPHRASE_PREF).setVisible(true);
       findPreference(TextSecurePreferences.PASSPHRASE_TIMEOUT_INTERVAL_PREF).setVisible(true);
       findPreference(TextSecurePreferences.PASSPHRASE_TIMEOUT_PREF).setVisible(true);
@@ -306,6 +303,19 @@ public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment
     }
   }
 
+  private void DisablePassphrase(Context context, Preference preference) {
+    MasterSecretUtil.changeMasterSecretPassphrase(context,
+                                                  KeyCachingService.getMasterSecret(getContext()),
+                                                  MasterSecretUtil.UNENCRYPTED_PASSPHRASE);
+
+    TextSecurePreferences.setPasswordDisabled(context, true);
+    ((CheckBoxPreference)preference).setChecked(false);
+
+    Intent intent = new Intent(context, KeyCachingService.class);
+    intent.setAction(KeyCachingService.DISABLE_ACTION);
+    getActivity().startService(intent);
+  }
+
   private class DisablePassphraseClickListener implements Preference.OnPreferenceChangeListener {
 
     @Override
@@ -316,17 +326,7 @@ public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment
         builder.setMessage(R.string.ApplicationPreferencesActivity_this_will_permanently_unlock_signal_and_message_notifications);
         builder.setIconAttribute(R.attr.dialog_alert_icon);
         builder.setPositiveButton(R.string.ApplicationPreferencesActivity_disable, (dialog, which) -> {
-          MasterSecretUtil.changeMasterSecretPassphrase(getActivity(),
-                                                        KeyCachingService.getMasterSecret(getContext()),
-                                                        MasterSecretUtil.UNENCRYPTED_PASSPHRASE);
-
-          TextSecurePreferences.setPasswordDisabled(getActivity(), true);
-          ((CheckBoxPreference)preference).setChecked(false);
-
-          Intent intent = new Intent(getActivity(), KeyCachingService.class);
-          intent.setAction(KeyCachingService.DISABLE_ACTION);
-          getActivity().startService(intent);
-
+          DisablePassphrase(getActivity(), preference);
           initializeVisibility();
         });
         builder.setNegativeButton(android.R.string.cancel, null);
@@ -349,20 +349,11 @@ public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment
 
       // After togggle, we disable both passphrase and Android keylock.
       // Remove the passphrase if there is one set
-      if (TextSecurePreferences.getBooleanPreference(getContext(), "pref_enable_passphrase_temporary", false))
-      {
-        MasterSecretUtil.changeMasterSecretPassphrase(getActivity(),
-          KeyCachingService.getMasterSecret(getContext()),
-          MasterSecretUtil.UNENCRYPTED_PASSPHRASE);
-
-        TextSecurePreferences.setPasswordDisabled(getActivity(), true);
-
-        Intent intent = new Intent(getActivity(), KeyCachingService.class);
-        intent.setAction(KeyCachingService.DISABLE_ACTION);
-        getActivity().startService(intent);
+      if (TextSecurePreferences.getBooleanPreference(getContext(), TextSecurePreferences.ENABLE_PASSWORD, false)) {
+        DisablePassphrase(getActivity(), preference);
       }
 
-      TextSecurePreferences.setBooleanPreference(getContext(), "pref_enable_passphrase_temporary", false);
+      TextSecurePreferences.setBooleanPreference(getContext(), TextSecurePreferences.ENABLE_PASSWORD, false);
       TextSecurePreferences.setPasswordDisabled(getActivity(), true);
       disablePassphrase.setChecked(false);
 
@@ -381,7 +372,7 @@ public class AppProtectionPreferenceFragment extends CorrectedPreferenceFragment
     public boolean onPreferenceChange(Preference preference, Object newValue) {
       boolean screenlockEnabled = (boolean) newValue;
 
-      if (Build.VERSION.SDK_INT >= 21) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         TextSecurePreferences.setScreenLockEnabled(getContext(), screenlockEnabled);
         enableScreenLock.setChecked(screenlockEnabled);
       }

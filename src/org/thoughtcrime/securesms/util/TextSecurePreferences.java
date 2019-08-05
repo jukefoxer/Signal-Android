@@ -185,13 +185,7 @@ public class TextSecurePreferences {
 
   public static final String PROTECTION_METHOD_PREF = "pref_signal_protection_method";
   
-  public static boolean isProtectionMethodPassphrase(@NonNull Context context) {
-    return getBooleanPreference(context, PROTECTION_METHOD_PREF, false);
-  }
-
-  public static void setProtectionMethod(@NonNull Context context, boolean value) {
-    setBooleanPreference(context, PROTECTION_METHOD_PREF, value);
-  }
+  public static final String ENABLE_PASSWORD = "pref_enable_passphrase_temporary";
 
   public static boolean isScreenLockEnabled(@NonNull Context context) {
     return getBooleanPreference(context, SCREEN_LOCK, false);
@@ -1106,6 +1100,14 @@ public class TextSecurePreferences {
   public static MediaKeyboardMode getMediaKeyboardMode(Context context) {
     String name = getStringPreference(context, MEDIA_KEYBOARD_MODE, MediaKeyboardMode.EMOJI.name());
     return MediaKeyboardMode.valueOf(name);
+  }
+
+  public static boolean isProtectionMethodPassphrase(@NonNull Context context) {
+    return getBooleanPreference(context, PROTECTION_METHOD_PREF, false);
+  }
+
+  public static void setProtectionMethod(@NonNull Context context, boolean value) {
+    setBooleanPreference(context, PROTECTION_METHOD_PREF, value);
   }
 
   public static void setBooleanPreference(Context context, String key, boolean value) {
