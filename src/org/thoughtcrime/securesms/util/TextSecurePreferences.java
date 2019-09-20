@@ -193,25 +193,32 @@ public class TextSecurePreferences {
   public static final String PROTECTION_METHOD_PREF = "pref_signal_protection_method";
   // JW: added: true = backup to removable SD card (if available), false = backup to internal sd card
   public static final String BACKUP_LOCATION_REMOVABLE_PREF = "pref_backup_location_external";
+  // JW: added to use encrypted zipfiles to store raw backups
+  public static final String BACKUP_STORE_ZIPFILE_PREF = "pref_backup_zipfile";
 
   // JW: added for PROTECTION_METHOD_PREF
   public static boolean isProtectionMethodPassphrase(@NonNull Context context) {
     return getBooleanPreference(context, PROTECTION_METHOD_PREF, false);
   }
-
   // JW added
   public static void setProtectionMethod(@NonNull Context context, boolean value) {
     setBooleanPreference(context, PROTECTION_METHOD_PREF, value);
   }
-
   // JW added
   public static void setBackupLocationRemovable(@NonNull Context context, boolean value) {
     setBooleanPreference(context, BACKUP_LOCATION_REMOVABLE_PREF, value);
   }
-
   // JW added. Default to false so default does the same as official Signal.
   public static boolean isBackupLocationRemovable(@NonNull Context context) {
     return getBooleanPreference(context, BACKUP_LOCATION_REMOVABLE_PREF, false);
+  }
+  // JW added.
+  public static boolean isRawBackupInZipfile(@NonNull Context context) {
+    return getBooleanPreference(context, BACKUP_STORE_ZIPFILE_PREF, false);
+  }
+  // JW added.
+  public static void setRawBackupZipfile(@NonNull Context context, boolean value) {
+    setBooleanPreference(context, BACKUP_STORE_ZIPFILE_PREF, value);
   }
 
   public static boolean isScreenLockEnabled(@NonNull Context context) {

@@ -19,6 +19,7 @@ package org.thoughtcrime.securesms.database;
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
+
 import androidx.annotation.NonNull;
 
 import org.thoughtcrime.securesms.crypto.AttachmentSecret;
@@ -30,6 +31,7 @@ import org.thoughtcrime.securesms.crypto.KeyStoreHelper;
 import org.thoughtcrime.securesms.logging.Log;
 import org.thoughtcrime.securesms.util.Base64;
 import org.thoughtcrime.securesms.util.JsonUtils;
+import org.thoughtcrime.securesms.util.StorageUtil;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
 
 import java.io.BufferedReader;
@@ -43,7 +45,13 @@ import java.lang.String;
 import java.nio.channels.FileChannel;
 import java.security.SecureRandom;
 
-import com.annimon.stream.Stream;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.model.enums.AesKeyStrength;
+import net.lingala.zip4j.model.enums.EncryptionMethod;
+import net.lingala.zip4j.model.enums.CompressionLevel;
+import net.lingala.zip4j.model.enums.CompressionMethod;
 
 
 public class EncryptedBackupExporter {
@@ -68,9 +76,21 @@ public class EncryptedBackupExporter {
     String bks = BackupPassphrase.get(context);
     exportDirectory(context, "");
     exportSecrets(context, dbs, ats, lgs, bks);
+    if (TextSecurePreferences.isRawBackupInZipfile(context)) {
+      File test = new File(getEncryptedZipfileName());
+      if (test.exists()) {
+        test.delete();
+      }
+      createEncryptedZipfile(context);
+      deleteRawBackupFiles(context);
+    }
   }
 
   public static void importFromSd(Context context) throws NoExternalStorageException, IOException {
+    // Extract the zipfile
+    if (TextSecurePreferences.isRawBackupInZipfile(context)) {
+      extractEncryptedZipfile(context);
+    }
     verifyExternalStorageForImport(context);
     DatabaseSecret dbs = getDatabaseSecretFromBackup(context);
     AttachmentSecret ats = getAttachmentSecretFromBackup(context);
@@ -88,6 +108,9 @@ public class EncryptedBackupExporter {
     }
     if (bks != null) {
 	    BackupPassphrase.set(context, bks);
+    }
+    if (TextSecurePreferences.isRawBackupInZipfile(context)) {
+      deleteRawBackupFiles(context);
     }
   }
 
@@ -108,28 +131,13 @@ public class EncryptedBackupExporter {
   }
 
   private static String getExportBaseDirectory(Context context) {
-//    File sdDirectory  = Environment.getExternalStorageDirectory();
-//    return sdDirectory.getAbsolutePath();
-    File storage = null;
-
-    if (TextSecurePreferences.isBackupLocationRemovable(context)) {
-      if (Build.VERSION.SDK_INT >= 19) {
-        File[] directories = context.getExternalFilesDirs(null);
-
-        if (directories != null) {
-          storage = Stream.of(directories)
-                          .withoutNulls()
-                          .filterNot(f -> f.getAbsolutePath().contains("emulated"))
-                          .limit(1)
-                          .findSingle()
-                          .orElse(null);
-        }
-      }
+    String basedir = Environment.getExternalStorageDirectory().getAbsolutePath();
+    try {
+      basedir = StorageUtil.getRawBackupDirectory().getAbsolutePath();
+    } catch (NoExternalStorageException e) {
+      Log.w(TAG, "getExportBaseDirectory failed: " + e.toString());
     }
-    if (storage == null) {
-      storage = Environment.getExternalStorageDirectory();
-    }
-    return storage.getAbsolutePath();
+    return basedir;
   }
 
   private static String getExportSecretsDirectory(Context context) {
@@ -190,6 +198,8 @@ public class EncryptedBackupExporter {
 
           // Don't export the libraries
           if ( localFile.getAbsolutePath().contains("libcurve25519.so") ||
+               localFile.getAbsolutePath().contains("libaesgcm.so") ||
+               localFile.getAbsolutePath().contains("libconscrypt_jni.so") ||
                localFile.getAbsolutePath().contains("libnative-utils.so") ||
                localFile.getAbsolutePath().contains("libjingle_peerconnection_so.so") ||
                localFile.getAbsolutePath().contains("libsqlcipher.so") ) {
@@ -428,5 +438,77 @@ public class EncryptedBackupExporter {
     }
 
     return secret;
+  }
+
+  //------------------------------------------------------------------------------------------------
+  // Handle backups in encrypted zipfiles
+  private static boolean createEncryptedZipfile(Context context) {
+    String password = BackupPassphrase.get(context);
+    if (password == null) {
+      Log.w(TAG, "createEncryptedZipfile: empty zipfile password");
+      password = "";
+    }
+    // Plaintext storage of password contains spaces
+    password = password.replace(" ", "");
+    try {
+      ZipParameters parameters = new ZipParameters();
+      parameters.setCompressionMethod(CompressionMethod.DEFLATE);
+      parameters.setCompressionLevel(CompressionLevel.NORMAL);
+      parameters.setEncryptFiles(true);
+      parameters.setEncryptionMethod(EncryptionMethod.AES);
+      parameters.setAesKeyStrength(AesKeyStrength.KEY_STRENGTH_256);
+      ZipFile zipFile = new ZipFile(getEncryptedZipfileName(), password.toCharArray());
+      zipFile.addFolder(new File(getExportSecretsDirectory(context)), parameters);
+      zipFile.addFolder(new File(getExportDirectoryPath(context)), parameters);
+    } catch (ZipException e) {
+      Log.w(TAG, "createEncryptedZipfile failed: " + e.toString());
+      return false;
+    }
+    return true;
+  }
+
+  private static boolean extractEncryptedZipfile(Context context) {
+    String password = BackupPassphrase.get(context);
+    if (password == null) {
+      Log.w(TAG, "createEncryptedZipfile: empty zipfile password");
+      password = "";
+    }
+    // Plaintext storage of password contains spaces
+    password = password.replace(" ", "");
+    try {
+      ZipFile zipFile = new ZipFile(getEncryptedZipfileName());
+      if (zipFile.isEncrypted()) {
+        zipFile.setPassword(password.toCharArray());
+      }
+      zipFile.extractAll(StorageUtil.getRawBackupDirectory().getAbsolutePath());
+    } catch (Exception e) {
+      Log.w(TAG, "extractEncryptedZipfile failed: " + e.toString());
+      return false;
+    }
+    return true;
+  }
+
+  // Delete the exported contents of the data dir and the unencrypted keys.
+  private static void deleteRawBackupFiles(Context context) {
+    deleteRecursive(new File(getExportSecretsDirectory(context)));// TODO: securely delete these files
+    deleteRecursive(new File(getExportDirectoryPath(context)));
+  }
+
+  private static void deleteRecursive(File fileOrDirectory) {
+    if (fileOrDirectory.isDirectory())
+      for (File child : fileOrDirectory.listFiles())
+        deleteRecursive(child);
+
+    fileOrDirectory.delete();
+  }
+
+  private static String getEncryptedZipfileName() {
+    try {
+      String backupPath = StorageUtil.getRawBackupDirectory().getAbsolutePath();
+      return backupPath + File.separator + "SignalExport.zip";
+    } catch (NoExternalStorageException e) {
+      Log.w(TAG, "getEncryptedZipfileName failed: " + e.toString());
+      return Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
   }
 }

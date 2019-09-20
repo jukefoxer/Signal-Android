@@ -75,7 +75,7 @@ public class PlaintextBackupImporter {
   }
 
   private static File getPlaintextExportFile() throws NoExternalStorageException {
-    File backup         = new File(StorageUtil.getBackupDirectory(), "SignalPlaintextBackup.xml");
+    File backup         = new File(StorageUtil.getBackupPlaintextDirectory(), "SignalPlaintextBackup.xml");
     File previousBackup = new File(StorageUtil.getLegacyBackupDirectory(), "SignalPlaintextBackup.xml");
     File oldBackup      = new File(Environment.getExternalStorageDirectory(), "TextSecurePlaintextBackup.xml");
 

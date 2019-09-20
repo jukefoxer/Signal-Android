@@ -54,6 +54,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'net.lingala.zip4j:zip4j:2.1.4' // JW: added
     implementation 'androidx.appcompat:appcompat:1.1.0-beta01'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
@@ -293,7 +294,7 @@ dependencyVerification {
 }
 
 def canonicalVersionCode = 528
-def canonicalVersionName = "4.47.6.0-JW"
+def canonicalVersionName = "4.47.6.1-JW"
 
 def postFixSize = 10
 def abiPostFix = ['armeabi-v7a' : 1,
