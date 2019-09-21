@@ -443,21 +443,19 @@ public class EncryptedBackupExporter {
   //------------------------------------------------------------------------------------------------
   // Handle backups in encrypted zipfiles
   private static boolean createEncryptedZipfile(Context context) {
-    String password = BackupPassphrase.get(context);
-    if (password == null) {
-      Log.w(TAG, "createEncryptedZipfile: empty zipfile password");
-      password = "";
-    }
-    // Plaintext storage of password contains spaces
-    password = password.replace(" ", "");
+    String password = getBackupPassword(context);
+    ZipFile zipFile = new ZipFile(getEncryptedZipfileName());
+
     try {
       ZipParameters parameters = new ZipParameters();
-      parameters.setCompressionMethod(CompressionMethod.DEFLATE);
-      parameters.setCompressionLevel(CompressionLevel.NORMAL);
-      parameters.setEncryptFiles(true);
-      parameters.setEncryptionMethod(EncryptionMethod.AES);
-      parameters.setAesKeyStrength(AesKeyStrength.KEY_STRENGTH_256);
-      ZipFile zipFile = new ZipFile(getEncryptedZipfileName(), password.toCharArray());
+      parameters.setCompressionMethod(CompressionMethod.STORE); // Encrypted data is uncompressable anyway
+      //parameters.setCompressionLevel(CompressionLevel.FASTEST);
+      if (password.length() > 0 ) {
+        parameters.setEncryptFiles(true);
+        parameters.setEncryptionMethod(EncryptionMethod.AES);
+        parameters.setAesKeyStrength(AesKeyStrength.KEY_STRENGTH_256);
+        zipFile.setPassword(password.toCharArray());
+      }
       zipFile.addFolder(new File(getExportSecretsDirectory(context)), parameters);
       zipFile.addFolder(new File(getExportDirectoryPath(context)), parameters);
     } catch (ZipException e) {
@@ -467,14 +465,24 @@ public class EncryptedBackupExporter {
     return true;
   }
 
-  private static boolean extractEncryptedZipfile(Context context) {
-    String password = BackupPassphrase.get(context);
-    if (password == null) {
-      Log.w(TAG, "createEncryptedZipfile: empty zipfile password");
-      password = "";
+  // Get the password of the regular backup. If there is no regular backup set, return an empty string.
+  private static String getBackupPassword(Context context) {
+    String password = "";
+    if (TextSecurePreferences.isBackupEnabled(context)) {
+      password = BackupPassphrase.get(context);
+      if (password == null) {
+        Log.w(TAG, "createEncryptedZipfile: empty zipfile password");
+        password = "";
+      }
+      // Plaintext storage of password contains spaces
+      password = password.replace(" ", "");
     }
-    // Plaintext storage of password contains spaces
-    password = password.replace(" ", "");
+    return password;
+  }
+
+  private static boolean extractEncryptedZipfile(Context context) {
+    String password = getBackupPassword(context);
+
     try {
       ZipFile zipFile = new ZipFile(getEncryptedZipfileName());
       if (zipFile.isEncrypted()) {

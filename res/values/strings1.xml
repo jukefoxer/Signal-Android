@@ -19,8 +19,7 @@
 
     <!--backup zipfile or not-->
     <string name="preferences_chats__chat_backups_zipfile">Store encrypted backups in zipfile</string>
-    <string name="preferences_chats__backup_chats_to_encrypted_zipfile">The zipfile will be encrypted with the same password as the regular backups</string>
-
+    <string name="preferences_chats__backup_chats_to_encrypted_zipfile">The zipfile will be encrypted with the same password as the regular backups, or no password if regular backup is not set</string>
 
     <!-- ImportExportActivity -->
     <string name="ImportExportActivity_import">Import</string>
