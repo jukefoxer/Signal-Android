@@ -206,6 +206,7 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
     case R.id.menu_settings:          handleDisplaySettings(); return true;
     case R.id.menu_clear_passphrase:  handleClearPassphrase(); return true;
     case R.id.menu_mark_all_read:     handleMarkAllRead();     return true;
+    case R.id.menu_import_export:     handleImportExport();    return true; // JW: added
     case R.id.menu_invite:            handleInvite();          return true;
     case R.id.menu_help:              handleHelp();            return true;
     }
@@ -260,6 +261,11 @@ public class ConversationListActivity extends PassphraseRequiredActionBarActivit
     Intent intent = new Intent(this, KeyCachingService.class);
     intent.setAction(KeyCachingService.CLEAR_KEY_ACTION);
     startService(intent);
+  }
+
+  // JW: added
+  private void handleImportExport() {
+    startActivity(new Intent(this, ImportExportActivity.class));
   }
 
   @SuppressLint("StaticFieldLeak")

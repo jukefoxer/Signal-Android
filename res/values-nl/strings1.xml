@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <!--arrays.xml-->
+  <string name="arrays__import_export_orig">Importeren / exporteren</string>
+    <!-- preferences.xml -->
+    <string name="preferences__oled_theme">OLED Donker</string>
+    <string name="preferences__green_theme">Groen Licht</string>
+  <!--app protection-->
+  <string name="preferences_app_protection__method_passphrase">Gebruik een wachtwoord</string>
+  <string name="preferences_app_protection__method_passphrase_summary">Gebruik een wachtwoord om Signal te beveiligen in plaats van de standaard Android schermbeveiliging of vingerafdruk</string>
+  <string name="preferences_app_protection__screenlock_requires_lollipop">Het gebruik van de schermbeveiliging vereist Android 5.0 (Lollipop) of hoger.</string>
+  <string name="preferences_app_protection__android_version_too_low">Android te laag</string>
+  <!--backup location-->
+  <string name="preferences_chats__chat_backups_removable">Backup locatie</string>
+  <string name="preferences_chats__backup_chats_to_removable_storage">Backup chats naar de SD-kaart (indien aanwezig)</string>
+  <!--backup zipfile or not-->
+  <string name="preferences_chats__chat_backups_zipfile">Versleutelde backups in zipfile opslaan</string>
+  <string name="preferences_chats__backup_chats_to_encrypted_zipfile">De zipfile wordt versleuteld met hetzelfde password als de reguliere backup, of geen indien geen regulierebackup geconfigureerd</string>
+  <!--ImportFragment-->
+  <string name="ImportFragment_restore_encrypted_backup">Versleutelde backup herstellen?</string>
+  <string name="ImportFragment_restoring_an_encrypted_backup_will_completely_replace_your_existing_keys">
+Herstellen van een versleutelde back-up zal je bestaande sleutels, voorkeuren en berichten volledig vervangen. Je zult alle informatie verliezen die wel in je huidige Signal-installatie zit, maar niet in de back-up.</string>
+  <string name="ImportFragment_restore">Herstellen</string>
+  <string name="ImportFragment_restoring">Herstellen</string>
+  <string name="ImportFragment_restoring_encrypted_backup">Versleutelde backup herstellen...</string>
+  <string name="ImportFragment_no_encrypted_backup_found">Geen versleutelde back-up gevonden!</string>
+  <string name="ImportFragment_restore_complete">Herstellen voltooid!</string>
+  <string name="ImportFragment_restore_ok">OK</string>
+  <!--ExportFragment-->
+  <string name="ExportFragment_export_to_sd_card">Opslaan op SD-kaart?</string>
+  <string name="ExportFragment_this_will_export_your_encrypted_keys_settings_and_messages">Dit exporteert je keys, instellingen en berichten versleuteld naar de SD-kaart</string>
+  <string name="ExportFragment_exporting_keys_settings_and_messages">Keys, instellingen en berichten versleuteld naar de SD-kaart aan het exporteren...</string>
+   <!--database_upgrade_activity-->
+  <string name="export_fragment__export_encrypted_backup">Exporteer Versleutelde Back-up</string>
+  <string name="export_fragment__export_an_encrypted_backup_to_the_sd_card">Export een versleutelde back-up naar de SD-kaart.</string>
+  <string name="import_fragment__restore_encrypted_backup">Versleutelde back-up herstellen</string>
+  <string name="import_fragment__restore_a_previously_exported_encrypted_signal_backup">Herstel een eerder geëxporteerde versleutelde back-up van Signal</string>
+    <!-- RegistrationActivity -->
+    <string name="registration_activity__restore_encrypted_backup">Versleutelde backup terugzetten</string>
+</resources>
