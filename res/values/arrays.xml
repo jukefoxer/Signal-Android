@@ -33,7 +33,6 @@
       <item>Kiswahili</item>
       <item>Korean 한국어</item>
       <item>Kurdí</item>
-      <item>Latviešu</item>
       <item>Lietuvių</item>
       <item>Luganda</item>
       <item>Magyar</item>
@@ -94,7 +93,6 @@
       <item>sw</item>
       <item>ko</item>
       <item>ku</item>
-      <item>lv</item>
       <item>lt</item>
       <item>lg</item>
       <item>hu</item>
@@ -123,14 +121,20 @@
       <item>vi</item>
   </string-array>
 
+  <!-- JW: added themes -->
     <string-array name="pref_theme_entries">
       <item>@string/preferences__light_theme</item>
       <item>@string/preferences__dark_theme</item>
+      <item>@string/preferences__oled_theme</item>
+      <item>@string/preferences__green_theme</item>
   </string-array>
 
+  <!-- JW: added themes -->
   <string-array name="pref_theme_values" translatable="false">
       <item>light</item>
       <item>dark</item>
+      <item>oled</item>
+      <item>green</item>
   </string-array>
 
   <string-array name="pref_led_color_entries">
