@@ -16,7 +16,32 @@ import static org.webrtc.ContextUtils.getApplicationContext;
 
 public class StorageUtil {
 
+  // JW: split backup directories per type because otherwise some files might get unintentionally deleted
   public static File getBackupDirectory() throws NoExternalStorageException {
+    return getBackupTypeDirectory("Backups");
+  }
+
+  public static File getBackupPlaintextDirectory() throws NoExternalStorageException {
+    return getBackupTypeDirectory("PlaintextBackups");
+  }
+
+  public static File getRawBackupDirectory() throws NoExternalStorageException {
+    return getBackupTypeDirectory("FullBackups");
+  }
+
+  private static File getBackupTypeDirectory(String backupType) throws NoExternalStorageException {
+    File signal = getBackupBaseDirectory();
+    File backups = new File(signal, backupType);
+
+    if (!backups.exists()) {
+      if (!backups.mkdirs()) {
+        throw new NoExternalStorageException("Unable to create backup directory...");
+      }
+    }
+    return backups;
+  }
+
+  public static File getBackupBaseDirectory() throws NoExternalStorageException {
     // JW: changed. We now check if the removable storage is prefered. If it is
     // and it is not available we fallback to internal storage.
     Context context = getApplicationContext(); // Ugly but this prevents me from changing some other files as well.
@@ -46,14 +71,8 @@ public class StorageUtil {
     }
 
     File signal = new File(storage, "Signal");
-    File backups = new File(signal, "Backups");
-
-    if (!backups.exists()) {
-      if (!backups.mkdirs()) {
-        throw new NoExternalStorageException("Unable to create backup directory...");
-      }
-    }
-    return backups;
+    // JW: changed
+    return signal;
   }
 
   public static File getBackupCacheDirectory(Context context) {

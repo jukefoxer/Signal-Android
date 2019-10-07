@@ -8,6 +8,9 @@
   <!--backup location-->
   <string name="preferences_chats__chat_backups_removable">Backup locatie</string>
   <string name="preferences_chats__backup_chats_to_removable_storage">Backup chats naar de SD-kaart (indien aanwezig)</string>
+  <!--backup zipfile or not-->
+  <string name="preferences_chats__chat_backups_zipfile">Versleutelde backups in zipfile opslaan</string>
+  <string name="preferences_chats__backup_chats_to_encrypted_zipfile">De zipfile wordt versleuteld met hetzelfde password als de reguliere backup, of geen indien geen regulierebackup geconfigureerd</string>
   <!--ImportFragment-->
   <string name="ImportFragment_restore_encrypted_backup">Versleutelde back-up herstellen?</string>
   <string name="ImportFragment_restoring_an_encrypted_backup_will_completely_replace_your_existing_keys">

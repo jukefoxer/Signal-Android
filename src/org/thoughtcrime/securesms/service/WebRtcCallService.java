@@ -564,6 +564,32 @@ public class WebRtcCallService extends Service implements InjectableType,
     });
   }
 
+  private void activateCallMedia() {
+    audioManager.startCommunication(callState == CallState.STATE_REMOTE_RINGING);
+    bluetoothStateManager.setWantsConnection(true);
+
+    callState = CallState.STATE_CONNECTED;
+
+    if (localCameraState.isEnabled()) lockManager.updatePhoneState(LockManager.PhoneState.IN_VIDEO);
+    else                              lockManager.updatePhoneState(LockManager.PhoneState.IN_CALL);
+
+    sendMessage(WebRtcViewModel.State.CALL_CONNECTED, recipient, localCameraState, remoteVideoEnabled, bluetoothAvailable, microphoneEnabled);
+
+    unregisterPowerButtonReceiver();
+
+    setCallInProgressNotification(TYPE_ESTABLISHED, recipient);
+
+    this.peerConnection.setCommunicationMode();
+    this.peerConnection.setAudioEnabled(microphoneEnabled);
+    this.peerConnection.setVideoEnabled(localCameraState.isEnabled());
+
+    this.dataChannel.send(new DataChannel.Buffer(ByteBuffer.wrap(Data.newBuilder()
+                                                                     .setVideoStreamingStatus(WebRtcDataProtos.VideoStreamingStatus.newBuilder()
+                                                                                                                                   .setId(this.callId)
+                                                                                                                                   .setEnabled(localCameraState.isEnabled()))
+                                                                     .build().toByteArray()), false));
+  }
+
   private void handleIceConnected(Intent intent) {
     if (callState == CallState.STATE_ANSWERING) {
       if (this.recipient == null) throw new AssertionError("assert");
@@ -597,7 +623,7 @@ public class WebRtcCallService extends Service implements InjectableType,
   }
 
   private void handleCallConnected(Intent intent) {
-    if (callState != CallState.STATE_REMOTE_RINGING && callState != CallState.STATE_LOCAL_RINGING) {
+    if (callState != CallState.STATE_REMOTE_RINGING) {
       Log.w(TAG, "Ignoring call connected for unknown state: " + callState);
       return;
     }
@@ -611,29 +637,7 @@ public class WebRtcCallService extends Service implements InjectableType,
       throw new AssertionError("assert");
     }
 
-    audioManager.startCommunication(callState == CallState.STATE_REMOTE_RINGING);
-    bluetoothStateManager.setWantsConnection(true);
-
-    callState = CallState.STATE_CONNECTED;
-
-    if (localCameraState.isEnabled()) lockManager.updatePhoneState(LockManager.PhoneState.IN_VIDEO);
-    else                              lockManager.updatePhoneState(LockManager.PhoneState.IN_CALL);
-
-    sendMessage(WebRtcViewModel.State.CALL_CONNECTED, recipient, localCameraState, remoteVideoEnabled, bluetoothAvailable, microphoneEnabled);
-
-    unregisterPowerButtonReceiver();
-
-    setCallInProgressNotification(TYPE_ESTABLISHED, recipient);
-
-    this.peerConnection.setCommunicationMode();
-    this.peerConnection.setAudioEnabled(microphoneEnabled);
-    this.peerConnection.setVideoEnabled(localCameraState.isEnabled());
-
-    this.dataChannel.send(new DataChannel.Buffer(ByteBuffer.wrap(Data.newBuilder()
-                                                                     .setVideoStreamingStatus(WebRtcDataProtos.VideoStreamingStatus.newBuilder()
-                                                                                                                                   .setId(this.callId)
-                                                                                                                                   .setEnabled(localCameraState.isEnabled()))
-                                                                     .build().toByteArray()), false));
+    activateCallMedia();
   }
 
   private void handleBusyCall(Intent intent) {
@@ -732,9 +736,7 @@ public class WebRtcCallService extends Service implements InjectableType,
     this.peerConnection.setVideoEnabled(true);
     this.dataChannel.send(new DataChannel.Buffer(ByteBuffer.wrap(Data.newBuilder().setConnected(Connected.newBuilder().setId(this.callId)).build().toByteArray()), false));
 
-    intent.putExtra(EXTRA_CALL_ID, callId);
-    intent.putExtra(EXTRA_REMOTE_ADDRESS, recipient.getAddress());
-    handleCallConnected(intent);
+    activateCallMedia();
   }
 
   private void handleDenyCall(Intent intent) {

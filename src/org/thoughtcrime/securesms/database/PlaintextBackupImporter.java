@@ -75,10 +75,14 @@ public class PlaintextBackupImporter {
   }
 
   private static File getPlaintextExportFile() throws NoExternalStorageException {
-    File backup    = new File(StorageUtil.getLegacyBackupDirectory(), "SignalPlaintextBackup.xml");
-    File oldBackup = new File(Environment.getExternalStorageDirectory(), "TextSecurePlaintextBackup.xml");
+    File backup         = new File(StorageUtil.getBackupPlaintextDirectory(), "SignalPlaintextBackup.xml");
+    File previousBackup = new File(StorageUtil.getLegacyBackupDirectory(), "SignalPlaintextBackup.xml");
+    File oldBackup      = new File(Environment.getExternalStorageDirectory(), "TextSecurePlaintextBackup.xml");
 
-    return !backup.exists() && oldBackup.exists() ? oldBackup : backup;
+    if (backup.exists()) return backup;
+    else if (previousBackup.exists()) return previousBackup;
+    else if (oldBackup.exists()) return oldBackup;
+    else return backup;
   }
 
   @SuppressWarnings("SameParameterValue")

@@ -57,6 +57,7 @@ repositories {
 dependencies {
     def supportVersion = '28.0.0'
 
+    compile 'net.lingala.zip4j:zip4j:2.2.2' // JW: added
     compile "com.android.support:appcompat-v7:$supportVersion"
     compile "com.android.support:recyclerview-v7:$supportVersion"
     compile "com.android.support:design:$supportVersion"
@@ -298,7 +299,7 @@ android {
 
     defaultConfig {
         versionCode 470
-        versionName "4.36.2.0-JW"
+        versionName "4.36.2.1-JW"
 
         minSdkVersion 14
         targetSdkVersion 26

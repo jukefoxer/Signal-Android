@@ -20,7 +20,7 @@ public class PlaintextBackupExporter {
   }
 
   public static File getPlaintextExportFile() throws NoExternalStorageException {
-    return new File(StorageUtil.getLegacyBackupDirectory(), FILENAME);
+    return new File(StorageUtil.getBackupPlaintextDirectory(), FILENAME);
   }
 
   private static void exportPlaintext(Context context)

@@ -30,6 +30,7 @@ import org.thoughtcrime.securesms.crypto.KeyStoreHelper;
 import org.thoughtcrime.securesms.logging.Log;
 import org.thoughtcrime.securesms.util.Base64;
 import org.thoughtcrime.securesms.util.JsonUtils;
+import org.thoughtcrime.securesms.util.StorageUtil;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
 
 import java.io.BufferedReader;
@@ -39,11 +40,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.RandomAccessFile;
 import java.lang.String;
 import java.nio.channels.FileChannel;
 import java.security.SecureRandom;
 
-import com.annimon.stream.Stream;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.model.enums.AesKeyStrength;
+import net.lingala.zip4j.model.enums.EncryptionMethod;
+import net.lingala.zip4j.model.enums.CompressionLevel;
+import net.lingala.zip4j.model.enums.CompressionMethod;
 
 
 public class EncryptedBackupExporter {
@@ -68,9 +76,21 @@ public class EncryptedBackupExporter {
     String bks = BackupPassphrase.get(context);
     exportDirectory(context, "");
     exportSecrets(context, dbs, ats, lgs, bks);
+    if (TextSecurePreferences.isRawBackupInZipfile(context)) {
+      File test = new File(getEncryptedZipfileName());
+      if (test.exists()) {
+        test.delete();
+      }
+      createEncryptedZipfile(context);
+      deleteRawBackupFiles(context);
+    }
   }
 
   public static void importFromSd(Context context) throws NoExternalStorageException, IOException {
+    // Extract the zipfile
+    if (TextSecurePreferences.isRawBackupInZipfile(context)) {
+      extractEncryptedZipfile(context);
+    }
     verifyExternalStorageForImport(context);
     DatabaseSecret dbs = getDatabaseSecretFromBackup(context);
     AttachmentSecret ats = getAttachmentSecretFromBackup(context);
@@ -88,6 +108,9 @@ public class EncryptedBackupExporter {
     }
     if (bks != null) {
 	    BackupPassphrase.set(context, bks);
+    }
+    if (TextSecurePreferences.isRawBackupInZipfile(context)) {
+      deleteRawBackupFiles(context);
     }
   }
 
@@ -108,28 +131,13 @@ public class EncryptedBackupExporter {
   }
 
   private static String getExportBaseDirectory(Context context) {
-//    File sdDirectory  = Environment.getExternalStorageDirectory();
-//    return sdDirectory.getAbsolutePath();
-    File storage = null;
-
-    if (TextSecurePreferences.isBackupLocationRemovable(context)) {
-      if (Build.VERSION.SDK_INT >= 19) {
-        File[] directories = context.getExternalFilesDirs(null);
-
-        if (directories != null) {
-          storage = Stream.of(directories)
-                          .withoutNulls()
-                          .filterNot(f -> f.getAbsolutePath().contains("emulated"))
-                          .limit(1)
-                          .findSingle()
-                          .orElse(null);
-        }
-      }
+    String basedir = Environment.getExternalStorageDirectory().getAbsolutePath();
+    try {
+      basedir = StorageUtil.getRawBackupDirectory().getAbsolutePath();
+    } catch (NoExternalStorageException e) {
+      Log.w(TAG, "getExportBaseDirectory failed: " + e.toString());
     }
-    if (storage == null) {
-      storage = Environment.getExternalStorageDirectory();
-    }
-    return storage.getAbsolutePath();
+    return basedir;
   }
 
   private static String getExportSecretsDirectory(Context context) {
@@ -190,6 +198,8 @@ public class EncryptedBackupExporter {
 
           // Don't export the libraries
           if ( localFile.getAbsolutePath().contains("libcurve25519.so") ||
+               localFile.getAbsolutePath().contains("libaesgcm.so") ||
+               localFile.getAbsolutePath().contains("libconscrypt_jni.so") ||
                localFile.getAbsolutePath().contains("libnative-utils.so") ||
                localFile.getAbsolutePath().contains("libjingle_peerconnection_so.so") ||
                localFile.getAbsolutePath().contains("libsqlcipher.so") ) {
@@ -428,5 +438,122 @@ public class EncryptedBackupExporter {
     }
 
     return secret;
+  }
+
+  //------------------------------------------------------------------------------------------------
+  // Handle backups in encrypted zipfiles
+  private static boolean createEncryptedZipfile(Context context) {
+    try {
+      String password = getBackupPassword(context);
+      ZipFile zipFile = new ZipFile(getEncryptedZipfileName());
+      ZipParameters parameters = new ZipParameters();
+      parameters.setCompressionMethod(CompressionMethod.STORE); // Encrypted data is uncompressable anyway
+      //parameters.setCompressionLevel(CompressionLevel.FASTEST);
+      if (password.length() > 0 ) {
+        parameters.setEncryptFiles(true);
+        parameters.setEncryptionMethod(EncryptionMethod.AES);
+        parameters.setAesKeyStrength(AesKeyStrength.KEY_STRENGTH_256);
+        zipFile.setPassword(password.toCharArray());
+      }
+      zipFile.addFolder(new File(getExportSecretsDirectory(context)), parameters);
+      zipFile.addFolder(new File(getExportDirectoryPath(context)), parameters);
+    } catch (ZipException e) {
+      Log.w(TAG, "createEncryptedZipfile failed: " + e.toString());
+      return false;
+    }
+    return true;
+  }
+
+  // Get the password of the regular backup. If there is no regular backup set, return an empty string.
+  private static String getBackupPassword(Context context) {
+    String password = "";
+    if (TextSecurePreferences.isBackupEnabled(context)) {
+      password = BackupPassphrase.get(context);
+      if (password == null) {
+        Log.w(TAG, "createEncryptedZipfile: empty zipfile password");
+        password = "";
+      }
+      // Plaintext storage of password contains spaces
+      password = password.replace(" ", "");
+    }
+    return password;
+  }
+
+  private static boolean extractEncryptedZipfile(Context context) {
+    String password = getBackupPassword(context);
+
+    try {
+      ZipFile zipFile = new ZipFile(getEncryptedZipfileName());
+      if (zipFile.isEncrypted()) {
+        zipFile.setPassword(password.toCharArray());
+      }
+      zipFile.extractAll(StorageUtil.getRawBackupDirectory().getAbsolutePath());
+    } catch (Exception e) {
+      Log.w(TAG, "extractEncryptedZipfile failed: " + e.toString());
+      return false;
+    }
+    return true;
+  }
+
+  // Delete the exported contents of the data dir and the unencrypted keys.
+  private static void deleteRawBackupFiles(Context context) {
+    secureDeleteRecursive(new File(getExportSecretsDirectory(context)));
+    deleteRecursive(new File(getExportDirectoryPath(context)));
+  }
+
+  private static String getEncryptedZipfileName() {
+    try {
+      String backupPath = StorageUtil.getRawBackupDirectory().getAbsolutePath();
+      return backupPath + File.separator + "SignalExport.zip";
+    } catch (NoExternalStorageException e) {
+      Log.w(TAG, "getEncryptedZipfileName failed: " + e.toString());
+      return Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
+  }
+
+  private static void deleteRecursive(File fileOrDirectory) {
+    if (fileOrDirectory.isDirectory()) {
+      for (File child : fileOrDirectory.listFiles()) {
+        deleteRecursive(child);
+      }
+    }
+    fileOrDirectory.delete();
+  }
+
+  private static void secureDeleteRecursive(File fileOrDirectory) {
+    if (fileOrDirectory.isDirectory()) {
+      for (File child : fileOrDirectory.listFiles()) {
+        secureDeleteRecursive(child);
+      }
+    }
+    try {
+      if (!fileOrDirectory.isFile()) {
+        fileOrDirectory.delete();
+      } else {
+        secureDelete(fileOrDirectory);
+      }
+    } catch (IOException e) {
+      Log.w(TAG, "secureDeleteRecursive failed: " + e.toString());
+    }
+  }
+
+  // Not perfect on wear-leveling flash memory but still better than nothing.
+  private static void secureDelete(File file) throws IOException {
+    if (file.exists()) {
+      long length = file.length();
+      SecureRandom random = new SecureRandom();
+      RandomAccessFile raf = new RandomAccessFile(file, "rws");
+      raf.seek(0);
+      raf.getFilePointer();
+      byte[] data = new byte[64];
+      long pos = 0;
+      while (pos < length) {
+        random.nextBytes(data);
+        raf.write(data);
+        pos += data.length;
+      }
+      raf.close();
+      file.delete();
+    }
   }
 }
