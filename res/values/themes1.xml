@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="TextSecure.DarkNoActionBarOled" parent="TextSecure.DarkNoActionBar">
+        <item name="android:windowBackground">@color/black</item>
+        <item name="colorPrimary">@color/black</item>
+    </style>
+
+    <style name="TextSecure.LightNoActionBarGreen" parent="TextSecure.LightNoActionBar">
+        <item name="colorPrimary">@color/green_600</item>
+        <item name="colorPrimaryDark">@color/green_800</item>
+        <item name="colorAccent">@color/green_900</item>
+        <item name="contact_selection_header_text">@color/green_900</item>
+        <item name="conversation_list_toolbar_background">@color/green_600</item>
+        <item name="fab_color">@color/green_500</item>
+        <item name="reminder_header_background">@color/green_800</item>
+        <item name="pref_icon_tint">@color/green_800</item>
+        <item name="invite_background">@color/green_500</item>
+    </style>
+
+    <style name="TextSecure.DarkIntroThemeOled" parent="TextSecure.DarkIntroTheme">
+        <item name="android:windowBackground">@color/black</item>
+    </style>
+
+    <style name="TextSecure.LightIntroThemeGreen" parent="TextSecure.LightIntroTheme">
+        <item name="android:windowBackground">@color/green_700</item>
+        <item name="colorAccent">@color/green_500</item>
+        <item name="login_top_background">@color/green_700</item>
+    </style>
+
+    <style name="TextSecure.DarkThemeOled" parent="TextSecure.DarkTheme">
+        <item name="android:windowBackground">@color/black</item>
+        <item name="attachment_type_selector_background">@color/black</item>
+        <item name="dialog_background_color">@color/black</item>
+        <item name="conversation_background">@color/black</item>
+        <item name="conversation_input_background">@drawable/compose_background_oled</item>
+        <item name="emoji_tab_strip_background">@color/black</item>
+    </style>
+
+    <style name="TextSecure.LightThemeGreen" parent="TextSecure.LightTheme">
+        <item name="actionBarStyle">@style/TextSecure.LightActionBarGreen</item>
+        <item name="colorPrimary">@color/green_500</item>
+        <item name="colorPrimaryDark">@color/green_800</item>
+        <item name="colorAccent">@color/green_800</item>
+        <item name="colorControlActivated">@color/green_500</item>
+        <item name="colorControlHighlight">@color/green_500</item>
+        <item name="conversation_list_toolbar_background">@color/green_600</item>
+        <item name="fab_color">@color/green_500</item>
+        <item name="reminder_header_background">@color/green_600</item>
+        <item name="pref_icon_tint">@color/green_700</item>
+        <item name="invite_background">@color/green_500</item>
+    </style>
+    
+    <style name="TextSecure.DarkRegistrationThemeOled" parent="TextSecure.DarkNoActionBarOled">
+    </style>
+
+    <style name="TextSecure.LightRegistrationThemeGreen" parent="TextSecure.LightNoActionBarGreen">
+    </style>
+</resources>
