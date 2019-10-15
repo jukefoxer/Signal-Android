@@ -54,6 +54,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'net.lingala.zip4j:zip4j:2.2.2' // JW: added
     implementation 'androidx.appcompat:appcompat:1.1.0-beta01'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
@@ -293,7 +294,7 @@ dependencyVerification {
 }
 
 def canonicalVersionCode = 546
-def canonicalVersionName = "4.48.17"
+def canonicalVersionName = "4.48.17.0-JW"
 
 def postFixSize = 10
 def abiPostFix = ['universal'   : 0,
@@ -321,9 +322,10 @@ android {
         multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true
-        project.ext.set("archivesBaseName", "Signal");
+        project.ext.set("archivesBaseName", "Signal-Android"); /* JW: change basename */
 
-        buildConfigField "long", "BUILD_TIMESTAMP", getLastCommitTimestamp() + "L"
+        /* JW: change back to old code that works without having Git in the path, timestamp is not used anyway */
+        buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
         buildConfigField "String", "SIGNAL_URL", "\"https://textsecure-service.whispersystems.org\""
         buildConfigField "String", "SIGNAL_CDN_URL", "\"https://cdn.signal.org\""
         buildConfigField "String", "SIGNAL_CONTACT_DISCOVERY_URL", "\"https://api.directory.signal.org\""
@@ -517,6 +519,7 @@ task signProductionWebsiteRelease {
 }
 
 tasks.whenTaskAdded { task ->
+/* JW: Disable extra apk signing steps, does not work and Android Studio does the signing already anyway
     if (task.name.equals("assemblePlayRelease")) {
         task.finalizedBy signProductionPlayRelease
     }
@@ -524,6 +527,7 @@ tasks.whenTaskAdded { task ->
     if (task.name.equals("assembleWebsiteRelease")) {
         task.finalizedBy signProductionWebsiteRelease
     }
+*/
 }
 
 def getLastCommitTimestamp() {

@@ -96,6 +96,22 @@
                 android:dependency="pref_backup_enabled"
                 tools:summary="Last backup: 3 days ago"/>
 
+        <!-- JW: added backup location switch -->
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+                android:defaultValue="false"
+                android:key="pref_backup_location_external"
+                android:title="@string/preferences_chats__chat_backups_removable"
+                android:summary="@string/preferences_chats__backup_chats_to_removable_storage" />
+
+        <PreferenceCategory android:layout="@layout/preference_divider"/>
+
+        <!-- JW: added backup type switch -->
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_backup_zipfile"
+            android:title="@string/preferences_chats__chat_backups_zipfile"
+            android:summary="@string/preferences_chats__backup_chats_to_encrypted_zipfile" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>
