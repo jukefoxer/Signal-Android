@@ -3,6 +3,7 @@ package org.thoughtcrime.securesms.contacts.avatars;
 import androidx.annotation.NonNull;
 
 import org.thoughtcrime.securesms.color.MaterialColor;
+import org.thoughtcrime.securesms.color.MaterialColors;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,20 +11,30 @@ import java.util.List;
 
 public class ContactColors {
 
-  public static final MaterialColor UNKNOWN_COLOR = MaterialColor.STEEL;
+  public static final MaterialColor UNKNOWN_COLOR = MaterialColor.GREY; // JW: change color
 
+  // JW: change colors
   private static final List<MaterialColor> CONVERSATION_PALETTE = new ArrayList<>(Arrays.asList(
-      MaterialColor.PLUM,
-      MaterialColor.CRIMSON,
-      MaterialColor.VERMILLION,
-      MaterialColor.VIOLET,
-      MaterialColor.BLUE,
-      MaterialColor.INDIGO,
-      MaterialColor.FOREST,
-      MaterialColor.WINTERGREEN,
-      MaterialColor.TEAL,
-      MaterialColor.BURLAP,
-      MaterialColor.TAUPE
+    MaterialColor.RED,
+    MaterialColor.PINK,
+    MaterialColor.PURPLE,
+    MaterialColor.DEEP_PURPLE,
+    MaterialColor.INDIGO,
+    MaterialColor.BLUE,
+    MaterialColor.LIGHT_BLUE,
+    MaterialColor.CYAN,
+    MaterialColor.TEAL,
+    MaterialColor.GREEN,
+    MaterialColor.LIGHT_GREEN,
+    MaterialColor.LIME,
+    MaterialColor.YELLOW,
+    MaterialColor.ORANGE,
+    MaterialColor.DEEP_ORANGE,
+    MaterialColor.BROWN,
+    MaterialColor.AMBER,
+    MaterialColor.BLUE_GREY,
+    MaterialColor.GREY,
+    MaterialColor.BLACK
   ));
 
   public static MaterialColor generateFor(@NonNull String name) {
