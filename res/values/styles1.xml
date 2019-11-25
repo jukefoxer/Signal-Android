@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="TextSecure.LightActionBarGreen"
-           parent="@style/TextSecure.LightActionBar">
+    <style name="TextSecure.DarkActionBarOled" parent="@style/TextSecure.DarkActionBar">
+        <item name="background">@color/black</item>
+    </style>
+
+    <style name="TextSecure.LightActionBarGreen" parent="@style/TextSecure.LightActionBar">
         <item name="background">@color/green_600</item>
     </style>
 
-    <style name="TextSecure.LightActionBarBlue"
-           parent="@style/TextSecure.LightActionBar">
+    <style name="TextSecure.LightActionBarBlue" parent="@style/TextSecure.LightActionBar">
         <item name="background">@color/signal_primary</item>
     </style>
 </resources>
