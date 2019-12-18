@@ -12,6 +12,9 @@ public class DynamicTheme {
 
   public static final String DARK  = "dark";
   public static final String LIGHT = "light";
+  public static final String OLED = "oled"; // JW: added
+  public static final String GREEN = "green"; // JW: added
+  public static final String BLUE = "blue"; // JW: added
 
   private int currentTheme;
 
@@ -36,7 +39,18 @@ public class DynamicTheme {
     if (theme.equals(DARK)) {
       return R.style.TextSecure_DarkTheme;
     }
-
+    // JW: added
+    else if (theme.equals(OLED)) {
+      return R.style.TextSecure_DarkThemeOled;
+    }
+    // JW: added
+    else if (theme.equals(GREEN)) {
+      return R.style.TextSecure_LightThemeGreen;
+    }
+    // JW: added
+    else if (theme.equals(BLUE)) {
+      return R.style.TextSecure_LightThemeBlue;
+    }
     return R.style.TextSecure_LightTheme;
   }
 
