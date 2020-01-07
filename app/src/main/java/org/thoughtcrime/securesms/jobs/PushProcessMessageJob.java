@@ -763,6 +763,11 @@ public final class PushProcessMessageJob extends BaseJob {
     database.beginTransaction();
 
     try {
+      // JW
+      boolean doViewOnce = false;
+      if (!TextSecurePreferences.isKeepViewOnceMessages(context)) {
+        doViewOnce = message.isViewOnce();
+      }
       Optional<QuoteModel>        quote          = getValidatedQuote(message.getQuote());
       Optional<List<Contact>>     sharedContacts = getContacts(message.getSharedContacts());
       Optional<List<LinkPreview>> linkPreviews   = getLinkPreviews(message.getPreviews(), message.getBody().or(""));
@@ -770,7 +775,7 @@ public final class PushProcessMessageJob extends BaseJob {
       IncomingMediaMessage        mediaMessage   = new IncomingMediaMessage(Recipient.externalPush(context, content.getSender()).getId(),
                                                                             message.getTimestamp(), -1,
                                                                             message.getExpiresInSeconds() * 1000L, false,
-                                                                            message.isViewOnce(),
+                                                                            doViewOnce, //JW message.isViewOnce(),
                                                                             content.isNeedsReceipt(),
                                                                             message.getBody(),
                                                                             message.getGroupInfo(),
