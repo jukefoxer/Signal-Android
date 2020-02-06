@@ -3,6 +3,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/preferences_app_protection__app_access">
 
+        <!-- JW: added option to use the passphrase -->
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:key="pref_signal_protection_method"
+            android:defaultValue="false"
+            android:title="@string/preferences_app_protection__method_passphrase"
+            android:summary="@string/preferences_app_protection__method_passphrase_summary"/>
+
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
                 android:key="pref_android_screen_lock"
                 android:defaultValue="false"
@@ -116,6 +123,13 @@
             android:key="pref_kbs_change"
             android:title="@string/preferences_app_protection__pin"
             android:summary="@string/preferences_app_protection__your_pin_adds_an_extra_layer_of_security_and_backs" />
+
+        <!-- JW: added option to disable reminders -->
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:key="pref_signal_disable_pinv2_reminders"
+            android:defaultValue="false"
+            android:title="@string/preferences_app_protection__disable_pinv2_reminders"
+            android:summary="@string/preferences_app_protection__disable_pinv2_reminders_summary"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
