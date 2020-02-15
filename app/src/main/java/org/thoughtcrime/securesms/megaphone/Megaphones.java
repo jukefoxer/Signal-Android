@@ -56,7 +56,7 @@ public final class Megaphones {
   static @Nullable Megaphone getNextMegaphone(@NonNull Context context, @NonNull Map<Event, MegaphoneRecord> records) {
     long currentTime = System.currentTimeMillis();
 
-    List<Megaphone> megaphones = Stream.of(buildDisplayOrder())
+    List<Megaphone> megaphones = Stream.of(buildDisplayOrder(context))// JW: added context parameter
                                        .filter(e -> {
                                          MegaphoneRecord   record = Objects.requireNonNull(records.get(e.getKey()));
                                          MegaphoneSchedule schedule = e.getValue();
@@ -86,12 +86,14 @@ public final class Megaphones {
    * This is when you would hide certain megaphones based on {@link FeatureFlags}. You could
    * conditionally set a {@link ForeverSchedule} set to false for disabled features.
    */
-  private static Map<Event, MegaphoneSchedule> buildDisplayOrder() {
+  private static Map<Event, MegaphoneSchedule> buildDisplayOrder(Context context) { // JW: added context parameter
     return new LinkedHashMap<Event, MegaphoneSchedule>() {{
       put(Event.REACTIONS, ALWAYS);
       put(Event.PINS_FOR_ALL, new PinsForAllSchedule());
       put(Event.PROFILE_NAMES_FOR_ALL, FeatureFlags.profileNamesMegaphoneEnabled() ? EVERY_TWO_DAYS : NEVER);
-      put(Event.PIN_REMINDER, new SignalPinReminderSchedule());
+      if (!TextSecurePreferences.isPinV2ReminderDisabled(context)) { // JW: made reminder optional
+        put(Event.PIN_REMINDER, new SignalPinReminderSchedule());
+      }
     }};
   }
 

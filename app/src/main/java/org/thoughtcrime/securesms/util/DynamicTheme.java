@@ -16,6 +16,9 @@ public class DynamicTheme {
   public static final String DARK   = "dark";
   public static final String LIGHT  = "light";
   public static final String SYSTEM = "system";
+  public static final String OLED = "oled"; // JW: added
+  public static final String GREEN = "green"; // JW: added
+  public static final String BLUE = "blue"; // JW: added
 
   private int currentTheme;
 
@@ -45,9 +48,28 @@ public class DynamicTheme {
       }
     } else if (theme.equals(DARK)) {
       return getDarkThemeStyle();
+    } else if (theme.equals(OLED)) { // JW: added
+      return getDarkThemeOledStyle();
+    } else if (theme.equals(GREEN)) { // JW: added
+      return getLightThemeGreenStyle();
+    } else if (theme.equals(BLUE)) { // JW: added
+      return getLightThemeBlueStyle();
     } else {
       return getLightThemeStyle();
     }
+  }
+
+  // JW: added
+  protected @StyleRes int getDarkThemeOledStyle() {
+    return R.style.TextSecure_DarkThemeOled;
+  }
+  // JW: added
+  protected @StyleRes int getLightThemeBlueStyle() {
+    return R.style.TextSecure_LightThemeBlue;
+  }
+  // JW: added
+  protected @StyleRes int getLightThemeGreenStyle() {
+    return R.style.TextSecure_LightThemeGreen;
   }
 
   protected @StyleRes int getLightThemeStyle() {
