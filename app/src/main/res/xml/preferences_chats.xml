@@ -89,12 +89,19 @@
                 android:title="@string/preferences_chats__chat_backups_removable"
                 android:summary="@string/preferences_chats__backup_chats_to_removable_storage" />
 
-        <!-- JW: added backup type switch -->
+        <!-- JW: added backup type switch for full backups -->
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_backup_zipfile"
             android:title="@string/preferences_chats__chat_backups_zipfile"
             android:summary="@string/preferences_chats__backup_chats_to_encrypted_zipfile" />
+
+        <!-- JW: added backup type switch for plaintext backups -->
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_backup_zipfile_plain"
+            android:title="@string/preferences_chats__chat_backups_zipfile_plain"
+            android:summary="@string/preferences_chats__backup_chats_to_encrypted_zipfile_plain" />
 
     </PreferenceCategory>
 

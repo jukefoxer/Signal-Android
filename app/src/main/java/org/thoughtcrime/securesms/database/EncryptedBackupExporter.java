@@ -30,6 +30,7 @@ import org.thoughtcrime.securesms.crypto.DatabaseSecretProvider;
 import org.thoughtcrime.securesms.crypto.KeyStoreHelper;
 import org.thoughtcrime.securesms.logging.Log;
 import org.thoughtcrime.securesms.util.Base64;
+import org.thoughtcrime.securesms.util.FileUtilsJW;
 import org.thoughtcrime.securesms.util.JsonUtils;
 import org.thoughtcrime.securesms.util.StorageUtil;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
@@ -82,7 +83,7 @@ public class EncryptedBackupExporter {
       if (test.exists()) {
         test.delete();
       }
-      createEncryptedZipfile(context);
+      FileUtilsJW.createEncryptedZipfile(context, getEncryptedZipfileName(), getExportDirectoryPath(context), getExportSecretsDirectory(context));
       deleteRawBackupFiles(context);
     }
   }
@@ -90,7 +91,7 @@ public class EncryptedBackupExporter {
   public static void importFromSd(Context context) throws NoExternalStorageException, IOException {
     // Extract the zipfile
     if (TextSecurePreferences.isRawBackupInZipfile(context)) {
-      extractEncryptedZipfile(context);
+      FileUtilsJW.extractEncryptedZipfile(context, getEncryptedZipfileName(), StorageUtil.getRawBackupDirectory().getAbsolutePath());
     }
     verifyExternalStorageForImport(context);
     DatabaseSecret dbs = getDatabaseSecretFromBackup(context);
@@ -437,69 +438,7 @@ public class EncryptedBackupExporter {
     } else {
       TextSecurePreferences.setLogUnencryptedSecret(context, Base64.encodeBytes(secret));
     }
-
     return secret;
-  }
-
-  //------------------------------------------------------------------------------------------------
-  // Handle backups in encrypted zipfiles
-  private static boolean createEncryptedZipfile(Context context) {
-    try {
-      String password = getBackupPassword(context);
-      ZipFile zipFile = new ZipFile(getEncryptedZipfileName());
-      ZipParameters parameters = new ZipParameters();
-      parameters.setCompressionMethod(CompressionMethod.STORE); // Encrypted data is uncompressable anyway
-      //parameters.setCompressionLevel(CompressionLevel.FASTEST);
-      if (password.length() > 0 ) {
-        parameters.setEncryptFiles(true);
-        parameters.setEncryptionMethod(EncryptionMethod.AES);
-        parameters.setAesKeyStrength(AesKeyStrength.KEY_STRENGTH_256);
-        zipFile.setPassword(password.toCharArray());
-      }
-      zipFile.addFolder(new File(getExportSecretsDirectory(context)), parameters);
-      zipFile.addFolder(new File(getExportDirectoryPath(context)), parameters);
-    } catch (ZipException e) {
-      Log.w(TAG, "createEncryptedZipfile failed: " + e.toString());
-      return false;
-    }
-    return true;
-  }
-
-  // Get the password of the regular backup. If there is no regular backup set, return an empty string.
-  private static String getBackupPassword(Context context) {
-    String password = "";
-    if (TextSecurePreferences.isBackupEnabled(context)) {
-      password = BackupPassphrase.get(context);
-      if (password == null) {
-        Log.w(TAG, "createEncryptedZipfile: empty zipfile password");
-        password = "";
-      }
-      // Plaintext storage of password contains spaces
-      password = password.replace(" ", "");
-    }
-    return password;
-  }
-
-  private static boolean extractEncryptedZipfile(Context context) {
-    String password = getBackupPassword(context);
-
-    try {
-      ZipFile zipFile = new ZipFile(getEncryptedZipfileName());
-      if (zipFile.isEncrypted()) {
-        zipFile.setPassword(password.toCharArray());
-      }
-      zipFile.extractAll(StorageUtil.getRawBackupDirectory().getAbsolutePath());
-    } catch (Exception e) {
-      Log.w(TAG, "extractEncryptedZipfile failed: " + e.toString());
-      return false;
-    }
-    return true;
-  }
-
-  // Delete the exported contents of the data dir and the unencrypted keys.
-  private static void deleteRawBackupFiles(Context context) {
-    secureDeleteRecursive(new File(getExportSecretsDirectory(context)));
-    deleteRecursive(new File(getExportDirectoryPath(context)));
   }
 
   private static String getEncryptedZipfileName() {
@@ -512,49 +451,9 @@ public class EncryptedBackupExporter {
     }
   }
 
-  private static void deleteRecursive(File fileOrDirectory) {
-    if (fileOrDirectory.isDirectory()) {
-      for (File child : fileOrDirectory.listFiles()) {
-        deleteRecursive(child);
-      }
-    }
-    fileOrDirectory.delete();
-  }
-
-  private static void secureDeleteRecursive(File fileOrDirectory) {
-    if (fileOrDirectory.isDirectory()) {
-      for (File child : fileOrDirectory.listFiles()) {
-        secureDeleteRecursive(child);
-      }
-    }
-    try {
-      if (!fileOrDirectory.isFile()) {
-        fileOrDirectory.delete();
-      } else {
-        secureDelete(fileOrDirectory);
-      }
-    } catch (IOException e) {
-      Log.w(TAG, "secureDeleteRecursive failed: " + e.toString());
-    }
-  }
-
-  // Not perfect on wear-leveling flash memory but still better than nothing.
-  private static void secureDelete(File file) throws IOException {
-    if (file.exists()) {
-      long length = file.length();
-      SecureRandom random = new SecureRandom();
-      RandomAccessFile raf = new RandomAccessFile(file, "rws");
-      raf.seek(0);
-      raf.getFilePointer();
-      byte[] data = new byte[64];
-      long pos = 0;
-      while (pos < length) {
-        random.nextBytes(data);
-        raf.write(data);
-        pos += data.length;
-      }
-      raf.close();
-      file.delete();
-    }
+  // Delete the exported contents of the data dir and the unencrypted keys.
+  private static void deleteRawBackupFiles(Context context) {
+    FileUtilsJW.secureDeleteRecursive(new File(getExportSecretsDirectory(context)));
+    FileUtilsJW.deleteRecursive(new File(getExportDirectoryPath(context)));
   }
 }

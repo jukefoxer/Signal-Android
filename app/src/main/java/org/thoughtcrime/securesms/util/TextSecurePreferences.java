@@ -219,6 +219,8 @@ public class TextSecurePreferences {
   public static final String BACKUP_LOCATION_REMOVABLE_PREF = "pref_backup_location_external";
   // JW: added to use encrypted zipfiles to store raw backups
   public static final String BACKUP_STORE_ZIPFILE_PREF = "pref_backup_zipfile";
+  // JW: added to use encrypted zipfiles to store plaintext backups
+  public static final String BACKUP_STORE_ZIPFILE_PLAIN_PREF = "pref_backup_zipfile_plain";
   // JW: used to see if we delete view once messagres or not
   public static final String KEEP_VIEW_ONCE_MESSAGES = "pref_keep_view_once_messages";
   // JW: used to disable mandatory PIN v2 reminders
@@ -247,6 +249,14 @@ public class TextSecurePreferences {
   // JW added.
   public static void setRawBackupZipfile(@NonNull Context context, boolean value) {
     setBooleanPreference(context, BACKUP_STORE_ZIPFILE_PREF, value);
+  }
+  // JW added.
+  public static boolean isPlainBackupInZipfile(@NonNull Context context) {
+    return getBooleanPreference(context, BACKUP_STORE_ZIPFILE_PLAIN_PREF, false);
+  }
+  // JW added.
+  public static void setPlainBackupZipfile(@NonNull Context context, boolean value) {
+    setBooleanPreference(context, BACKUP_STORE_ZIPFILE_PLAIN_PREF, value);
   }
   // JW added.
   public static boolean isKeepViewOnceMessages(@NonNull Context context) {

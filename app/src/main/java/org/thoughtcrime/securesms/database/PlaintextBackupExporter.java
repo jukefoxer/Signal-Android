@@ -4,7 +4,9 @@ package org.thoughtcrime.securesms.database;
 import android.content.Context;
 
 import org.thoughtcrime.securesms.database.model.SmsMessageRecord;
+import org.thoughtcrime.securesms.util.FileUtilsJW;
 import org.thoughtcrime.securesms.util.StorageUtil;
+import org.thoughtcrime.securesms.util.TextSecurePreferences;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.io.IOException;
 public class PlaintextBackupExporter {
 
   private static final String FILENAME = "SignalPlaintextBackup.xml";
+  private static final String ZIPFILENAME = "SignalPlaintextBackup.zip";
 
   public static void exportPlaintextToSd(Context context)
       throws NoExternalStorageException, IOException
@@ -60,5 +63,18 @@ public class PlaintextBackupExporter {
     } while (reader.getCount() > 0);
 
     writer.close();
+
+    if (TextSecurePreferences.isPlainBackupInZipfile(context)) {
+      File test = new File(getPlaintextExportFile().getName());
+      if (test.exists()) {
+        test.delete();
+      }
+      FileUtilsJW.createEncryptedPlaintextZipfile(context, getPlaintextZipFilename(), getPlaintextExportFile().getAbsolutePath());
+      FileUtilsJW.secureDelete(getPlaintextExportFile());
+    }
+  }
+
+  private static String getPlaintextZipFilename() throws NoExternalStorageException {
+    return new File(StorageUtil.getBackupPlaintextDirectory(), ZIPFILENAME).getAbsolutePath();
   }
 }

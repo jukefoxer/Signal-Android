@@ -8,7 +8,9 @@ import net.sqlcipher.database.SQLiteStatement;
 
 import org.thoughtcrime.securesms.logging.Log;
 import org.thoughtcrime.securesms.recipients.Recipient;
+import org.thoughtcrime.securesms.util.FileUtilsJW;
 import org.thoughtcrime.securesms.util.StorageUtil;
+import org.thoughtcrime.securesms.util.TextSecurePreferences;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
@@ -24,6 +26,14 @@ public class PlaintextBackupImporter {
       throws NoExternalStorageException, IOException
   {
     Log.w(TAG, "importPlaintext()");
+    // Unzip zipfile first
+    if (TextSecurePreferences.isPlainBackupInZipfile(context)) {
+      File zipFile = getPlaintextExportZipFile();
+      FileUtilsJW.extractEncryptedZipfile(context, zipFile.getAbsolutePath(), StorageUtil.getBackupPlaintextDirectory().getAbsolutePath());
+      if (zipFile != null) {
+        zipFile.delete();
+      }
+    }
     SmsDatabase    db          = DatabaseFactory.getSmsDatabase(context);
     SQLiteDatabase transaction = db.beginTransaction();
 
@@ -83,6 +93,10 @@ public class PlaintextBackupImporter {
     else if (previousBackup.exists()) return previousBackup;
     else if (oldBackup.exists()) return oldBackup;
     else return backup;
+  }
+
+  private static File getPlaintextExportZipFile() throws NoExternalStorageException {
+    return new File(StorageUtil.getBackupPlaintextDirectory(), "SignalPlaintextBackup.zip");
   }
 
   @SuppressWarnings("SameParameterValue")
