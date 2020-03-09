@@ -30,9 +30,6 @@ public class PlaintextBackupImporter {
     if (TextSecurePreferences.isPlainBackupInZipfile(context)) {
       File zipFile = getPlaintextExportZipFile();
       FileUtilsJW.extractEncryptedZipfile(context, zipFile.getAbsolutePath(), StorageUtil.getBackupPlaintextDirectory().getAbsolutePath());
-      if (zipFile != null) {
-        zipFile.delete();
-      }
     }
     SmsDatabase    db          = DatabaseFactory.getSmsDatabase(context);
     SQLiteDatabase transaction = db.beginTransaction();
@@ -81,6 +78,10 @@ public class PlaintextBackupImporter {
       throw new IOException("XML Parsing error!");
     } finally {
       db.endTransaction(transaction);
+    }
+    // Delete the plaintext file
+    if (TextSecurePreferences.isPlainBackupInZipfile(context)) {
+      FileUtilsJW.secureDelete(getPlaintextExportFile());
     }
   }
 

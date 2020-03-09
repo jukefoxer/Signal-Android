@@ -26,6 +26,10 @@ public class PlaintextBackupExporter {
     return new File(StorageUtil.getBackupPlaintextDirectory(), FILENAME);
   }
 
+  private static File getPlaintextZipFile() throws NoExternalStorageException {
+    return new File(StorageUtil.getBackupPlaintextDirectory(), ZIPFILENAME);
+  }
+
   private static void exportPlaintext(Context context)
       throws NoExternalStorageException, IOException
   {
@@ -65,16 +69,12 @@ public class PlaintextBackupExporter {
     writer.close();
 
     if (TextSecurePreferences.isPlainBackupInZipfile(context)) {
-      File test = new File(getPlaintextExportFile().getName());
+      File test = new File(getPlaintextZipFile().getAbsolutePath());
       if (test.exists()) {
         test.delete();
       }
-      FileUtilsJW.createEncryptedPlaintextZipfile(context, getPlaintextZipFilename(), getPlaintextExportFile().getAbsolutePath());
+      FileUtilsJW.createEncryptedPlaintextZipfile(context, getPlaintextZipFile().getAbsolutePath(), getPlaintextExportFile().getAbsolutePath());
       FileUtilsJW.secureDelete(getPlaintextExportFile());
     }
-  }
-
-  private static String getPlaintextZipFilename() throws NoExternalStorageException {
-    return new File(StorageUtil.getBackupPlaintextDirectory(), ZIPFILENAME).getAbsolutePath();
   }
 }
