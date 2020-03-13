@@ -17,6 +17,7 @@
 package org.thoughtcrime.securesms.database;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Environment;
 
@@ -46,6 +47,8 @@ import java.io.RandomAccessFile;
 import java.lang.String;
 import java.nio.channels.FileChannel;
 import java.security.SecureRandom;
+import java.util.Map;
+import java.util.Set;
 
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -89,16 +92,75 @@ public class EncryptedBackupExporter {
   }
 
   public static void importFromSd(Context context) throws NoExternalStorageException, IOException {
+    // Store in a boolean because settings might change after restore
+    boolean rawBackupInZipfile = TextSecurePreferences.isRawBackupInZipfile(context);
     // Extract the zipfile
-    if (TextSecurePreferences.isRawBackupInZipfile(context)) {
+    if (rawBackupInZipfile) {
       FileUtilsJW.extractEncryptedZipfile(context, getEncryptedZipfileName(), StorageUtil.getRawBackupDirectory().getAbsolutePath());
     }
     verifyExternalStorageForImport(context);
+    importDirectory(context, "");
+    importSharedSettings(context);
+    importSecrets(context);
+    if (rawBackupInZipfile) {
+      deleteRawBackupFiles(context);
+    }
+  }
+
+  private static void importSharedSettings(Context context) {
+    String tempFileName = "tempsettings";
+    String settingsFile = "org.thoughtcrime.securesms_preferences";
+
+    File fromPrefFile = new File(getExportDirectoryPath(context) + File.separator + "shared_prefs" + File.separator + settingsFile + ".xml");
+    // Copy fromFile to shared_prefs
+    File toTempFile = new File(context.getFilesDir() + File.separator + ".." + File.separator + "shared_prefs" + File.separator + tempFileName + ".xml");
+    migrateFile(fromPrefFile, toTempFile);
+    // Get default preferences
+    SharedPreferences defaultPreferences = context.getSharedPreferences(settingsFile, Context.MODE_PRIVATE);
+    // Load settings from backup file
+    SharedPreferences newPreferences = context.getSharedPreferences(tempFileName, Context.MODE_PRIVATE);
+    // Write settings to current file
+    copySharedPreferences(newPreferences, defaultPreferences);
+    // delete temp file
+    toTempFile.delete();
+  }
+
+  public static void copySharedPreferences(SharedPreferences fromPreferences, SharedPreferences toPreferences) {
+    SharedPreferences.Editor editor = toPreferences.edit();
+    editor.clear();
+    copySharedPreferences(fromPreferences, editor);
+    editor.commit();
+  }
+
+  public static void copySharedPreferences(SharedPreferences fromPreferences, SharedPreferences.Editor toEditor) {
+    for (Map.Entry<String, ?> entry : fromPreferences.getAll().entrySet()) {
+      Object value = entry.getValue();
+      String key = entry.getKey();
+      //Log.w(TAG, "copySharedPreferences: Key = " + entry.getKey() + ", Value = " + entry.getValue().toString());
+      if (value instanceof String) {
+        toEditor.putString(key, ((String) value));
+      } else if (value instanceof Set) {
+        toEditor.putStringSet(key, (Set<String>) value); // EditorImpl.putStringSet already creates a copy of the set
+      } else if (value instanceof Integer) {
+        toEditor.putInt(key, (Integer) value);
+      } else if (value instanceof Long) {
+        toEditor.putLong(key, (Long) value);
+      } else if (value instanceof Float) {
+        toEditor.putFloat(key, (Float) value);
+      } else if (value instanceof Boolean) {
+        toEditor.putBoolean(key, (Boolean) value);
+      }
+    }
+  }
+
+  // Replace the secrets with the new versions. These values might change when the backup is
+  // restored on another device as where it is made.
+  private static void importSecrets(Context context) {
     DatabaseSecret dbs = getDatabaseSecretFromBackup(context);
     AttachmentSecret ats = getAttachmentSecretFromBackup(context);
     byte[] lgs = getLogSecretFromBackup(context);
     String bks = getBackupKeyFromBackup(context);
-    importDirectory(context, "");
+
     if (dbs != null) {
       overwriteDatabaseSecret(context, dbs);
     }
@@ -110,9 +172,6 @@ public class EncryptedBackupExporter {
     }
     if (bks != null) {
 	    BackupPassphrase.set(context, bks);
-    }
-    if (TextSecurePreferences.isRawBackupInZipfile(context)) {
-      deleteRawBackupFiles(context);
     }
   }
 
@@ -199,11 +258,12 @@ public class EncryptedBackupExporter {
           File localFile = contents[i];
 
           // Don't export the libraries
-          if ( localFile.getAbsolutePath().contains("libcurve25519.so") ||
-               localFile.getAbsolutePath().contains("libaesgcm.so") ||
+          if ( localFile.getAbsolutePath().contains("libaesgcm.so") ||
                localFile.getAbsolutePath().contains("libconscrypt_jni.so") ||
                localFile.getAbsolutePath().contains("libnative-utils.so") ||
-               localFile.getAbsolutePath().contains("libjingle_peerconnection_so.so") ||
+               localFile.getAbsolutePath().contains("libringrtc.so") ||
+               localFile.getAbsolutePath().contains("libringrtc_rffi.so") ||
+               localFile.getAbsolutePath().contains("libargon2.so") ||
                localFile.getAbsolutePath().contains("libsqlcipher.so") ) {
            // Do nothing
           } else if (localFile.isFile()) {        
