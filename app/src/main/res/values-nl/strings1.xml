@@ -2,10 +2,17 @@
 <resources>
   <!--arrays.xml-->
   <string name="arrays__import_export_orig">Importeren / exporteren</string>
-    <!-- preferences.xml -->
-    <string name="preferences__oled_theme">OLED Donker</string>
-    <string name="preferences__green_theme">Groen Licht</string>
-    <string name="preferences__blue_theme">Blauw Licht</string>
+  <!-- preferences.xml -->
+  <string name="preferences__oled_theme">OLED Donker</string>
+  <string name="preferences__green_theme">Groen Licht</string>
+  <string name="preferences__blue_theme">Blauw Licht</string>
+  <string name="preferences_chats__google_map_type">Locatie</string>
+  <string name="preferences__map_type">Kaartsoort</string>
+  <string name="preferences__map_normal">Normaal</string>
+  <string name="preferences__map_hybrid">Hybride</string>
+  <string name="preferences__map_satellite">Satelliet</string>
+  <string name="preferences__map_terrain">Terrein</string>
+  <string name="preferences__map_none">Geen</string>
   <!-- app protection-->
   <string name="preferences_app_protection__method_passphrase">Gebruik een wachtwoord</string>
   <string name="preferences_app_protection__method_passphrase_summary">Gebruik een wachtwoord om Signal te beveiligen in plaats van de standaard Android schermbeveiliging of vingerafdruk</string>

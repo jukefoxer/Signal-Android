@@ -108,12 +108,24 @@
     <!-- JW: added option to disable view once messages -->
     <PreferenceCategory android:layout="@layout/preference_divider"/>
 
-    <PreferenceCategory android:key="backup_category" android:title="@string/preferences_chats__view_once_messages">
+    <PreferenceCategory android:title="@string/preferences_chats__view_once_messages">
         <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
             android:defaultValue="false"
             android:key="pref_keep_view_once_messages"
             android:title="@string/preferences_chats__chat_keep_view_once_messages"
             android:summary="@string/preferences_chats__keep_view_once_messages_summary" />
+    </PreferenceCategory>
+
+    <!-- JW: added option to choose map type for the place picker -->
+    <PreferenceCategory android:layout="@layout/preference_divider"/>
+
+    <PreferenceCategory android:title="@string/preferences_chats__google_map_type">
+        <org.thoughtcrime.securesms.preferences.widgets.SignalListPreference
+            android:key="pref_google_map_type"
+            android:defaultValue="normal"
+            android:title="@string/preferences__map_type"
+            android:entries="@array/pref_map_type_entries"
+            android:entryValues="@array/pref_map_type_values" />
     </PreferenceCategory>
 
 </PreferenceScreen>

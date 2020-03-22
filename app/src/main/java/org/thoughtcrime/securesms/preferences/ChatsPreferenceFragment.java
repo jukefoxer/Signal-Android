@@ -55,8 +55,11 @@ public class ChatsPreferenceFragment extends ListSummaryPreferenceFragment {
         .setOnPreferenceClickListener(new BackupVerifyListener());
     findPreference(TextSecurePreferences.BACKUP_LOCATION_REMOVABLE_PREF) // JW: added
         .setOnPreferenceChangeListener(new BackupLocationListener());
+    findPreference(TextSecurePreferences.GOOGLE_MAP_TYPE) // JW: added
+        .setOnPreferenceChangeListener(new ListSummaryListener());
 
     initializeListSummary((ListPreference) findPreference(TextSecurePreferences.MESSAGE_BODY_TEXT_SIZE_PREF));
+    initializeListSummary((ListPreference) findPreference(TextSecurePreferences.GOOGLE_MAP_TYPE)); // JW: added
 
     EventBus.getDefault().register(this);
   }

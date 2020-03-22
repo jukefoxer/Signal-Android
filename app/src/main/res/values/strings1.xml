@@ -6,6 +6,13 @@
   <string name="preferences__oled_theme">OLED Dark</string>
   <string name="preferences__green_theme">Green Light</string>
   <string name="preferences__blue_theme">Blue Light</string>
+  <string name="preferences_chats__google_map_type">Location</string>
+  <string name="preferences__map_type">Map type</string>
+  <string name="preferences__map_normal">Normal</string>
+  <string name="preferences__map_hybrid">Hybrid</string>
+  <string name="preferences__map_satellite">Satellite</string>
+  <string name="preferences__map_terrain">Terrain</string>
+  <string name="preferences__map_none">None</string>
   <!-- app protection-->
   <string name="preferences_app_protection__method_passphrase">Use a passphrase</string>
   <string name="preferences_app_protection__method_passphrase_summary">Use a passphrase to protect Signal instead of the Android screen lock or fingerprint</string>

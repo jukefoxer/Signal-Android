@@ -225,6 +225,8 @@ public class TextSecurePreferences {
   public static final String KEEP_VIEW_ONCE_MESSAGES = "pref_keep_view_once_messages";
   // JW: used to disable mandatory PIN v2 reminders
   public static final String DISABLE_PINV2_REMINDERS = "pref_signal_disable_pinv2_reminders";
+  // JW: select map type for location picker
+  public static final String GOOGLE_MAP_TYPE = "pref_google_map_type";
 
   // JW: added for PROTECTION_METHOD_PREF
   public static boolean isProtectionMethodPassphrase(@NonNull Context context) {
@@ -273,6 +275,10 @@ public class TextSecurePreferences {
   // JW:added.
   public static void setPinV2ReminderDisabled(@NonNull Context context, boolean value) {
     setBooleanPreference(context, DISABLE_PINV2_REMINDERS, value);
+  }
+  // JW: added
+  public static String getGoogleMapType(Context context) {
+    return getStringPreference(context, GOOGLE_MAP_TYPE, "normal");
   }
 
   public static boolean isScreenLockEnabled(@NonNull Context context) {
@@ -1104,7 +1110,7 @@ public class TextSecurePreferences {
     }
 
     return getBooleanPreference(context, CALL_VIBRATE_PREF, defaultValue);
-  }
+}
 
   public static String getNotificationLedColor(Context context) {
     return getStringPreference(context, LED_COLOR_PREF, "blue");
