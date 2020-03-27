@@ -1,7 +1,9 @@
 package org.thoughtcrime.securesms.megaphone;
 
+import org.thoughtcrime.securesms.dependencies.ApplicationDependencies; // JW
 import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.util.FeatureFlags;
+import org.thoughtcrime.securesms.util.TextSecurePreferences; // JW
 
 final class SignalPinReminderSchedule implements MegaphoneSchedule {
 
@@ -10,7 +12,10 @@ final class SignalPinReminderSchedule implements MegaphoneSchedule {
     if (!SignalStore.kbsValues().isV2RegistrationLockEnabled()) {
       return false;
     }
-
+    // JW
+    if (TextSecurePreferences.isPinV2ReminderDisabled(ApplicationDependencies.getApplication())) {
+      return false;
+    }
     if (!FeatureFlags.pinsForAll()) {
       return false;
     }
