@@ -3,6 +3,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
   <PreferenceCategory android:title="@string/preferences_app_protection__app_access">
 
+    <!-- JW: added option to use the passphrase -->
+    <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+        android:key="pref_signal_protection_method"
+        android:defaultValue="false"
+        android:title="@string/preferences_app_protection__method_passphrase"
+        android:summary="@string/preferences_app_protection__method_passphrase_summary"/>
+
     <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="pref_android_screen_lock"
@@ -122,6 +129,12 @@
         android:summary="@string/preferences_app_protection__registration_lock_adds_and_extra_layer_of_security"
         android:title="@string/preferences_app_protection__registration_lock" />
 
+    <!-- JW: added option to disable reminders -->
+    <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+        android:key="pref_signal_disable_pinv2_reminders"
+        android:defaultValue="false"
+        android:title="@string/preferences_app_protection__disable_pinv2_reminders"
+        android:summary="@string/preferences_app_protection__disable_pinv2_reminders_summary"/>
   </PreferenceCategory>
 
   <PreferenceCategory
@@ -132,6 +145,13 @@
         android:key="pref_registration_lock"
         android:summary="@string/preferences_app_protection__enable_a_registration_lock_pin_that_will_be_required"
         android:title="@string/preferences_app_protection__registration_lock_pin" />
+
+    <!-- JW: added option to disable reminders -->
+    <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+        android:key="pref_signal_disable_pinv2_reminders"
+        android:defaultValue="false"
+        android:title="@string/preferences_app_protection__disable_pinv2_reminders"
+        android:summary="@string/preferences_app_protection__disable_pinv2_reminders_summary"/>
   </PreferenceCategory>
 
 

@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+import android.widget.Button; // JW
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import org.thoughtcrime.securesms.R;
 import org.thoughtcrime.securesms.logging.Log;
+import org.thoughtcrime.securesms.util.TextSecurePreferences; // JW: added
 
 import java.io.IOException;
 import java.util.List;
@@ -70,9 +72,34 @@ public final class PlacePickerActivity extends AppCompatActivity {
     bottomSheet      = findViewById(R.id.bottom_sheet);
     View markerImage = findViewById(R.id.marker_image_view);
     View fab         = findViewById(R.id.place_chosen_button);
+    // JW: add maptype buttons
+    Button btnMapTypeNormal = findViewById(R.id.btnMapTypeNormal);
+    Button btnMapTypeSatellite = findViewById(R.id.btnMapTypeSatellite);
+    Button btnMapTypeTerrain = findViewById(R.id.btnMapTypeTerrain);
 
     fab.setOnClickListener(v -> finishWithAddress());
 
+    // JW: button event handlers
+    btnMapTypeNormal.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(@NonNull View v) {
+        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        TextSecurePreferences.setGoogleMapType(getApplicationContext(), "normal");
+      }
+    });
+
+    btnMapTypeSatellite.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(@NonNull View v) {
+        googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+        TextSecurePreferences.setGoogleMapType(getApplicationContext(), "satellite");
+      }
+    });
+
+    btnMapTypeTerrain.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(@NonNull View v) {
+        googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+        TextSecurePreferences.setGoogleMapType(getApplicationContext(), "terrain");
+      }
+    });
 
     if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)   == PackageManager.PERMISSION_GRANTED ||
         ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
@@ -127,8 +154,19 @@ public final class PlacePickerActivity extends AppCompatActivity {
 
   private void setMap(GoogleMap googleMap) {
     this.googleMap = googleMap;
+    setGoogleMapType(googleMap); // JW: set maptype
 
     moveMapToInitialIfPossible();
+  }
+
+  // JW: set the maptype
+  private void setGoogleMapType(GoogleMap googleMap) {
+    String mapType = TextSecurePreferences.getGoogleMapType(getApplicationContext());
+    if (mapType.equals("normal")) { googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL); }
+    else if (mapType.equals("hybrid")) { googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID); }
+    else if (mapType.equals("satellite")) { googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE); }
+    else if (mapType.equals("terrain")) { googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN); }
+    else if (mapType.equals("none")) { googleMap.setMapType(GoogleMap.MAP_TYPE_NONE); }
   }
 
   private void moveMapToInitialIfPossible() {
