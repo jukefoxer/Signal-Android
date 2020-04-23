@@ -71,6 +71,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.thoughtcrime.securesms.ApplicationContext;
+import org.thoughtcrime.securesms.ImportExportActivity; // JW
 import org.thoughtcrime.securesms.MainFragment;
 import org.thoughtcrime.securesms.MainNavigator;
 import org.thoughtcrime.securesms.NewConversationActivity;
@@ -238,7 +239,9 @@ public class ConversationListFragment extends MainFragment implements LoaderMana
 
     RatingManager.showRatingDialogIfNecessary(requireContext());
 
+    if (!TextSecurePreferences.isPinV2ReminderDisabled(requireContext())) { // JW: made reminder optional
     RegistrationLockV1Dialog.showReminderIfNecessary(this);
+    }
 
     TooltipCompat.setTooltipText(searchAction, getText(R.string.SearchToolbar_search_for_conversations_contacts_and_messages));
   }
@@ -294,6 +297,7 @@ public class ConversationListFragment extends MainFragment implements LoaderMana
       case R.id.menu_settings:          handleDisplaySettings(); return true;
       case R.id.menu_clear_passphrase:  handleClearPassphrase(); return true;
       case R.id.menu_mark_all_read:     handleMarkAllRead();     return true;
+      case R.id.menu_import_export:     handleImportExport();    return true; // JW: added
       case R.id.menu_invite:            handleInvite();          return true;
       case R.id.menu_insights:          handleInsights();        return true;
     }
@@ -577,6 +581,11 @@ public class ConversationListFragment extends MainFragment implements LoaderMana
     Intent intent = new Intent(requireActivity(), KeyCachingService.class);
     intent.setAction(KeyCachingService.CLEAR_KEY_ACTION);
     requireActivity().startService(intent);
+  }
+
+  // JW: added
+  private void handleImportExport() {
+    startActivity(new Intent(requireActivity(), ImportExportActivity.class));
   }
 
   private void handleMarkAllRead() {
