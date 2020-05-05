@@ -13,4 +13,17 @@ public class DynamicRegistrationTheme extends DynamicTheme {
   protected @StyleRes int getDarkThemeStyle() {
     return R.style.TextSecure_DarkRegistrationTheme;
   }
+
+  // JW: added
+  protected @StyleRes int getDarkThemeOledStyle() {
+    return R.style.TextSecure_DarkRegistrationThemeOled;
+  }
+  // JW: added
+  protected @StyleRes int getLightThemeBlueStyle() {
+    return R.style.TextSecure_LightRegistrationThemeBlue;
+  }
+  // JW: added
+  protected @StyleRes int getLightThemeGreenStyle() {
+    return R.style.TextSecure_LightRegistrationThemeGreen;
+  }
 }
