@@ -150,11 +150,11 @@ public final class AudioWaveForm {
       }
 
       MediaCodec codec = MediaCodec.createDecoderByType(mime);
-
+/* JW: exception still leads to a crash
       if (totalDurationUs == 0) {
         throw new IOException("Zero duration");
       }
-
+*/
       codec.configure(format, null, null, 0);
       codec.start();
 
@@ -192,7 +192,7 @@ public final class AudioWaveForm {
               presentationTimeUs,
               sawInputEOS ? MediaCodec.BUFFER_FLAG_END_OF_STREAM : 0);
 
-            if (!sawInputEOS) {
+            if (!sawInputEOS && (totalDurationUs != 0)) { // JW
               int barSampleIndex = (int) (SAMPLES_PER_BAR * (wave.length * extractor.getSampleTime()) / totalDurationUs);
               inputSamples[barSampleIndex]++;
               sawInputEOS = !extractor.advance();
@@ -218,7 +218,10 @@ public final class AudioWaveForm {
             }
 
             ByteBuffer buf = codecOutputBuffers[outputBufferIndex];
-            int barIndex = (int) ((wave.length * info.presentationTimeUs) / totalDurationUs);
+            int barIndex = 0; // JW
+            if (totalDurationUs != 0) {
+              barIndex = (int) ((wave.length * info.presentationTimeUs) / totalDurationUs) - 1;
+            }
             long total = 0;
             for (int i = 0; i < info.size; i += 2 * 4) {
               short aShort = buf.getShort(i);
