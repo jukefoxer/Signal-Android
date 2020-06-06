@@ -8,7 +8,9 @@ import androidx.annotation.Nullable;
 
 import org.thoughtcrime.securesms.R;
 import org.thoughtcrime.securesms.database.NoExternalStorageException;
+import org.thoughtcrime.securesms.dependencies.ApplicationDependencies; // JW: added
 import org.thoughtcrime.securesms.logging.Log;
+import org.thoughtcrime.securesms.util.TextSecurePreferences; // JW: added
 import org.whispersystems.libsignal.util.ByteUtil;
 
 import java.io.File;
@@ -74,6 +76,18 @@ public class BackupUtil {
   private static List<BackupInfo> getAllBackupsNewestFirst() throws NoExternalStorageException {
     File             backupDirectory = StorageUtil.getBackupDirectory();
     File[]           files           = backupDirectory.listFiles();
+    // JW: if no backup found in internal storage, try removable storage.
+    // This code is used at first app start when restoring a backup that is located
+    // on the removable storage.
+    if (files.length == 0) {
+      Context context = ApplicationDependencies.getApplication();
+      TextSecurePreferences.setBackupLocationRemovable(context, true);
+      backupDirectory = StorageUtil.getBackupDirectory();
+      files   = backupDirectory.listFiles();
+      if (files.length == 0) { // No backup in removable storage, reset preference to default value
+        TextSecurePreferences.setBackupLocationRemovable(context, false);
+      }
+    }
     List<BackupInfo> backups         = new ArrayList<>(files.length);
 
     for (File file : files) {
