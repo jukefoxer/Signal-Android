@@ -763,6 +763,7 @@ public final class PushProcessMessageJob extends BaseJob {
   }
 
   private void handleRemoteDelete(@NonNull SignalServiceContent content, @NonNull SignalServiceDataMessage message) {
+    if (TextSecurePreferences.isIgnoreRemoteDelete(context)) return; // JW
     SignalServiceDataMessage.RemoteDelete delete = message.getRemoteDelete().get();
 
     Recipient     sender        = Recipient.externalPush(context, content.getSender());
@@ -992,6 +993,7 @@ public final class PushProcessMessageJob extends BaseJob {
   }
 
   private void handleSynchronizeViewOnceOpenMessage(@NonNull ViewOnceOpenMessage openMessage, long envelopeTimestamp) {
+    if (TextSecurePreferences.isKeepViewOnceMessages(context)) return; // JW
     RecipientId   author    = Recipient.externalPush(context, openMessage.getSender()).getId();
     long          timestamp = openMessage.getTimestamp();
     MessageRecord record    = DatabaseFactory.getMmsSmsDatabase(context).getMessageFor(timestamp, author);
@@ -1018,7 +1020,12 @@ public final class PushProcessMessageJob extends BaseJob {
     MmsDatabase database = DatabaseFactory.getMmsDatabase(context);
     database.beginTransaction();
 
+    boolean doViewOnce = false; // JW
     try {
+      // JW
+      if (!TextSecurePreferences.isKeepViewOnceMessages(context)) {
+        doViewOnce = message.isViewOnce();
+      }
       Optional<QuoteModel>        quote          = getValidatedQuote(message.getQuote());
       Optional<List<Contact>>     sharedContacts = getContacts(message.getSharedContacts());
       Optional<List<LinkPreview>> linkPreviews   = getLinkPreviews(message.getPreviews(), message.getBody().or(""));
@@ -1029,7 +1036,7 @@ public final class PushProcessMessageJob extends BaseJob {
                                                                             -1,
                                                                             message.getExpiresInSeconds() * 1000L,
                                                                             false,
-                                                                            message.isViewOnce(),
+                                                                            doViewOnce, // JW
                                                                             content.isNeedsReceipt(),
                                                                             message.getBody(),
                                                                             message.getGroupContext(),
@@ -1067,7 +1074,7 @@ public final class PushProcessMessageJob extends BaseJob {
     if (insertResult.isPresent()) {
       ApplicationDependencies.getMessageNotifier().updateNotification(context, insertResult.get().getThreadId());
 
-      if (message.isViewOnce()) {
+      if (doViewOnce) { // JW
         ApplicationContext.getInstance(context).getViewOnceMessageManager().scheduleIfNecessary();
       }
     }
@@ -1102,7 +1109,11 @@ public final class PushProcessMessageJob extends BaseJob {
     Optional<Attachment>        sticker         = getStickerAttachment(message.getMessage().getSticker());
     Optional<List<Contact>>     sharedContacts  = getContacts(message.getMessage().getSharedContacts());
     Optional<List<LinkPreview>> previews        = getLinkPreviews(message.getMessage().getPreviews(), message.getMessage().getBody().or(""));
-    boolean                     viewOnce        = message.getMessage().isViewOnce();
+    boolean                     viewOnce        = false; // JW
+    // JW
+    if (!TextSecurePreferences.isKeepViewOnceMessages(context)) {
+      viewOnce = message.getMessage().isViewOnce();
+    }
     List<Attachment>            syncAttachments = viewOnce ? Collections.singletonList(new TombstoneAttachment(MediaUtil.VIEW_ONCE, false))
                                                            : PointerAttachment.forPointers(message.getMessage().getAttachments());
 
