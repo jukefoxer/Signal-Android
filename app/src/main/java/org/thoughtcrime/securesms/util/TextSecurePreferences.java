@@ -214,6 +214,91 @@ public class TextSecurePreferences {
 
   private static final String ARGON2_TESTED = "argon2_tested";
 
+  //---------------------------------------------------------------------------
+  // JW: true = passphrase, false = Android lock or fingerprint
+  public static final String PROTECTION_METHOD_PREF = "pref_signal_protection_method";
+  // JW: true = backup to removable SD card (if available), false = backup to internal sd card
+  public static final String BACKUP_LOCATION_REMOVABLE_PREF = "pref_backup_location_external";
+  // JW: false (default) means the backup location is not changed by the user, true means it is changed.
+  // This is used to determine at first app start to locate the app backup.
+  public static final String BACKUP_LOCATION_CHANGED = "pref_backup_location_changed";  
+  // JW: added to use encrypted zipfiles to store raw backups
+  public static final String BACKUP_STORE_ZIPFILE_PREF = "pref_backup_zipfile";
+  // JW: added to use encrypted zipfiles to store plaintext backups
+  public static final String BACKUP_STORE_ZIPFILE_PLAIN_PREF = "pref_backup_zipfile_plain";
+  // JW: used to see if we delete view once messagres or not
+  public static final String KEEP_VIEW_ONCE_MESSAGES = "pref_keep_view_once_messages";
+  // JW: used to see if we ignore remote delete messages or not
+  public static final String IGNORE_REMOTE_DELETE = "pref_ignore_remote_delete";
+  // JW: select map type for location picker
+  public static final String GOOGLE_MAP_TYPE = "pref_google_map_type";
+
+  // JW: added for PROTECTION_METHOD_PREF
+  public static boolean isProtectionMethodPassphrase(@NonNull Context context) {
+    return getBooleanPreference(context, PROTECTION_METHOD_PREF, false);
+  }
+  // JW added
+  public static void setProtectionMethod(@NonNull Context context, boolean value) {
+    setBooleanPreference(context, PROTECTION_METHOD_PREF, value);
+  }
+  // JW added
+  public static void setBackupLocationRemovable(@NonNull Context context, boolean value) {
+    setBooleanPreference(context, BACKUP_LOCATION_REMOVABLE_PREF, value);
+  }
+  // JW added. Default to false so default does the same as official Signal.
+  public static boolean isBackupLocationRemovable(@NonNull Context context) {
+    return getBooleanPreference(context, BACKUP_LOCATION_REMOVABLE_PREF, false);
+  }
+  // JW added
+  public static void setBackupLocationChanged(@NonNull Context context, boolean value) {
+    setBooleanPreference(context, BACKUP_LOCATION_CHANGED, value);
+  }
+  // JW added
+  public static boolean isBackupLocationChanged(@NonNull Context context) {
+    return getBooleanPreference(context, BACKUP_LOCATION_CHANGED, false);
+  }
+  // JW added.
+  public static boolean isRawBackupInZipfile(@NonNull Context context) {
+    return getBooleanPreference(context, BACKUP_STORE_ZIPFILE_PREF, false);
+  }
+  // JW added.
+  public static void setRawBackupZipfile(@NonNull Context context, boolean value) {
+    setBooleanPreference(context, BACKUP_STORE_ZIPFILE_PREF, value);
+  }
+  // JW added.
+  public static boolean isPlainBackupInZipfile(@NonNull Context context) {
+    return getBooleanPreference(context, BACKUP_STORE_ZIPFILE_PLAIN_PREF, false);
+  }
+  // JW added.
+  public static void setPlainBackupZipfile(@NonNull Context context, boolean value) {
+    setBooleanPreference(context, BACKUP_STORE_ZIPFILE_PLAIN_PREF, value);
+  }
+  // JW added.
+  public static boolean isKeepViewOnceMessages(@NonNull Context context) {
+    return getBooleanPreference(context, KEEP_VIEW_ONCE_MESSAGES, false);
+  }
+  // JW added.
+  public static void setKeepViewOnceMessages(@NonNull Context context, boolean value) {
+    setBooleanPreference(context, KEEP_VIEW_ONCE_MESSAGES, value);
+  }
+  // JW: added
+  public static String getGoogleMapType(Context context) {
+    return getStringPreference(context, GOOGLE_MAP_TYPE, "normal");
+  }
+  // JW: added
+  public static void setGoogleMapType(Context context, String value) {
+    setStringPreference(context, GOOGLE_MAP_TYPE, value);
+  }
+  // JW: added
+  public static boolean isIgnoreRemoteDelete(@NonNull Context context) {
+    return getBooleanPreference(context, IGNORE_REMOTE_DELETE, false);
+  }
+  // JW added.
+  public static void setIgnoreRemoteDelete(@NonNull Context context, boolean value) {
+    setBooleanPreference(context, IGNORE_REMOTE_DELETE, value);
+  }
+  //---------------------------------------------------------------------------
+
   public static boolean isScreenLockEnabled(@NonNull Context context) {
     return getBooleanPreference(context, SCREEN_LOCK, false);
   }
