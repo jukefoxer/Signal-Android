@@ -13,4 +13,17 @@ public class DynamicNoActionBarTheme extends DynamicTheme {
   protected @StyleRes int getDarkThemeStyle() {
     return R.style.TextSecure_DarkNoActionBar;
   }
+
+  // JW: added
+  protected @StyleRes int getDarkThemeOledStyle() {
+    return R.style.TextSecure_DarkNoActionBarOled;
+  }
+  // JW: added
+  protected @StyleRes int getLightThemeBlueStyle() {
+    return R.style.TextSecure_LightNoActionBarBlue;
+  }
+  // JW: added
+  protected @StyleRes int getLightThemeGreenStyle() {
+    return R.style.TextSecure_LightNoActionBarGreen;
+  }
 }
