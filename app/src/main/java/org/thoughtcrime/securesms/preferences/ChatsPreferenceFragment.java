@@ -54,7 +54,13 @@ public class ChatsPreferenceFragment extends ListSummaryPreferenceFragment {
     findPreference(TextSecurePreferences.BACKUP_PASSPHRASE_VERIFY)
         .setOnPreferenceClickListener(new BackupVerifyListener());
 
+    findPreference(TextSecurePreferences.BACKUP_LOCATION_REMOVABLE_PREF) // JW: added
+        .setOnPreferenceChangeListener(new BackupLocationListener());
+    findPreference(TextSecurePreferences.GOOGLE_MAP_TYPE) // JW: added
+        .setOnPreferenceChangeListener(new ListSummaryListener());
+
     initializeListSummary((ListPreference) findPreference(TextSecurePreferences.MESSAGE_BODY_TEXT_SIZE_PREF));
+    initializeListSummary((ListPreference) findPreference(TextSecurePreferences.GOOGLE_MAP_TYPE)); // JW: added
 
     EventBus.getDefault().register(this);
   }
@@ -141,6 +147,18 @@ public class ChatsPreferenceFragment extends ListSummaryPreferenceFragment {
                  .withPermanentDenialDialog(getString(R.string.ChatsPreferenceFragment_signal_requires_external_storage_permission_in_order_to_create_backups))
                  .execute();
 
+      return true;
+    }
+  }
+
+  // JW: added
+  private class BackupLocationListener implements Preference.OnPreferenceChangeListener {
+    @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
+      // Set the new preference ourself before calling setBackupSummary() to make it use
+      // the correct backup directory.
+      TextSecurePreferences.setBackupLocationRemovable(getActivity(), (boolean)newValue);
+      TextSecurePreferences.setBackupLocationChanged(getActivity(), true); // Used in BackupUtil.getAllBackupsNewestFirst()
+      setBackupSummary();
       return true;
     }
   }
