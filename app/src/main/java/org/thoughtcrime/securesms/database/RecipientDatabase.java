@@ -850,30 +850,35 @@ public class RecipientDatabase extends Database {
         threadDatabase.setArchived(recipient.getId(), update.getNew().isArchived());
         needsRefresh.add(recipient.getId());
       }
-      
-      for (SignalGroupV2Record insert : groupV2Inserts) {
-        db.insertOrThrow(TABLE_NAME, null, getValuesForStorageGroupV2(insert));
 
+      // JW: rewrote loop to prevent crash, code by @alan-signal
+      for (SignalGroupV2Record insert : groupV2Inserts) {
         GroupMasterKey masterKey = insert.getMasterKeyOrThrow();
         GroupId.V2     groupId   = GroupId.v2(masterKey);
+        ContentValues  values    = getValuesForStorageGroupV2(insert);
+        long           id        = db.insertWithOnConflict(TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_IGNORE);
         Recipient      recipient = Recipient.externalGroup(context, groupId);
-
+   
+        if (id < 0) {
+          Log.w(TAG, String.format("Recipient %s is already linked to group %s", recipient.getId(), groupId));
+        } else {
+          Log.i(TAG, String.format("Inserted recipient %s for group %s", recipient.getId(), groupId));
+        }
+   
         Log.i(TAG, "Creating restore placeholder for " + groupId);
-
         DatabaseFactory.getGroupDatabase(context)
                        .create(masterKey,
                                DecryptedGroup.newBuilder()
                                              .setRevision(GroupsV2StateProcessor.RESTORE_PLACEHOLDER_REVISION)
                                              .build());
-
+   
         Log.i(TAG, "Scheduling request for latest group info for " + groupId);
-
+   
         ApplicationDependencies.getJobManager().add(new RequestGroupV2InfoJob(groupId));
-
+   
         threadDatabase.setArchived(recipient.getId(), insert.isArchived());
         needsRefresh.add(recipient.getId());
       }
-
       for (RecordUpdate<SignalGroupV2Record> update : groupV2Updates) {
         ContentValues values      = getValuesForStorageGroupV2(update.getNew());
         int           updateCount = db.update(TABLE_NAME, values, STORAGE_SERVICE_ID + " = ?", new String[]{Base64.encodeBytes(update.getOld().getId().getRaw())});
