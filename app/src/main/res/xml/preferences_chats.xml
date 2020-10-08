@@ -82,6 +82,56 @@
                 android:dependency="pref_backup_enabled"
                 android:summary="@string/preferences_chats__test_your_backup_passphrase_and_verify_that_it_matches"/>
 
+        <!-- JW: added backup location switch -->
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+                android:defaultValue="false"
+                android:key="pref_backup_location_external"
+                android:title="@string/preferences_chats__chat_backups_removable"
+                android:summary="@string/preferences_chats__backup_chats_to_removable_storage" />
+
+        <!-- JW: added backup type switch for full backups -->
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_backup_zipfile"
+            android:title="@string/preferences_chats__chat_backups_zipfile"
+            android:summary="@string/preferences_chats__backup_chats_to_encrypted_zipfile" />
+
+        <!-- JW: added backup type switch for plaintext backups -->
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_backup_zipfile_plain"
+            android:title="@string/preferences_chats__chat_backups_zipfile_plain"
+            android:summary="@string/preferences_chats__backup_chats_to_encrypted_zipfile_plain" />
+
+    </PreferenceCategory>
+
+    <!-- JW: added option to disable view once messages -->
+    <PreferenceCategory android:layout="@layout/preference_divider"/>
+
+    <PreferenceCategory android:title="@string/preferences_chats__control_message_deletion">
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_keep_view_once_messages"
+            android:title="@string/preferences_chats__chat_keep_view_once_messages"
+            android:summary="@string/preferences_chats__keep_view_once_messages_summary" />
+
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_ignore_remote_delete"
+            android:title="@string/preferences_chats__chat_ignore_remote_delete"
+            android:summary="@string/preferences_chats__chat_ignore_remote_delete_summary" />
+    </PreferenceCategory>
+
+    <!-- JW: added option to choose map type for the place picker -->
+    <PreferenceCategory android:layout="@layout/preference_divider"/>
+
+    <PreferenceCategory android:title="@string/preferences_chats__google_map_type">
+        <org.thoughtcrime.securesms.preferences.widgets.SignalListPreference
+            android:key="pref_google_map_type"
+            android:defaultValue="normal"
+            android:title="@string/preferences__map_type"
+            android:entries="@array/pref_map_type_entries"
+            android:entryValues="@array/pref_map_type_values" />
     </PreferenceCategory>
 
 </PreferenceScreen>
