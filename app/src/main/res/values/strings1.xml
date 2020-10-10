@@ -18,6 +18,10 @@
   <string name="preferences_app_protection__method_passphrase_summary">Use a passphrase to protect Signal instead of the Android screen lock or fingerprint</string>
   <string name="preferences_app_protection__screenlock_requires_lollipop">Using the system screenlock requires Android 5.0 (Lollipop) or higher.</string>
   <string name="preferences_app_protection__android_version_too_low">Android version too low</string>
+  <!-- FCM switch -->
+  <string name="preferences_advanced__push_notifications_fcm">Push Notifications via Google Play Services</string>
+  <string name="preferences_advanced__play_services_not_found">Google Play Services not found</string>
+  <string name="preferences_advanced__need_to_restart">Signal needs to restart for the changes to take effect</string>
   <!-- Keep messages -->
   <string name="preferences_chats__control_message_deletion">Control message deletion</string>
   <string name="preferences_chats__chat_keep_view_once_messages">Keep view-once media</string>

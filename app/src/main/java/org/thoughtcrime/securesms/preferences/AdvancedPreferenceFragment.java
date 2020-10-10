@@ -19,11 +19,14 @@ import androidx.preference.Preference;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.thoughtcrime.securesms.ApplicationPreferencesActivity;
+import org.thoughtcrime.securesms.ExitActivity; // JW: added
+import org.thoughtcrime.securesms.jobs.FcmRefreshJob; // JW: added
 import org.thoughtcrime.securesms.BuildConfig;
 import org.thoughtcrime.securesms.R;
 import org.thoughtcrime.securesms.contacts.ContactAccessor;
 import org.thoughtcrime.securesms.contacts.ContactIdentityManager;
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
+import org.thoughtcrime.securesms.jobs.RefreshAttributesJob; // JW: added
 import org.thoughtcrime.securesms.keyvalue.KbsValues;
 import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.lock.v2.CreateKbsPinActivity;
@@ -33,7 +36,9 @@ import org.thoughtcrime.securesms.pin.PinOptOutDialog;
 import org.thoughtcrime.securesms.pin.PinState;
 import org.thoughtcrime.securesms.registration.RegistrationNavigationActivity;
 import org.thoughtcrime.securesms.util.FeatureFlags;
+import org.thoughtcrime.securesms.util.PlayServicesUtil;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
+import org.thoughtcrime.securesms.util.concurrent.SignalExecutors; // JW: added
 import org.thoughtcrime.securesms.util.concurrent.SimpleTask;
 import org.thoughtcrime.securesms.util.task.ProgressDialogAsyncTask;
 import org.thoughtcrime.securesms.util.views.SimpleProgressDialog;
@@ -51,6 +56,7 @@ public class AdvancedPreferenceFragment extends CorrectedPreferenceFragment {
   private static final String SUBMIT_DEBUG_LOG_PREF = "pref_submit_debug_logs";
   private static final String INTERNAL_PREF         = "pref_internal";
   private static final String ADVANCED_PIN_PREF     = "pref_advanced_pin_settings";
+  private static final String FCM_PREF              = "pref_toggle_fcm"; // JW: added
 
   private static final int PICK_IDENTITY_CONTACT = 1;
 
@@ -127,6 +133,16 @@ public class AdvancedPreferenceFragment extends CorrectedPreferenceFragment {
     }
 
     preference.setOnPreferenceChangeListener(new PushMessagingClickListener());
+    initializeFcmToggle(); // JW: added
+  }
+
+  // JW: added method
+  private void initializeFcmToggle() {
+    CheckBoxPreference preference = (CheckBoxPreference)this.findPreference(FCM_PREF);
+
+    preference.setEnabled(TextSecurePreferences.isPushRegistered(getActivity()));
+    preference.setChecked(!TextSecurePreferences.isFcmDisabled(getActivity()));
+    preference.setOnPreferenceChangeListener(new FcmClickListener());
   }
 
   private void initializeIdentitySelection() {
@@ -259,6 +275,70 @@ public class AdvancedPreferenceFragment extends CorrectedPreferenceFragment {
       }
 
       return false;
+    }
+  }
+
+  // JW: added class
+  private class FcmClickListener implements Preference.OnPreferenceChangeListener {
+
+    private void restartApp(Context context) {
+      // JW: Restart after OK press
+      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+      builder.setMessage(context.getString(R.string.preferences_advanced__need_to_restart))
+        .setCancelable(false)
+        .setPositiveButton(context.getString(R.string.ImportFragment_restore_ok), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+            ExitActivity.exitAndRemoveFromRecentApps(getActivity());
+          }
+        });
+      AlertDialog alert = builder.create();
+      alert.show();
+    }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
+      final Context context = preference.getContext();
+
+      boolean enabled = (boolean) newValue;
+
+      if (enabled) {
+        PlayServicesUtil.PlayServicesStatus status = PlayServicesUtil.getPlayServicesStatus(context);
+
+        if (status == PlayServicesUtil.PlayServicesStatus.SUCCESS) {
+          TextSecurePreferences.setFcmDisabled(context, false);
+          //ApplicationDependencies.getJobManager().add(new FcmRefreshJob());
+          ApplicationDependencies.getJobManager().startChain(new FcmRefreshJob())
+            .then(new RefreshAttributesJob())
+            .enqueue();
+
+          restartApp(context);
+        } else {
+          // No Play Services found
+          Toast.makeText(getActivity(),
+            R.string.preferences_advanced__play_services_not_found,
+            Toast.LENGTH_LONG).show();
+
+          preference.setEnabled(false);
+          return false;
+        }
+      } else {
+        TextSecurePreferences.setFcmDisabled(context, true);
+        TextSecurePreferences.setFcmToken(context, null);
+        SignalExecutors.BOUNDED.execute(() -> {
+          SignalServiceAccountManager accountManager = ApplicationDependencies.getSignalServiceAccountManager();
+          try {
+            accountManager.setGcmId(Optional.<String>absent());
+          } catch (IOException e) {
+            Toast.makeText(getActivity(),
+              R.string.ApplicationPreferencesActivity_error_connecting_to_server,
+              Toast.LENGTH_LONG).show();
+          }
+        });
+        ApplicationDependencies.getJobManager().startChain(new RefreshAttributesJob()).enqueue();
+        restartApp(context);
+      }
+
+      return true;
     }
   }
 }

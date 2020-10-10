@@ -18,6 +18,10 @@
   <string name="preferences_app_protection__method_passphrase_summary">Gebruik een wachtwoord om Signal te beveiligen in plaats van de standaard Android schermbeveiliging of vingerafdruk</string>
   <string name="preferences_app_protection__screenlock_requires_lollipop">Het gebruik van de schermbeveiliging vereist Android 5.0 (Lollipop) of hoger.</string>
   <string name="preferences_app_protection__android_version_too_low">Android versie te laag</string>
+  <!-- FCM switch -->
+  <string name="preferences_advanced__push_notifications_fcm">Push meldingen via Google Play Services</string>
+  <string name="preferences_advanced__play_services_not_found">Google Play Services niet gevonden</string>
+  <string name="preferences_advanced__need_to_restart">Signal moet opnieuw starten om de veranderingen door te voeren</string>
   <!-- Keep messages -->
   <string name="preferences_chats__control_message_deletion">Beheer verwijderen van berichten</string>
   <string name="preferences_chats__chat_keep_view_once_messages">Behoud eenmalige weergave-media</string>
