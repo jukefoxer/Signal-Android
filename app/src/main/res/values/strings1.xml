@@ -19,9 +19,10 @@
   <string name="preferences_app_protection__screenlock_requires_lollipop">Using the system screenlock requires Android 5.0 (Lollipop) or higher.</string>
   <string name="preferences_app_protection__android_version_too_low">Android version too low</string>
   <!-- FCM switch -->
-  <string name="preferences_advanced__push_notifications_fcm">Push Notifications via Google Play Services</string>
+  <string name="preferences_advanced__push_notifications_fcm">Push Notifications via FCM</string>
+  <string name="preferences_advanced__push_notifications_fcm_summary">Receive push notifications via Google Play Services. When switched off a websocket will be used, which might cause more battery usage</string>
   <string name="preferences_advanced__play_services_not_found">Google Play Services not found</string>
-  <string name="preferences_advanced__need_to_restart">Signal needs to restart for the changes to take effect</string>
+  <string name="preferences_advanced__need_to_restart">Signal needs to restart for the changes to take effect. Press OK to stop Signal.</string>
   <!-- Keep messages -->
   <string name="preferences_chats__control_message_deletion">Control message deletion</string>
   <string name="preferences_chats__chat_keep_view_once_messages">Keep view-once media</string>

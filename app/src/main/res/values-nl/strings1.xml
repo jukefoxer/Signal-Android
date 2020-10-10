@@ -19,9 +19,10 @@
   <string name="preferences_app_protection__screenlock_requires_lollipop">Het gebruik van de schermbeveiliging vereist Android 5.0 (Lollipop) of hoger.</string>
   <string name="preferences_app_protection__android_version_too_low">Android versie te laag</string>
   <!-- FCM switch -->
-  <string name="preferences_advanced__push_notifications_fcm">Push meldingen via Google Play Services</string>
+  <string name="preferences_advanced__push_notifications_fcm">Push meldingen via FCM</string>
+  <string name="preferences_advanced__push_notifications_fcm_summary">Ontvang notifications via Google Play Services. Als dit uitstaat wordt een websocket gebruikt, dit kan de accu iets meer belasten</string>
   <string name="preferences_advanced__play_services_not_found">Google Play Services niet gevonden</string>
-  <string name="preferences_advanced__need_to_restart">Signal moet opnieuw starten om de veranderingen door te voeren</string>
+  <string name="preferences_advanced__need_to_restart">Signal moet opnieuw starten om de veranderingen door te voeren. Druk op OK om Signal te stoppen.</string>
   <!-- Keep messages -->
   <string name="preferences_chats__control_message_deletion">Beheer verwijderen van berichten</string>
   <string name="preferences_chats__chat_keep_view_once_messages">Behoud eenmalige weergave-media</string>

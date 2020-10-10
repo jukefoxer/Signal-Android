@@ -14,7 +14,8 @@
     <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="pref_toggle_fcm"
-        android:title="@string/preferences_advanced__push_notifications_fcm"/>
+        android:title="@string/preferences_advanced__push_notifications_fcm"
+        android:summary="@string/preferences_advanced__push_notifications_fcm_summary"/>
 
     <Preference
         android:key="pref_advanced_pin_settings"

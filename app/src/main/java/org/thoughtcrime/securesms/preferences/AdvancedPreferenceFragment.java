@@ -306,6 +306,7 @@ public class AdvancedPreferenceFragment extends CorrectedPreferenceFragment {
 
         if (status == PlayServicesUtil.PlayServicesStatus.SUCCESS) {
           TextSecurePreferences.setFcmDisabled(context, false);
+
           //ApplicationDependencies.getJobManager().add(new FcmRefreshJob());
           ApplicationDependencies.getJobManager().startChain(new FcmRefreshJob())
             .then(new RefreshAttributesJob())
@@ -324,20 +325,22 @@ public class AdvancedPreferenceFragment extends CorrectedPreferenceFragment {
       } else {
         TextSecurePreferences.setFcmDisabled(context, true);
         TextSecurePreferences.setFcmToken(context, null);
+
         SignalExecutors.BOUNDED.execute(() -> {
           SignalServiceAccountManager accountManager = ApplicationDependencies.getSignalServiceAccountManager();
           try {
             accountManager.setGcmId(Optional.<String>absent());
+            //ApplicationDependencies.getJobManager().startChain(new RefreshAttributesJob()).enqueue();
+            ApplicationDependencies.getJobManager().add(new RefreshAttributesJob());
           } catch (IOException e) {
             Toast.makeText(getActivity(),
               R.string.ApplicationPreferencesActivity_error_connecting_to_server,
               Toast.LENGTH_LONG).show();
           }
         });
-        ApplicationDependencies.getJobManager().startChain(new RefreshAttributesJob()).enqueue();
+
         restartApp(context);
       }
-
       return true;
     }
   }
