@@ -1,9 +1,12 @@
 package org.thoughtcrime.securesms.preferences;
 
 import android.app.Activity;
+import android.app.AlarmManager; // JW: added
+import android.app.PendingIntent; // JW: added
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager; // JW: added
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NotificationCompat;
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.Preference;
 
@@ -32,6 +36,8 @@ import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.lock.v2.CreateKbsPinActivity;
 import org.thoughtcrime.securesms.logging.Log;
 import org.thoughtcrime.securesms.logsubmit.SubmitDebugLogActivity;
+import org.thoughtcrime.securesms.messages.IncomingMessageObserver; // JW: added
+import org.thoughtcrime.securesms.notifications.NotificationChannels;
 import org.thoughtcrime.securesms.pin.PinOptOutDialog;
 import org.thoughtcrime.securesms.pin.PinState;
 import org.thoughtcrime.securesms.registration.RegistrationNavigationActivity;
@@ -48,6 +54,9 @@ import org.whispersystems.signalservice.api.push.exceptions.AuthorizationFailedE
 import org.whispersystems.signalservice.internal.contacts.crypto.UnauthenticatedResponseException;
 
 import java.io.IOException;
+import java.lang.reflect.Field; // JW: added
+
+import static org.thoughtcrime.securesms.messages.IncomingMessageObserver.FOREGROUND_ID;
 
 public class AdvancedPreferenceFragment extends CorrectedPreferenceFragment {
   private static final String TAG = AdvancedPreferenceFragment.class.getSimpleName();
@@ -281,18 +290,62 @@ public class AdvancedPreferenceFragment extends CorrectedPreferenceFragment {
   // JW: added class
   private class FcmClickListener implements Preference.OnPreferenceChangeListener {
 
-    private void restartApp(Context context) {
+    private void cleanGcmId() {
+      try {
+        SignalServiceAccountManager accountManager = ApplicationDependencies.getSignalServiceAccountManager();
+        accountManager.setGcmId(Optional.<String>absent());
+      } catch (IOException e) {
+        Log.w(TAG, e.getMessage());
+        Toast.makeText(getActivity(), R.string.ApplicationPreferencesActivity_error_connecting_to_server, Toast.LENGTH_LONG).show();
+      }
+    }
+
+    private void exitAndRestart(Context context) {
       // JW: Restart after OK press
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder.setMessage(context.getString(R.string.preferences_advanced__need_to_restart))
         .setCancelable(false)
         .setPositiveButton(context.getString(R.string.ImportFragment_restore_ok), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
-            ExitActivity.exitAndRemoveFromRecentApps(getActivity());
+            restartApp(context);
           }
         });
       AlertDialog alert = builder.create();
       alert.show();
+    }
+
+    // Create a pending intent to restart Signal
+    private void restartApp(Context context) {
+      try {
+        if (context != null) {
+          PackageManager pm = context.getPackageManager();
+
+          if (pm != null) {
+            Intent startActivity = pm.getLaunchIntentForPackage(context.getPackageName());
+            if (startActivity != null) {
+              startActivity.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+              int pendingIntentId = 223344;
+              PendingIntent pendingIntent = PendingIntent.getActivity(context, pendingIntentId, startActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+              AlarmManager mgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+              mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, pendingIntent);
+              System.exit(0);
+              //ExitActivity.exitAndRemoveFromRecentApps(getActivity());
+            } else {
+              Log.e(TAG, "restartApp: unable to restart application, startActivity == null");
+              System.exit(0);
+            }
+          } else {
+            Log.e(TAG, "restartApp: unable to restart application, Package manager == null");
+            System.exit(0);
+          }
+        } else {
+          Log.e(TAG, "restartApp: unable to restart application, Context == null");
+          System.exit(0);
+        }
+      } catch (Exception e) {
+        Log.e(TAG, "restartApp: unable to restart application: " + e.getMessage());
+        System.exit(0);
+      }
     }
 
     @Override
@@ -306,40 +359,27 @@ public class AdvancedPreferenceFragment extends CorrectedPreferenceFragment {
 
         if (status == PlayServicesUtil.PlayServicesStatus.SUCCESS) {
           TextSecurePreferences.setFcmDisabled(context, false);
-
-          //ApplicationDependencies.getJobManager().add(new FcmRefreshJob());
           ApplicationDependencies.getJobManager().startChain(new FcmRefreshJob())
             .then(new RefreshAttributesJob())
             .enqueue();
 
-          restartApp(context);
+          context.stopService(new Intent(context, IncomingMessageObserver.ForegroundService.class));
+
+          Log.i(TAG, "FcmClickListener.onPreferenceChange: enabled fcm");
+          exitAndRestart(context);
         } else {
           // No Play Services found
-          Toast.makeText(getActivity(),
-            R.string.preferences_advanced__play_services_not_found,
-            Toast.LENGTH_LONG).show();
-
+          Toast.makeText(getActivity(), R.string.preferences_advanced__play_services_not_found, Toast.LENGTH_LONG).show();
           preference.setEnabled(false);
           return false;
         }
-      } else {
+      } else { // switch to websockets
         TextSecurePreferences.setFcmDisabled(context, true);
         TextSecurePreferences.setFcmToken(context, null);
-
-        SignalExecutors.BOUNDED.execute(() -> {
-          SignalServiceAccountManager accountManager = ApplicationDependencies.getSignalServiceAccountManager();
-          try {
-            accountManager.setGcmId(Optional.<String>absent());
-            //ApplicationDependencies.getJobManager().startChain(new RefreshAttributesJob()).enqueue();
-            ApplicationDependencies.getJobManager().add(new RefreshAttributesJob());
-          } catch (IOException e) {
-            Toast.makeText(getActivity(),
-              R.string.ApplicationPreferencesActivity_error_connecting_to_server,
-              Toast.LENGTH_LONG).show();
-          }
-        });
-
-        restartApp(context);
+        cleanGcmId();
+        ApplicationDependencies.getJobManager().add(new RefreshAttributesJob());
+        Log.i(TAG, "FcmClickListener.onPreferenceChange: disabled fcm");
+        exitAndRestart(context);
       }
       return true;
     }
