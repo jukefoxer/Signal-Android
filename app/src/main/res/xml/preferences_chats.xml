@@ -106,6 +106,12 @@
             android:key="pref_ignore_remote_delete"
             android:title="@string/preferences_chats__chat_ignore_remote_delete"
             android:summary="@string/preferences_chats__chat_ignore_remote_delete_summary" />
+
+        <org.thoughtcrime.securesms.components.SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:key="pref_delete_media_only"
+            android:title="@string/preferences_chats__delete_media_only"
+            android:summary="@string/preferences_chats__delete_media_only_summary" />
     </PreferenceCategory>
 
     <!-- JW: added option to choose map type for the place picker -->

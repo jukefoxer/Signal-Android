@@ -29,6 +29,8 @@
   <string name="preferences_chats__keep_view_once_messages_summary">Deze optie zorgt ervoor dat eenmalige weergave-media behandeld worden als gewone media en niet verwijderd worden na het bekijken</string>
   <string name="preferences_chats__chat_ignore_remote_delete">Negeer verwijderen op afstand</string>
   <string name="preferences_chats__chat_ignore_remote_delete_summary">Deze optie voorkomt dat berichten door de verzender verwijderd kunnen worden</string>
+  <string name="preferences_chats__delete_media_only">Verwijder alleen media</string>
+  <string name="preferences_chats__delete_media_only_summary">Verwijder in het Alle media scherm alleen media, niet het bericht zelf</string>
   <!--backup location-->
   <string name="preferences_chats__chat_backups_removable">Backup locatie</string>
   <string name="preferences_chats__backup_chats_to_removable_storage">Backup chats naar de SD-kaart (indien aanwezig)</string>
