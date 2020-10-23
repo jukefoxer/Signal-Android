@@ -1815,6 +1815,12 @@ public class MmsDatabase extends MessageDatabase {
       return getCurrent();
     }
 
+    // JW: added for plaintext backup
+    public int getCount() {
+      if (cursor == null) return 0;
+      else                return cursor.getCount();
+    }
+
     @Override
     public MessageRecord getCurrent() {
       long mmsType = cursor.getLong(cursor.getColumnIndexOrThrow(MmsDatabase.MESSAGE_TYPE));
@@ -1983,4 +1989,48 @@ public class MmsDatabase extends MessageDatabase {
     final long time = System.currentTimeMillis();
     return time - (time % 1000);
   }
+
+  //------------------------------------------------------------------------------------------------
+  // JW: added methods.
+  private static final String[] MESSAGE_PROJECTION = new String[] {
+    ID, THREAD_ID, RECIPIENT_ID, ADDRESS_DEVICE_ID,
+    DATE_RECEIVED + " AS " + NORMALIZED_DATE_RECEIVED,
+    DATE_SENT + " AS " + NORMALIZED_DATE_SENT,
+    DATE_SERVER,
+    READ, STATUS, MESSAGE_TYPE,
+    BODY,
+    MISMATCHED_IDENTITIES, SUBSCRIPTION_ID,
+  };
+
+  // Deletes only the attachment for the message, not the message itself.
+  public boolean deleteAttachmentsOnly(long messageId) {
+    long threadId = getThreadIdForMessage(messageId);
+    AttachmentDatabase attachmentDatabase = DatabaseFactory.getAttachmentDatabase(context);
+    attachmentDatabase.deleteAttachmentsForMessage(messageId);
+    notifyConversationListeners(threadId);
+    return true;
+  }
+
+  // function required for PlaintextBackup
+  public int getMessageCount() {
+    SQLiteDatabase db = databaseHelper.getReadableDatabase();
+    Cursor cursor = null;
+
+    try {
+      cursor = db.query(TABLE_NAME, new String[]{"COUNT(*)"}, null, null, null, null, null);
+
+      if (cursor != null && cursor.moveToFirst()) return cursor.getInt(0);
+      else return 0;
+    } finally {
+      if (cursor != null)
+        cursor.close();
+    }
+  }
+
+  // JW: added function, required for PlaintextBackup
+  Cursor getMessages(int skip, int limit) {
+    SQLiteDatabase db = databaseHelper.getReadableDatabase();
+    return db.query(TABLE_NAME, MESSAGE_PROJECTION, null, null, null, null, ID, skip + "," + limit);
+  }
+  //------------------------------------------------------------------------------------------------
 }
