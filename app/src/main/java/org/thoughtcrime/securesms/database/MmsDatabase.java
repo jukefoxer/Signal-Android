@@ -1992,14 +1992,19 @@ public class MmsDatabase extends MessageDatabase {
 
   //------------------------------------------------------------------------------------------------
   // JW: added methods.
-  private static final String[] MESSAGE_PROJECTION = new String[] {
-    ID, THREAD_ID, RECIPIENT_ID, ADDRESS_DEVICE_ID,
+  private static final String[] MESSAGE_COLUMNS = new String[] {
+    ID,
+    THREAD_ID, DATE_SENT + " AS " + NORMALIZED_DATE_SENT,
     DATE_RECEIVED + " AS " + NORMALIZED_DATE_RECEIVED,
-    DATE_SENT + " AS " + NORMALIZED_DATE_SENT,
     DATE_SERVER,
-    READ, STATUS, MESSAGE_TYPE,
-    BODY,
-    MISMATCHED_IDENTITIES, SUBSCRIPTION_ID,
+    MESSAGE_BOX, READ,
+    CONTENT_LOCATION, EXPIRY, MESSAGE_TYPE,
+    MESSAGE_SIZE, STATUS, TRANSACTION_ID,
+    BODY, PART_COUNT, RECIPIENT_ID, ADDRESS_DEVICE_ID,
+    DELIVERY_RECEIPT_COUNT, READ_RECEIPT_COUNT, MISMATCHED_IDENTITIES, NETWORK_FAILURE, SUBSCRIPTION_ID,
+    EXPIRES_IN, EXPIRE_STARTED, NOTIFIED, QUOTE_ID, QUOTE_AUTHOR, QUOTE_BODY, QUOTE_ATTACHMENT, QUOTE_MISSING, QUOTE_MENTIONS,
+    SHARED_CONTACTS, LINK_PREVIEWS, UNIDENTIFIED, VIEW_ONCE, REACTIONS, REACTIONS_UNREAD, REACTIONS_LAST_SEEN,
+    REMOTE_DELETED, MENTIONS_SELF
   };
 
   // Deletes only the attachment for the message, not the message itself.
@@ -2030,7 +2035,8 @@ public class MmsDatabase extends MessageDatabase {
   // JW: added function, required for PlaintextBackup
   Cursor getMessages(int skip, int limit) {
     SQLiteDatabase db = databaseHelper.getReadableDatabase();
-    return db.query(TABLE_NAME, MESSAGE_PROJECTION, null, null, null, null, ID, skip + "," + limit);
+    //return db.query(TABLE_NAME, MMS_PROJECTION, null, null, null, null, ID, skip + "," + limit);
+    return db.query(TABLE_NAME, MESSAGE_COLUMNS, null, null, null, null, ID, skip + "," + limit);
   }
   //------------------------------------------------------------------------------------------------
 }

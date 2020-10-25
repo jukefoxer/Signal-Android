@@ -3,12 +3,15 @@ package org.thoughtcrime.securesms.database;
 
 import android.content.Context;
 
+import org.thoughtcrime.securesms.R;
+import org.thoughtcrime.securesms.database.model.MessageRecord;
 import org.thoughtcrime.securesms.database.model.MmsMessageRecord;
 import org.thoughtcrime.securesms.database.model.SmsMessageRecord;
 import org.thoughtcrime.securesms.logging.Log;
 import org.thoughtcrime.securesms.util.FileUtilsJW;
 import org.thoughtcrime.securesms.util.StorageUtil;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -40,8 +43,8 @@ public class PlaintextBackupExporter {
     SmsDatabase database = (SmsDatabase)DatabaseFactory.getSmsDatabase(context);
     MmsDatabase      mmsdb    = (MmsDatabase)DatabaseFactory.getMmsDatabase(context);
     int              count    = database.getMessageCount();
-    //int              mmscount = mmsdb.getMessageCount();
-    int              mmscount = 0;
+    int              mmscount = mmsdb.getMessageCount();
+    mmscount = 0;
     XmlBackup.Writer writer   = new XmlBackup.Writer(getPlaintextExportFile().getAbsolutePath(), count + mmscount);
 
     SmsMessageRecord record;
@@ -61,7 +64,7 @@ public class PlaintextBackupExporter {
       while ((record = smsreader.getNext()) != null) {
         XmlBackup.XmlBackupItem item =
             new XmlBackup.XmlBackupItem(0,
-                                        record.getIndividualRecipient().requireSmsAddress(),
+                                        record.getIndividualRecipient().getSmsAddress().or("null"),
                                         record.getIndividualRecipient().getName(context),
                                         record.getDateReceived(),
                                         MmsSmsColumns.Types.translateToSystemBaseType(record.getType()),
@@ -69,7 +72,8 @@ public class PlaintextBackupExporter {
                                         record.getDisplayBody(context).toString(),
                                         null,
                                         1,
-                                        record.getDeliveryStatus());
+                                        record.getDeliveryStatus(),
+                                        getTransportType(record));
 
         writer.writeItem(item);
       }
@@ -80,6 +84,7 @@ public class PlaintextBackupExporter {
     int i = 0;
     Log.w(TAG, "Number of mms to export: " + mmscount);
 
+    skip = 0;
     do {
       i++;
       Log.w(TAG, "Exporting mms: " + i);
@@ -91,25 +96,24 @@ public class PlaintextBackupExporter {
 
       while ((mmsrecord = (MmsMessageRecord)mmsreader.getNext()) != null) {
         XmlBackup.XmlBackupItem item =
-            new XmlBackup.XmlBackupItem(0,
-                                        mmsrecord.getIndividualRecipient().requireSmsAddress(),
-                                        mmsrecord.getIndividualRecipient().getName(context),
-                                        mmsrecord.getDateReceived(),
-                                        MmsSmsColumns.Types.translateToSystemBaseType(record.getType()),
-                                        null,
-                                        mmsrecord.getDisplayBody(context).toString(),
-                                        null,
-                                        1,
-                                        mmsrecord.getDeliveryStatus());
-        Log.w(TAG, "mmsrecord exported: " + mmsrecord.getIndividualRecipient().requireSmsAddress() + ": " + mmsrecord.getDisplayBody(context).toString());
+          new XmlBackup.XmlBackupItem(0,
+                                      mmsrecord.getIndividualRecipient().getSmsAddress().or("null"),
+                                      mmsrecord.getIndividualRecipient().getName(context),
+                                      mmsrecord.getDateReceived(),
+                                      MmsSmsColumns.Types.translateToSystemBaseType(mmsrecord.getType()),
+                                      null,
+                                      mmsrecord.getDisplayBody(context).toString(),
+                                      null,
+                                      1,
+                                      mmsrecord.getDeliveryStatus(),
+                                      getTransportType(mmsrecord));
+        Log.w(TAG, "mmsrecord exported: " + mmsrecord.getIndividualRecipient().getSmsAddress().or("null") + ": " + mmsrecord.getDisplayBody(context).toString());
         writer.writeItem(item);
       }
 
       skip += ROW_LIMIT;
     } while (mmsreader.getCount() > 0);
-
-    Log.w(TAG, "Total number of exportied mms: " + i);
- */
+*/
     writer.close();
 
     if (TextSecurePreferences.isPlainBackupInZipfile(context)) {
@@ -120,5 +124,21 @@ public class PlaintextBackupExporter {
       FileUtilsJW.createEncryptedPlaintextZipfile(context, getPlaintextZipFile().getAbsolutePath(), getPlaintextExportFile().getAbsolutePath());
       FileUtilsJW.secureDelete(getPlaintextExportFile());
     }
+  }
+
+  private static String getTransportType(MessageRecord messageRecord) {
+    String transportText = "-";
+    if (messageRecord.isOutgoing() && messageRecord.isFailed()) {
+      transportText = "-";
+    } else if (messageRecord.isPending()) {
+      transportText = "Pending";
+    } else if (messageRecord.isPush()) {
+      transportText = "Data";
+    } else if (messageRecord.isMms()) {
+      transportText = "MMS";
+    } else {
+      transportText = "SMS";
+    }
+    return transportText;
   }
 }
