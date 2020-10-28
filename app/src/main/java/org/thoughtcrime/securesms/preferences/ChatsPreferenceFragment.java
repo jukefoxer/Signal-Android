@@ -16,6 +16,7 @@ import org.thoughtcrime.securesms.ApplicationPreferencesActivity;
 import org.thoughtcrime.securesms.R;
 import org.thoughtcrime.securesms.logging.Log;
 import org.thoughtcrime.securesms.permissions.Permissions;
+import org.thoughtcrime.securesms.util.BackupUtil;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
 
 import java.util.ArrayList;
@@ -43,7 +44,36 @@ public class ChatsPreferenceFragment extends ListSummaryPreferenceFragment {
       return true;
     });
 
+    findPreference(TextSecurePreferences.BACKUP_LOCATION_REMOVABLE_PREF) // JW: added
+        .setOnPreferenceChangeListener(new BackupLocationListener());
+    findPreference(TextSecurePreferences.GOOGLE_MAP_TYPE) // JW: added
+        .setOnPreferenceChangeListener(new ListSummaryListener());
+
+    initializeVisibility(); // JW: added
+
     initializeListSummary((ListPreference) findPreference(TextSecurePreferences.MESSAGE_BODY_TEXT_SIZE_PREF));
+    initializeListSummary((ListPreference) findPreference(TextSecurePreferences.GOOGLE_MAP_TYPE)); // JW: added
+  }
+
+  // JW: added
+  private void initializeVisibility() {
+    // JW: On Android 10 and above the backup location is selectable, in that case we don't show
+    // the location toggle
+    if (BackupUtil.isUserSelectionRequired(requireContext())) {
+      findPreference(TextSecurePreferences.BACKUP_LOCATION_REMOVABLE_PREF).setVisible(false);
+    }
+    else {
+      findPreference(TextSecurePreferences.BACKUP_LOCATION_REMOVABLE_PREF).setVisible(true);
+    }
+  }
+
+  // JW: added
+  private class BackupLocationListener implements Preference.OnPreferenceChangeListener {
+    @Override public boolean onPreferenceChange(Preference preference, Object newValue) {
+      TextSecurePreferences.setBackupLocationRemovable(getActivity(), (boolean)newValue);
+      TextSecurePreferences.setBackupLocationChanged(getActivity(), true); // Used in BackupUtil.getAllBackupsNewestFirst()
+      return true;
+    }
   }
 
   @Override
