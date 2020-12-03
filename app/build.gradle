@@ -82,7 +82,7 @@ protobuf {
 }
 
 def canonicalVersionCode = 750
-def canonicalVersionName = "4.79.3"
+def canonicalVersionName = "4.79.3.0-JW"
 
 def postFixSize = 10
 def abiPostFix = ['universal'   : 0,
@@ -123,9 +123,10 @@ android {
         multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true
-        project.ext.set("archivesBaseName", "Signal");
+        project.ext.set("archivesBaseName", "Signal-Android"); // JW: change basename
 
-        buildConfigField "long", "BUILD_TIMESTAMP", getLastCommitTimestamp() + "L"
+        // JW: change back to old code that works without having Git in the path and by downloading the source as zip, timestamp is not used anyway
+        buildConfigField "long", "BUILD_TIMESTAMP", System.currentTimeMillis() + "L"
         buildConfigField "String", "SIGNAL_URL", "\"https://textsecure-service.whispersystems.org\""
         buildConfigField "String", "STORAGE_URL", "\"https://storage.signal.org\""
         buildConfigField "String", "SIGNAL_CDN_URL", "\"https://cdn.signal.org\""
@@ -304,6 +305,7 @@ android {
 dependencies {
     lintChecks project(':lintchecks')
 
+    implementation 'net.lingala.zip4j:zip4j:2.6.4' // JW: added
     implementation ('androidx.appcompat:appcompat:1.2.0') {
         force = true
     }
