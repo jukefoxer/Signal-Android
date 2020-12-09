@@ -20,6 +20,7 @@ import org.thoughtcrime.securesms.database.NoExternalStorageException;
 import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
 import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.permissions.Permissions;
+import org.thoughtcrime.securesms.util.TextSecurePreferences; // JW: added
 import org.whispersystems.libsignal.util.ByteUtil;
 
 import java.io.File;
@@ -182,6 +183,24 @@ public class BackupUtil {
   private static List<BackupInfo> getAllBackupsNewestFirstLegacy() throws NoExternalStorageException {
     File             backupDirectory = StorageUtil.getOrCreateBackupDirectory();
     File[]           files           = backupDirectory.listFiles();
+    // JW: if no backup found in internal storage, try removable storage.
+    // This code is used at first app start when restoring a backup that is located
+    // on the removable storage.
+    if (files.length == 0) {
+      Context context = ApplicationDependencies.getApplication();
+      // This code should run only at the initial app start. In that case isBackupLocationChanged
+      // defaults to false.
+      if (!TextSecurePreferences.isBackupLocationChanged(context)) {
+        TextSecurePreferences.setBackupLocationRemovable(context, true);
+        TextSecurePreferences.setBackupLocationChanged(context, true); // Set this so we know it has been changed in the future
+        backupDirectory = StorageUtil.getBackupDirectory();
+        files   = backupDirectory.listFiles();
+        if (files.length == 0) { // No backup in removable storage, reset preferences to default values
+          TextSecurePreferences.setBackupLocationRemovable(context, false);
+          TextSecurePreferences.setBackupLocationChanged(context, false);
+        }
+      }
+    }
     List<BackupInfo> backups         = new ArrayList<>(files.length);
 
     for (File file : files) {
