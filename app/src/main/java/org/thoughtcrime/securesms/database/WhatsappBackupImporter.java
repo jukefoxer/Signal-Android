@@ -1,28 +1,44 @@
 package org.thoughtcrime.securesms.database;
 
+import android.content.ContentValues;
 import android.content.Context;
+
+import com.google.android.mms.pdu_alt.PduHeaders;
 
 import net.sqlcipher.database.SQLiteStatement;
 
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.attachments.Attachment;
-import org.thoughtcrime.securesms.contactshare.Contact;
-import org.thoughtcrime.securesms.database.model.Mention;
+import org.thoughtcrime.securesms.attachments.AttachmentId;
 import org.thoughtcrime.securesms.database.whatsapp.WaDbOpenHelper;
-import org.thoughtcrime.securesms.linkpreview.LinkPreview;
-import org.thoughtcrime.securesms.mms.IncomingMediaMessage;
 import org.thoughtcrime.securesms.mms.MmsException;
-import org.thoughtcrime.securesms.mms.OutgoingMediaMessage;
-import org.thoughtcrime.securesms.mms.SlideDeck;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
-import org.whispersystems.libsignal.util.guava.Optional;
 
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import static org.thoughtcrime.securesms.database.MmsDatabase.DATE_RECEIVED;
+import static org.thoughtcrime.securesms.database.MmsDatabase.DATE_SENT;
+import static org.thoughtcrime.securesms.database.MmsDatabase.MESSAGE_BOX;
+import static org.thoughtcrime.securesms.database.MmsDatabase.MESSAGE_TYPE;
+import static org.thoughtcrime.securesms.database.MmsDatabase.PART_COUNT;
+import static org.thoughtcrime.securesms.database.MmsDatabase.STATUS;
+import static org.thoughtcrime.securesms.database.MmsDatabase.TABLE_NAME;
+import static org.thoughtcrime.securesms.database.MmsDatabase.VIEW_ONCE;
+import static org.thoughtcrime.securesms.database.MmsSmsColumns.DATE_SERVER;
+import static org.thoughtcrime.securesms.database.MmsSmsColumns.EXPIRES_IN;
+import static org.thoughtcrime.securesms.database.MmsSmsColumns.READ;
+import static org.thoughtcrime.securesms.database.MmsSmsColumns.RECIPIENT_ID;
+import static org.thoughtcrime.securesms.database.MmsSmsColumns.SUBSCRIPTION_ID;
+import static org.thoughtcrime.securesms.database.MmsSmsColumns.THREAD_ID;
+import static org.thoughtcrime.securesms.database.MmsSmsColumns.Types.BASE_INBOX_TYPE;
+import static org.thoughtcrime.securesms.database.MmsSmsColumns.Types.BASE_SENT_TYPE;
+import static org.thoughtcrime.securesms.database.MmsSmsColumns.UNIDENTIFIED;
 
 public class WhatsappBackupImporter {
 
@@ -44,9 +60,10 @@ public class WhatsappBackupImporter {
     {
         Log.w(TAG, "importWhatsapp()");
         android.database.sqlite.SQLiteDatabase whatsappDb = openWhatsappDb(context);
-        SmsDatabase smsDb          = (SmsDatabase) DatabaseFactory.getSmsDatabase(context);
-        MmsDatabase mmsDb          = (MmsDatabase) DatabaseFactory.getMmsDatabase(context);
-        SQLiteDatabase transaction = smsDb.beginTransaction();
+        SmsDatabase smsDb                   = (SmsDatabase) DatabaseFactory.getSmsDatabase(context);
+        MmsDatabase mmsDb                   = (MmsDatabase) DatabaseFactory.getMmsDatabase(context);
+        AttachmentDatabase attachmentDb     = DatabaseFactory.getAttachmentDatabase(context);
+        SQLiteDatabase smsDbTransaction = smsDb.beginTransaction();
 
         try {
             ThreadDatabase threads         = DatabaseFactory.getThreadDatabase(context);
@@ -63,10 +80,9 @@ public class WhatsappBackupImporter {
 
                 if (isMms(item)) {
                     List<Attachment> attachments = WhatsappBackup.getMediaAttachments(whatsappDb, item);
-                    // Temporarily deactivated because timestamps are not correct
-                    //if (attachments != null && attachments.size() > 0) insertMms(context, mmsDb, item, recipient, threadId, attachments);
+                    if (attachments != null && attachments.size() > 0) insertMms(mmsDb, attachmentDb, item, recipient, threadId, attachments);
                 } else {
-                    insertSms(smsDb, transaction, item, recipient, threadId);
+                    insertSms(smsDb, smsDbTransaction, item, recipient, threadId);
                 }
                 modifiedThreads.add(threadId);
             }
@@ -81,7 +97,7 @@ public class WhatsappBackupImporter {
             throw new IOException("Whatsapp Import error!");
         } finally {
             whatsappDb.close();
-            smsDb.endTransaction(transaction);
+            smsDb.endTransaction(smsDbTransaction);
         }
 
     }
@@ -119,59 +135,35 @@ public class WhatsappBackupImporter {
         return false;
     }
 
-    private static void insertMms(Context context, MmsDatabase mmsDb, WhatsappBackup.WhatsappBackupItem item, Recipient recipient, long threadId, List<Attachment> attachments) {
+    private static void insertMms(MmsDatabase mmsDb, AttachmentDatabase attachmentDb, WhatsappBackup.WhatsappBackupItem item, Recipient recipient, long threadId, List<Attachment> attachments) throws MmsException {
+        List<Attachment> quoteAttachments = new LinkedList<>();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(DATE_SENT, item.getDate());
+        contentValues.put(DATE_SERVER, item.getDate());
+        contentValues.put(RECIPIENT_ID, recipient.getId().serialize());
         if (item.getType() == 1) {
-            insertIncomingMms(mmsDb, item, recipient, threadId, attachments);
+            contentValues.put(MESSAGE_BOX, BASE_INBOX_TYPE);
         } else {
-            insertOutgoingMms(context, mmsDb, item, recipient, threadId, attachments);
+            contentValues.put(MESSAGE_BOX, BASE_SENT_TYPE);
         }
-    }
+        contentValues.put(MESSAGE_TYPE, PduHeaders.MESSAGE_TYPE_RETRIEVE_CONF);
+        contentValues.put(THREAD_ID, threadId);
+        contentValues.put(STATUS, MmsDatabase.Status.DOWNLOAD_INITIALIZED);
+        contentValues.put(DATE_RECEIVED, item.getDate());
+        contentValues.put(PART_COUNT, 1);
+        contentValues.put(SUBSCRIPTION_ID, -1);
+        contentValues.put(EXPIRES_IN, Long.MAX_VALUE);
+        contentValues.put(VIEW_ONCE, 0);
+        contentValues.put(READ, 0);
+        contentValues.put(UNIDENTIFIED, 0);
 
-    private static void insertIncomingMms(MmsDatabase mmsDb, WhatsappBackup.WhatsappBackupItem item, Recipient recipient, long threadId, List<Attachment> attachments) {
-        List<Contact> sharedContacts = new LinkedList<>();
-        IncomingMediaMessage retrieved = new IncomingMediaMessage(recipient.getId(),
-                recipient.getGroupId(),
-                item.getBody(),
-                item.getDate(),
-                item.getDate(),
-                attachments,
-                -1,
-                Long.MAX_VALUE,
-                false,
-                false,
-                false,
-                Optional.of(sharedContacts));
-        String contentLocation = attachments.get(0).getLocation();
-        try {
-            mmsDb.insertMessageInbox(retrieved, contentLocation, threadId);
-        } catch (MmsException e) {
-            e.printStackTrace();
-        }
-    }
+        SQLiteDatabase transaction = mmsDb.beginTransaction();
+        long messageId = transaction.insert(TABLE_NAME, null, contentValues);
 
-    private static void insertOutgoingMms(Context context, MmsDatabase mmsDb, WhatsappBackup.WhatsappBackupItem item, Recipient recipient, long threadId, List<Attachment> attachments) {
-        SlideDeck slideDeck = new SlideDeck(context, attachments);
-        List<Contact> contacts = new LinkedList<>();
-        List<LinkPreview> linkPreviews = new LinkedList<>();
-        List<Mention> mentions = new LinkedList<>();
-        OutgoingMediaMessage sent = new OutgoingMediaMessage(recipient,
-                slideDeck,
-                item.getBody(),
-                item.getDate(),
-                -1,
-                Long.MAX_VALUE,
-                false,
-                ThreadDatabase.DistributionTypes.CONVERSATION,
-                null,
-                contacts,
-                linkPreviews,
-                mentions);
-        String contentLocation = attachments.get(0).getLocation();
-        try {
-            mmsDb.insertMessageOutbox(sent, threadId, false, GroupReceiptDatabase.STATUS_DELIVERED, null);
-        } catch (MmsException e) {
-            e.printStackTrace();
-        }
+        Map<Attachment, AttachmentId> insertedAttachments = attachmentDb.insertAttachmentsForMessage(messageId, attachments, quoteAttachments);
+        mmsDb.setTransactionSuccessful();
+        mmsDb.endTransaction();
+
     }
 
     private static void insertSms(SmsDatabase smsDb, SQLiteDatabase transaction, WhatsappBackup.WhatsappBackupItem item, Recipient recipient, long threadId) {
@@ -232,7 +224,7 @@ public class WhatsappBackupImporter {
     private static boolean isAppropriateTypeForImport(long theirType) {
         long ourType = SmsDatabase.Types.translateFromSystemBaseType(theirType);
 
-        return ourType == MmsSmsColumns.Types.BASE_INBOX_TYPE ||
+        return ourType == BASE_INBOX_TYPE ||
                 ourType == MmsSmsColumns.Types.BASE_SENT_TYPE ||
                 ourType == MmsSmsColumns.Types.BASE_SENT_FAILED_TYPE;
     }
