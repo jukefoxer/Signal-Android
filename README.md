@@ -1,12 +1,10 @@
-# Signal Android 
+# WhatsApp Data Import for Signal Android
 
-Signal is a messaging app for simple private communication with friends.
+This is a fork of the private messaging app Signal with the goal to provide a method to import WhatsApp conversations and facilitating the transition from WhatsApp to Signal.
 
-Signal uses your phone's data connection (WiFi/3G/4G) to communicate securely, optionally supports plain SMS/MMS to function as a unified messenger, and can also encrypt the stored messages on your phone.
+You can find the original project at: https://github.com/signalapp/Signal-Android
 
-Currently available on the Play store.
-
-<a href='https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height='80px'/></a>
+It's based on the fork of johanw666: https://github.com/johanw666/Signal-Android
 
 ## WhatsApp Data Import
 
@@ -30,51 +28,12 @@ This fork of the Signal App aims at providing a method to import one's WhatsApp 
 * Extract your unencrypted msgstore.db from your WhatsApp installation. There are several methods to do so. WhatsAppDump seems to offer a possibility that doesn't require rooting the device. A more detailed description of how to do so might be added here in the future.
 * Copy the msgstore.db file to the top level directory of your internal storage
 * Make an encrypted Backup of your Signal Messages using the built-in feature of the Signal App.
-* Build and install this version of the Signal App and import the excrypted Backup of your signal messages.
+* Build and install this version of the Signal App and import the encrypted Backup of your signal messages.
 * You might have to go to the app permission settings and give it the permission to manage all of the external storage.
-* Go to Backup => Import Whatsapp to start the import.
+* Go to Backup => Import WhatsApp to start the import.
 * Be patient until it finishes.
-* If you're happy with the Whatsapp import create another encrypted backup of all Signal messages.
+* If you're happy with the WhatsApp import create another encrypted backup of all Signal messages.
 * Install the original Signal app again and import the encrypted Backup.
-
-## Contributing Bug reports
-We use GitHub for bug tracking. Please search the existing issues for your bug and create a new one if the issue is not yet tracked!
-
-https://github.com/signalapp/Signal-Android/issues
-
-## Joining the Beta
-Want to live life on the bleeding edge and help out with testing?
-
-You can subscribe to Signal Android Beta releases here:
-https://play.google.com/apps/testing/org.thoughtcrime.securesms
- 
-If you're interested in a life of peace and tranquility, stick with the standard releases.
-
-## Contributing Translations
-Interested in helping to translate Signal? Contribute here:
-
-https://www.transifex.com/projects/p/signal-android/
-
-## Contributing Code
-
-If you're new to the Signal codebase, we recommend going through our issues and picking out a simple bug to fix (check the "easy" label in our issues) in order to get yourself familiar. Also please have a look at the [CONTRIBUTING.md](https://github.com/signalapp/Signal-Android/blob/master/CONTRIBUTING.md), that might answer some of your questions.
-
-For larger changes and feature ideas, we ask that you propose it on the [unofficial Community Forum](https://community.signalusers.org) for a high-level discussion with the wider community before implementation.
-
-## Contributing Ideas
-Have something you want to say about Open Whisper Systems projects or want to be part of the conversation? Get involved in the [community forum](https://community.signalusers.org).
-
-Help
-====
-## Support
-For troubleshooting and questions, please visit our support center!
-
-https://support.signal.org/
-
-## Documentation
-Looking for documentation? Check out the wiki!
-
-https://github.com/signalapp/Signal-Android/wiki
 
 # Legal things
 ## Cryptography Notice
