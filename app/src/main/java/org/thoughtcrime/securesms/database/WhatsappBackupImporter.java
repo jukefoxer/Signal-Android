@@ -2,8 +2,6 @@ package org.thoughtcrime.securesms.database;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
-
 import net.sqlcipher.database.SQLiteStatement;
 
 import org.signal.core.util.logging.Log;
@@ -14,13 +12,11 @@ import org.thoughtcrime.securesms.database.whatsapp.WaDbOpenHelper;
 import org.thoughtcrime.securesms.linkpreview.LinkPreview;
 import org.thoughtcrime.securesms.mms.IncomingMediaMessage;
 import org.thoughtcrime.securesms.mms.MmsException;
-import org.thoughtcrime.securesms.mms.QuoteModel;
+import org.thoughtcrime.securesms.mms.OutgoingMediaMessage;
+import org.thoughtcrime.securesms.mms.SlideDeck;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
 import org.whispersystems.libsignal.util.guava.Optional;
-import org.whispersystems.signalservice.api.messages.SignalServiceAttachment;
-import org.whispersystems.signalservice.api.messages.SignalServiceGroupContext;
-import org.whispersystems.signalservice.api.messages.shared.SharedContact;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -67,16 +63,16 @@ public class WhatsappBackupImporter {
 
                 if (isMms(item)) {
                     List<Attachment> attachments = WhatsappBackup.getMediaAttachments(whatsappDb, item);
-                    if (attachments != null && attachments.size() > 0) insertMms(mmsDb, item, recipient, threadId, attachments);
+                    // Temporarily deactivated because timestamps are not correct
+                    //if (attachments != null && attachments.size() > 0) insertMms(context, mmsDb, item, recipient, threadId, attachments);
                 } else {
-                    //insertSms(smsDb, transaction, item, recipient, threadId);
+                    insertSms(smsDb, transaction, item, recipient, threadId);
                 }
                 modifiedThreads.add(threadId);
             }
 
             for (long threadId : modifiedThreads) {
                 threads.update(threadId, true);
-                mmsDb.setEntireThreadRead(threadId);
             }
 
             Log.w(TAG, "Exited loop");
@@ -123,7 +119,15 @@ public class WhatsappBackupImporter {
         return false;
     }
 
-    private static void insertMms(MmsDatabase mmsDb, WhatsappBackup.WhatsappBackupItem item, Recipient recipient, long threadId, List<Attachment> attachments) {
+    private static void insertMms(Context context, MmsDatabase mmsDb, WhatsappBackup.WhatsappBackupItem item, Recipient recipient, long threadId, List<Attachment> attachments) {
+        if (item.getType() == 1) {
+            insertIncomingMms(mmsDb, item, recipient, threadId, attachments);
+        } else {
+            insertOutgoingMms(context, mmsDb, item, recipient, threadId, attachments);
+        }
+    }
+
+    private static void insertIncomingMms(MmsDatabase mmsDb, WhatsappBackup.WhatsappBackupItem item, Recipient recipient, long threadId, List<Attachment> attachments) {
         List<Contact> sharedContacts = new LinkedList<>();
         IncomingMediaMessage retrieved = new IncomingMediaMessage(recipient.getId(),
                 recipient.getGroupId(),
@@ -131,8 +135,8 @@ public class WhatsappBackupImporter {
                 item.getDate(),
                 item.getDate(),
                 attachments,
-                0,
-                0l,
+                -1,
+                Long.MAX_VALUE,
                 false,
                 false,
                 false,
@@ -140,6 +144,31 @@ public class WhatsappBackupImporter {
         String contentLocation = attachments.get(0).getLocation();
         try {
             mmsDb.insertMessageInbox(retrieved, contentLocation, threadId);
+        } catch (MmsException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void insertOutgoingMms(Context context, MmsDatabase mmsDb, WhatsappBackup.WhatsappBackupItem item, Recipient recipient, long threadId, List<Attachment> attachments) {
+        SlideDeck slideDeck = new SlideDeck(context, attachments);
+        List<Contact> contacts = new LinkedList<>();
+        List<LinkPreview> linkPreviews = new LinkedList<>();
+        List<Mention> mentions = new LinkedList<>();
+        OutgoingMediaMessage sent = new OutgoingMediaMessage(recipient,
+                slideDeck,
+                item.getBody(),
+                item.getDate(),
+                -1,
+                Long.MAX_VALUE,
+                false,
+                ThreadDatabase.DistributionTypes.CONVERSATION,
+                null,
+                contacts,
+                linkPreviews,
+                mentions);
+        String contentLocation = attachments.get(0).getLocation();
+        try {
+            mmsDb.insertMessageOutbox(sent, threadId, false, GroupReceiptDatabase.STATUS_DELIVERED, null);
         } catch (MmsException e) {
             e.printStackTrace();
         }

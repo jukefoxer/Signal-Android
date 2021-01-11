@@ -70,12 +70,22 @@ public class WhatsappBackup {
                         String filePath = storagePath.getAbsolutePath() + File.separator + "WhatsApp" + File.separator + c.getString(c.getColumnIndex("file_path"));
                         int size = c.getInt(c.getColumnIndex("file_size"));
                         String type = c.getString(c.getColumnIndex("mime_type"));
-                        if (!type.equals("image/jpeg")) return attachments; // Ignore everything that is not an image for the moment
-                        Uri uri = Uri.fromFile(new File(filePath));
-                        String name = null;
-                        Attachment attachment = new UriAttachment(uri, MediaUtil.IMAGE_JPEG, AttachmentDatabase.TRANSFER_PROGRESS_DONE,
-                                size, name, false, false, false, null, null, null, null, null);
-                        attachments.add(attachment);
+                        File file = new File(filePath);
+                        if (!file.exists()) return attachments;
+                        Uri uri = Uri.fromFile(file);
+                        String name = filePath;
+                        if (type.equals("image/jpeg")) {
+                            Attachment attachment = new UriAttachment(uri, MediaUtil.IMAGE_JPEG, AttachmentDatabase.TRANSFER_PROGRESS_DONE,
+                                    size, name, false, false, false, null, null, null, null, null);
+                            attachments.add(attachment);
+                        } else if (type.equals("video/mp4")) {
+                            Attachment attachment = new UriAttachment(uri, MediaUtil.VIDEO_MP4, AttachmentDatabase.TRANSFER_PROGRESS_DONE,
+                                    size, name, false, false, false, null, null, null, null, null);
+                            attachments.add(attachment);
+                        } else {
+                            return attachments; // Ignore everything that is not an image or a video for the moment
+                        }
+                        return attachments;
                     }
                     while (c.moveToNext());
                 }
@@ -132,7 +142,7 @@ public class WhatsappBackup {
         }
 
         dbOffset++;
-        //if (dbOffset == 1000) return null; // Limit number of imported messages for quick testing
+        //if (dbOffset == 3000) return null; // Limit number of imported messages for quick testing
         return item;
     }
 

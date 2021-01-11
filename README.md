@@ -14,13 +14,12 @@ This fork of the Signal App aims at providing a method to import one's WhatsApp 
 
 * Import 1-to-1 text conversation threads.
 * Import group chat conversations if a group chat with the same name is set up in the Signal App.
-* Importing images from chats.
+* Importing images and videos messages from WhatsApp chats. (deactivated because of incorrect timestamps)
 
 ### What doesn't work
 
-* All multimedia messages (other than images) are currently not imported.
-* Image messages always look like their sent by you (i.e. sender is incorrect).
-* All threads with imported images are marked as unread.
+* Multimedia messages that are not images or videos are currently not imported.
+* Multimedia have the wrong timestamp (now).
 * It's pretty slow (10 seconds per 1000 messages).
 
 ### How to do it
