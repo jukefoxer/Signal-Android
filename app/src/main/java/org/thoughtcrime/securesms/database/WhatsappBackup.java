@@ -2,15 +2,22 @@ package org.thoughtcrime.securesms.database;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.os.Environment;
 import android.text.TextUtils;
 
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.attachments.Attachment;
+import org.thoughtcrime.securesms.attachments.UriAttachment;
+import org.thoughtcrime.securesms.providers.BlobProvider;
+import org.thoughtcrime.securesms.util.MediaUtil;
+import org.thoughtcrime.securesms.util.Util;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -59,8 +66,16 @@ public class WhatsappBackup {
             if (c != null) {
                 if (c.moveToFirst()) {
                     do {
-                        //Attachment attachment = null;
-                        //attachments.add(attachment);
+                        File storagePath = Environment.getExternalStorageDirectory();
+                        String filePath = storagePath.getAbsolutePath() + File.separator + "WhatsApp" + File.separator + c.getString(c.getColumnIndex("file_path"));
+                        int size = c.getInt(c.getColumnIndex("file_size"));
+                        String type = c.getString(c.getColumnIndex("mime_type"));
+                        if (!type.equals("image/jpeg")) return attachments; // Ignore everything that is not an image for the moment
+                        Uri uri = Uri.fromFile(new File(filePath));
+                        String name = null;
+                        Attachment attachment = new UriAttachment(uri, MediaUtil.IMAGE_JPEG, AttachmentDatabase.TRANSFER_PROGRESS_DONE,
+                                size, name, false, false, false, null, null, null, null, null);
+                        attachments.add(attachment);
                     }
                     while (c.moveToNext());
                 }
@@ -75,8 +90,7 @@ public class WhatsappBackup {
     public WhatsappBackup.WhatsappBackupItem getNext() {
         WhatsappBackup.WhatsappBackupItem item = null;
         try {
-
-            Cursor c = whatsappDb.rawQuery("SELECT * FROM messages WHERE data!='' AND remote_resource!= '' LIMIT "+ dbOffset + ", 1", null);
+            Cursor c = whatsappDb.rawQuery("SELECT * FROM messages LIMIT "+ dbOffset + ", 1", null);
             if (c != null) {
                 if (c.moveToFirst()) {
                     do {
@@ -118,7 +132,7 @@ public class WhatsappBackup {
         }
 
         dbOffset++;
-        //if (dbOffset == 100) return null; Limit number of imported messges for quick testing
+        //if (dbOffset == 1000) return null; // Limit number of imported messages for quick testing
         return item;
     }
 

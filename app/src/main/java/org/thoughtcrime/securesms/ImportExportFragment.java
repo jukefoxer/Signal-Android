@@ -137,7 +137,7 @@ public class ImportExportFragment extends Fragment {
     builder.setMessage(getActivity().getString(R.string.ImportFragment_this_will_import_messages_from_whatsapp_backup));
     builder.setPositiveButton(getActivity().getString(R.string.ImportFragment_import), (dialog, which) -> {
       Permissions.with(ImportExportFragment.this)
-              .request(Manifest.permission.MANAGE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+              .request(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
               .ifNecessary()
               .withPermanentDenialDialog(getString(R.string.ImportExportFragment_signal_needs_the_storage_permission_in_order_to_read_from_external_storage_but_it_has_been_permanently_denied))
               .onAllGranted(() -> new ImportWhatsappBackupTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR))

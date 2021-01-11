@@ -2,15 +2,25 @@ package org.thoughtcrime.securesms.database;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import net.sqlcipher.database.SQLiteStatement;
 
 import org.signal.core.util.logging.Log;
 import org.thoughtcrime.securesms.attachments.Attachment;
+import org.thoughtcrime.securesms.contactshare.Contact;
+import org.thoughtcrime.securesms.database.model.Mention;
 import org.thoughtcrime.securesms.database.whatsapp.WaDbOpenHelper;
+import org.thoughtcrime.securesms.linkpreview.LinkPreview;
 import org.thoughtcrime.securesms.mms.IncomingMediaMessage;
 import org.thoughtcrime.securesms.mms.MmsException;
+import org.thoughtcrime.securesms.mms.QuoteModel;
 import org.thoughtcrime.securesms.recipients.Recipient;
 import org.thoughtcrime.securesms.recipients.RecipientId;
+import org.whispersystems.libsignal.util.guava.Optional;
+import org.whispersystems.signalservice.api.messages.SignalServiceAttachment;
+import org.whispersystems.signalservice.api.messages.SignalServiceGroupContext;
+import org.whispersystems.signalservice.api.messages.shared.SharedContact;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -59,13 +69,14 @@ public class WhatsappBackupImporter {
                     List<Attachment> attachments = WhatsappBackup.getMediaAttachments(whatsappDb, item);
                     if (attachments != null && attachments.size() > 0) insertMms(mmsDb, item, recipient, threadId, attachments);
                 } else {
-                    insertSms(smsDb, transaction, item, recipient, threadId);
+                    //insertSms(smsDb, transaction, item, recipient, threadId);
                 }
                 modifiedThreads.add(threadId);
             }
 
             for (long threadId : modifiedThreads) {
                 threads.update(threadId, true);
+                mmsDb.setEntireThreadRead(threadId);
             }
 
             Log.w(TAG, "Exited loop");
@@ -113,7 +124,7 @@ public class WhatsappBackupImporter {
     }
 
     private static void insertMms(MmsDatabase mmsDb, WhatsappBackup.WhatsappBackupItem item, Recipient recipient, long threadId, List<Attachment> attachments) {
-
+        List<Contact> sharedContacts = new LinkedList<>();
         IncomingMediaMessage retrieved = new IncomingMediaMessage(recipient.getId(),
                 recipient.getGroupId(),
                 item.getBody(),
@@ -125,8 +136,8 @@ public class WhatsappBackupImporter {
                 false,
                 false,
                 false,
-                null);
-        String contentLocation = "";
+                Optional.of(sharedContacts));
+        String contentLocation = attachments.get(0).getLocation();
         try {
             mmsDb.insertMessageInbox(retrieved, contentLocation, threadId);
         } catch (MmsException e) {
