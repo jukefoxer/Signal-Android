@@ -61,6 +61,13 @@
   <string name="ImportFragment_error_importing_backup">Error importing backup!</string>
   <string name="ImportFragment_import_complete">Import complete!</string>
 
+  <string name="ImportFragment_import_whatsapp_backup">Import Whatsapp backup?</string>
+  <string name="ImportFragment_this_will_import_messages_from_whatsapp_backup">This will import
+      messages from a Whatsapp msgstore.db backup file. If you\'ve previously imported this backup,
+      importing again will result in duplicated messages.
+  </string>
+  <string name="ImportFragment_import_whatsapp_backup_elipse">Importing whatsapp backup...</string>
+
   <string name="ImportExportFragment_signal_needs_the_sms_permission_in_order_to_import_sms_messages">Signal needs the SMS permission in order to import SMS messages, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"SMS\".</string>
   <string name="ImportExportFragment_signal_needs_the_sms_permission_in_order_to_import_sms_messages_toast">Signal needs the SMS permission in order to import SMS messages</string>
   <string name="ImportExportFragment_signal_needs_the_storage_permission_in_order_to_read_from_external_storage_but_it_has_been_permanently_denied">Signal needs the Storage permission in order to read from external storage, but it has been permanently denied. Please continue to app settings, select \"Permissions\", then enable \"Storage\".</string>
