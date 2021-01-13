@@ -5,9 +5,7 @@ import android.content.ContextWrapper;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
-import android.util.Log;
-
-import org.thoughtcrime.securesms.database.NoExternalStorageException;
+import org.signal.core.util.logging.Log;
 
 import java.io.File;
 
@@ -28,13 +26,7 @@ public class WaDbContext extends ContextWrapper {
         if (!dbfile.endsWith(".db")) {
             dbfile += ".db" ;
         }
-
         File result = new File(dbfile);
-
-        if (Log.isLoggable("DEBUG_CONTEXT", Log.WARN)) {
-            Log.w("DEBUG_CONTEXT", "getDatabasePath(" + name + ") = " + result.getAbsolutePath());
-        }
-
         return result;
     }
 
@@ -48,10 +40,6 @@ public class WaDbContext extends ContextWrapper {
     @Override
     public SQLiteDatabase openOrCreateDatabase(String name, int mode, SQLiteDatabase.CursorFactory factory) {
         SQLiteDatabase result = SQLiteDatabase.openOrCreateDatabase(getDatabasePath(name), null);
-        // SQLiteDatabase result = super.openOrCreateDatabase(name, mode, factory);
-        if (Log.isLoggable("DEBUG_CONTEXT", Log.WARN)) {
-            Log.w("DEBUG_CONTEXT", "openOrCreateDatabase(" + name + ",,) = " + result.getPath());
-        }
         return result;
     }
 }

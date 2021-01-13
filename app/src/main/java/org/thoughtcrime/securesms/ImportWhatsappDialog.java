@@ -2,7 +2,6 @@ package org.thoughtcrime.securesms;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.view.View;
 import android.widget.CheckBox;
 
