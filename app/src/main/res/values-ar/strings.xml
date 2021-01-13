@@ -52,7 +52,7 @@
   <string name="ApplicationPreferencesActivity_privacy_summary">إقفال الشاشة %1$s، إنهاء التسجيل %2$s</string>
   <string name="ApplicationPreferencesActivity_privacy_summary_screen_lock">قفل الشاشة %1$s</string>
   <string name="ApplicationPreferencesActivity_appearance_summary">المظهر %1$s، اللغة %2$s</string>
-  <string name="ApplicationPreferencesActivity_pins_are_required_for_registration_lock">يطلب الرقم التعريفي الشخصي من أجل قفل الانخراط. لإلغاء الرقم التعريفي الشخصي، الرجاء إلغاء قفل الانخراط.</string>
+  <string name="ApplicationPreferencesActivity_pins_are_required_for_registration_lock">يطلب الرقم التعريفي الشخصي من أجل قفل التسجيل لإلغاء الرقم التعريفي الشخصي، الرجاء إلغاء قفل التسجيل.</string>
   <string name="ApplicationPreferencesActivity_pin_created">تم إنشاء الرقم التعريفي الشخصي.</string>
   <string name="ApplicationPreferencesActivity_pin_disabled">الرقم التعريفي الشخصي غير مفعل.</string>
   <string name="ApplicationPreferencesActivity_hide">إخفاء</string>
@@ -724,6 +724,7 @@
   <string name="AddGroupDetailsFragment__create_group">إنشاء مجموعة</string>
   <string name="AddGroupDetailsFragment__create">إنشاء</string>
   <string name="AddGroupDetailsFragment__members">الأعضاء</string>
+  <string name="AddGroupDetailsFragment__you_can_add_or_invite_friends_after_creating_this_group">يمكنك إضافة أو دعوة أصدقاء بعد إنشاء هذه المجموعة.</string>
   <string name="AddGroupDetailsFragment__group_name_required">اسم المجموعة (ضروري)</string>
   <string name="AddGroupDetailsFragment__group_name_optional">اسم المجموعة (اختياري)</string>
   <string name="AddGroupDetailsFragment__this_field_is_required">هذا الحقل مطلوب.</string>
@@ -932,6 +933,15 @@
   <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_update_signal">قم بتحديث Signal</string>
   <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_update_linked_device_message">تُشغِّل إحدى أجهزتك المرتبطة إصدار Signal لا يدعم وصلات المجموعات. يُرجى تحديث Signal على أجهزتك المرتبطة للانضمام إلى هذه المجموعة.</string>
   <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_group_link_is_not_valid">وصلة المجموعة غير صالحة</string>
+  <!--GroupInviteLinkEnableAndShareBottomSheetDialogFragment-->
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_invite_friends">دعوة الأصدقاء</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_share_a_link_with_friends_to_let_them_quickly_join_this_group">شارك أصدقاءك بوصلة للسماح لهم بالانضمام لهذه المجموعة بسرعة.</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_enable_and_share_link">تفعيل ومشاركة الوصلة</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_share_link">مشاركة الوصلة</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_unable_to_enable_group_link_please_try_again_later">تعذر تفعيل وصلة المجموعة. يُرجى إعادة المحاولة لاحقا</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_encountered_a_network_error">حدث خطأ فى الشبكة</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_you_dont_have_the_right_to_enable_group_link">ليس لديك الصلاحية لتفعيل وصلة المجموعة. يُرجى الطلب من مشرف القيام بذلك.</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_you_are_not_currently_a_member_of_the_group">لست عضوًا في المجموعة حاليا.</string>
   <!--GV2 Request confirmation dialog-->
   <string name="RequestConfirmationDialog_add_s_to_the_group">إضافة \"%1$s\" إلى المجموعة ؟</string>
   <string name="RequestConfirmationDialog_deny_request_from_s">رفض طلب \"%1$s\" ؟</string>
@@ -1053,6 +1063,10 @@
   <string name="Megaphones_verify_your_signal_pin">إثبات الرقم التعريفي الشخصي ل Signal</string>
   <string name="Megaphones_well_occasionally_ask_you_to_verify_your_pin">قد نسألك أحيانا للتحقق من رقمك التعريفي الشخصي لكي تتذكره.</string>
   <string name="Megaphones_verify_pin">التحقق من الرقم التعريفي الشخصي</string>
+  <string name="Megaphones_get_started">لنبدأ</string>
+  <string name="Megaphones_new_group">مجموعة جديدة</string>
+  <string name="Megaphones_invite_friends">دعوة الأصدقاء</string>
+  <string name="Megaphones_use_sms">استخدام SMS</string>
   <!--NotificationBarManager-->
   <string name="NotificationBarManager_signal_call_in_progress">مكالمة Signal جارية</string>
   <string name="NotificationBarManager__establishing_signal_call">بدء مكالمة Signal</string>
@@ -1135,6 +1149,7 @@
   <!--GV2 specific-->
   <string name="MessageRecord_you_created_the_group">لقد أنشأتَ مجموعة.</string>
   <string name="MessageRecord_group_updated">تم تحديث المجموعة.</string>
+  <string name="MessageRecord_invite_friends_to_this_group">قم بدعوة الأصدقاء لهذه المجموعة باستخدام وصلة المجموعة</string>
   <!--GV2 member additions-->
   <string name="MessageRecord_you_added_s">أضفت %1$s.</string>
   <string name="MessageRecord_s_added_s">%1$s أضاف %2$s.</string>
@@ -1415,7 +1430,7 @@
     <item quantity="many">لديك %1$d محاولات متبقية. إذا انتهت محاولاتك، تستطيع إنشاء رقم تعريفي شخصي جديد. والتسجيل واستخدام حسابك لكنك ستفقد الإعدادات المحفوظة مثل معلومات حسابك الشخصي.</item>
     <item quantity="other">لديك %1$d محاولات متبقية. إذا انتهت محاولاتك، تستطيع إنشاء رقم تعريفي شخصي جديد. والتسجيل واستخدام حسابك لكنك ستفقد الإعدادات المحفوظة مثل معلومات حسابك الشخصي.</item>
   </plurals>
-  <string name="PinRestoreEntryFragment_signal_registration_need_help_with_pin">تسجيل Signal - تحتاج مساعدة بالرقم التعريفي الشخصي لنظام تشغيل Android</string>
+  <string name="PinRestoreEntryFragment_signal_registration_need_help_with_pin">تسجيل Signal - تحتاج مساعدة بالرقم التعريفي الشخصي لنظام تشغيل أندرويد</string>
   <string name="PinRestoreEntryFragment_enter_alphanumeric_pin">أدخل الرقم التعريفي الشخصي بالأحرف والأرقام</string>
   <string name="PinRestoreEntryFragment_enter_numeric_pin">أدخل الرقم التعريفي الشخصي بالأرقام</string>
   <!--PinRestoreLockedFragment-->
@@ -1549,8 +1564,10 @@
 
 كن على طبيعتك في كل رسالة.</string>
   <string name="RegistrationActivity_enter_your_phone_number_to_get_started">أدخل رقم هاتفك للبدء</string>
+  <string name="RegistrationActivity_enter_your_phone_number">يُرجى إدخال رقم هاتفك</string>
   <string name="RegistrationActivity_you_will_receive_a_verification_code">ستستلم رمز تحقّق. قد تنطبّق تكلفة من مزوّد الخدمة.</string>
   <string name="RegistrationActivity_enter_the_code_we_sent_to_s">أدخل الرمز الذي أرسلناه إلى%s</string>
+  <string name="RegistrationActivity_make_sure_your_phone_has_a_cellular_signal">يُرجى التأكد من أن هاتفك يلتقط الإشارة الخلوية لتلقي الرسائل القصيرة أو المكالمات</string>
   <string name="RegistrationActivity_phone_number_description">رقم الهاتف</string>
   <string name="RegistrationActivity_country_code_description">رمز البلد</string>
   <string name="RegistrationActivity_call">اتصال</string>
@@ -1695,6 +1712,14 @@
   <string name="UsernameEditFragment_username_is_invalid">اسم المستخدم غير صالح</string>
   <string name="UsernameEditFragment_usernames_must_be_between_a_and_b_characters">اسم المستخدم لا بد أن يكون بين %1$d و%2$d رمز.</string>
   <string name="UsernameEditFragment_usernames_on_signal_are_optional">إن اسم المستخدم اختياري في Signal. إذا اخترت إنشاء اسم المستخدم، سوف يتمكن المستخدمون الآخرون لـ Signal من العثور عليك بواسطة ذلك الاسم و من ثَمَّ التواصل معك بدون معرفتهم لرقم هاتفك.</string>
+  <plurals name="UserNotificationMigrationJob_d_contacts_are_on_signal">
+    <item quantity="zero">%d جهات اتصال تستخدم Signal</item>
+    <item quantity="one">تستخدم جهة اتصال %d Signal</item>
+    <item quantity="two">%d جهات اتصال تستخدم Signal</item>
+    <item quantity="few">%d جهات اتصال تستخدم Signal</item>
+    <item quantity="many">%d جهات اتصال تستخدم Signal</item>
+    <item quantity="other">%d جهات اتصال تستخدم Signal</item>
+  </plurals>
   <!--VerifyIdentityActivity-->
   <string name="VerifyIdentityActivity_your_contact_is_running_an_old_version_of_signal">جهة الاتصال هذه تستخدم إصدار قديم من Signal. اطلب منه تحديث التطبيق قبل التحقق من رقم السلامة.</string>
   <string name="VerifyIdentityActivity_your_contact_is_running_a_newer_version_of_Signal">جهة الاتصال هذه تستخدم نسخة أحدث من تطبيق Signal وصيغة رمز الاستجابة السريع أو QR فيها لا تتوافق مع نسختك. يرجى تحديث النسخة للمقارنة.</string>
@@ -1946,6 +1971,7 @@
   <string name="ConversationUpdateItem_join_call">الانضمام للمكالمة</string>
   <string name="ConversationUpdateItem_return_to_call">العودة للمكالمة</string>
   <string name="ConversationUpdateItem_call_is_full">المكالمة ممتلئة</string>
+  <string name="ConversationUpdateItem_invite_friends">دعوة الأصدقاء</string>
   <!--audio_view-->
   <string name="audio_view__play_pause_accessibility_description">شغّل … توقف</string>
   <string name="audio_view__download_accessibility_description">تنزيل</string>
@@ -2445,7 +2471,7 @@
   <!--conversation_list_fragment-->
   <string name="conversation_list_fragment__fab_content_description">محادثة جديدة</string>
   <string name="conversation_list_fragment__open_camera_description">فتح الكاميرا</string>
-  <string name="conversation_list_fragment__give_your_inbox_something_to_write_home_about_get_started_by_messaging_a_friend">ابدأي أو ابدأ محادثات مع أصدقائك. </string>
+  <string name="conversation_list_fragment__no_chats_yet_get_started_by_messaging_a_friend">لا محادثات حتى الآن.\nابدأ عن طريق محادثة صديق.</string>
   <!--conversation_secure_verified-->
   <string name="conversation_secure_verified__menu_reset_secure_session">إعادة ضبط جلسة آمنة</string>
   <!--conversation_muted-->
@@ -2482,8 +2508,6 @@
   <string name="verify_display_fragment_context_menu__copy_to_clipboard">نسخ إلى الحافظة</string>
   <string name="verify_display_fragment_context_menu__compare_with_clipboard">قارن مع الحافظة</string>
   <!--reminder_header-->
-  <string name="reminder_header_sms_default_title">الاستخدام كالتطبيق الافتراضي لرسائل SMS</string>
-  <string name="reminder_header_sms_default_text">انقر لجعل Signal التطبيق الافتراضي لرسائل SMS.</string>
   <string name="reminder_header_sms_import_title">استيراد رسائل SMS من النظام</string>
   <string name="reminder_header_sms_import_text">انقر لنسخ رسائل SMS من على الهاتف إلى قاعدة بيانات Signal المشفرة.</string>
   <string name="reminder_header_push_title">تفعيل رسائل ومكالمات Signal</string>
@@ -2707,6 +2731,7 @@
   <string name="BackupDialog_to_enable_backups_choose_a_folder">لتفعيل النسخ اﻻحتياطية، يُرجى اختيار المجلد. سوف تُخزَّن النسخ اﻻحتياطية في هذا الموقع.</string>
   <string name="BackupDialog_choose_folder">اختر مجلّدًا</string>
   <string name="BackupDialog_copied_to_clipboard">تمّ النسخ إلى الحافظة</string>
+  <string name="BackupDialog_no_file_picker_available">لا يوجد محدد للملفات متاح.</string>
   <string name="BackupDialog_enter_backup_passphrase_to_verify">
 ادخل رمز أمان النسخة الاحتياطية للتحقق</string>
   <string name="BackupDialog_verify">تحقق</string>
@@ -2819,7 +2844,7 @@
   <string name="GroupRecipientListItem_approve_description">الموافقة</string>
   <string name="GroupRecipientListItem_deny_description">رفض</string>
   <!--GroupsLearnMoreBottomSheetDialogFragment-->
-  <string name="GroupsLearnMore_legacy_vs_new_groups">المجموعات من الطراز القديم مقارنة بالمجموعات من الطراز القديم</string>
+  <string name="GroupsLearnMore_legacy_vs_new_groups">المجموعات من الطراز القديم مقارنة بالمجموعات من الطراز الجديد</string>
   <string name="GroupsLearnMore_what_are_legacy_groups">ماهي المجموعات من الطراز القديم؟</string>
   <string name="GroupsLearnMore_paragraph_1">المجموعات من الطراز القديم هي المجموعات الغير متوائمة مع الميزات الجديدة الموجودة في الطراز الجديد مثل خاصية المشرفين وتحديثات وصف المجموعة.</string>
   <string name="GroupsLearnMore_can_i_upgrade_a_legacy_group">أيمكنني ترقية المجموعات من الطراز القديم ؟</string>
@@ -2904,5 +2929,7 @@
   <string name="DeleteAccountFragment__launch_app_settings">إعدادات تشغيل التطبيق</string>
   <!--DeleteAccountCountryPickerFragment-->
   <string name="DeleteAccountCountryPickerFragment__search_countries">البحث في البلدان</string>
+  <!--CreateGroupActivity-->
+  <string name="CreateGroupActivity__skip">تخطّي</string>
   <!--EOF-->
 </resources>

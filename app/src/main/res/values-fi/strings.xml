@@ -739,6 +739,9 @@
   <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_update_signal">Päivitä Signal</string>
   <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_update_linked_device_message">Yhdellä tai useammalla linkitetyllä laitteellasi on Signal-versio, joka ei tue ryhmälinkkejä. Päivitä linkitettyjen laitteidesi sovellukset liittyäksesi tähän ryhmään.</string>
   <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_group_link_is_not_valid">Ryhmälinkki ei ole kelvollinen</string>
+  <!--GroupInviteLinkEnableAndShareBottomSheetDialogFragment-->
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_invite_friends">Kutsu ystäviä</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_encountered_a_network_error">Verkkovirhe.</string>
   <!--GV2 Request confirmation dialog-->
   <string name="RequestConfirmationDialog_add_s_to_the_group">Lisää \"%1$s\" ryhmään?</string>
   <string name="RequestConfirmationDialog_deny_request_from_s">Hylkää pyyntö käyttäjältä \"%1$s\"?</string>
@@ -836,6 +839,9 @@
   <string name="Megaphones_verify_your_signal_pin">Varmenna Signal PIN-koodisi</string>
   <string name="Megaphones_well_occasionally_ask_you_to_verify_your_pin">Tulemme toisinaan pyytämään sinua varmentamaan PIN-koodisi, jotta muistat sen.</string>
   <string name="Megaphones_verify_pin">Varmenna PIN</string>
+  <string name="Megaphones_get_started">Aloita</string>
+  <string name="Megaphones_new_group">Uusi ryhmä</string>
+  <string name="Megaphones_invite_friends">Kutsu ystäviä</string>
   <!--NotificationBarManager-->
   <string name="NotificationBarManager_signal_call_in_progress">Signal-puhelu käynnissä</string>
   <string name="NotificationBarManager__establishing_signal_call">Muodostetaan Signal-puhelua</string>
@@ -1132,7 +1138,7 @@
   <string name="PinRestoreEntryFragment_enter_numeric_pin">Syötä numeerinen PIN</string>
   <!--PinRestoreLockedFragment-->
   <string name="PinRestoreLockedFragment_create_your_pin">Luo PIN-koodisi</string>
-  <string name="PinRestoreLockedFragment_youve_run_out_of_pin_guesses">PIN-arvailut ovat loppuneet, mutta voit silti käyttää Signal-tiliäsi luomalla uuden PIN-koodin. Yksityisyytesi ja turvallisuutesi vuoksi tili palautetaan ilman tallennettuja profiilitietoja tai asetuksia.</string>
+  <string name="PinRestoreLockedFragment_youve_run_out_of_pin_guesses">PIN-arvailut ovat loppuneet, mutta voit silti käyttää Signal-tiliäsi luomalla uuden PIN-koodin. Yksityisyytesi ja tietoturvasi vuoksi tili palautetaan ilman tallennettuja profiilitietoja tai asetuksia.</string>
   <string name="PinRestoreLockedFragment_create_new_pin">Luo uusi PIN-koodi</string>
   <!--PinOptOutDialog-->
   <string name="PinOptOutDialog_warning">Varoitus</string>
@@ -1241,6 +1247,7 @@ puhelinnumero</string>
   <string name="RegistrationActivity_continue_last_attempt">Jatka (viimeinen yritys!)</string>
   <string name="RegistrationActivity_take_privacy_with_you_be_yourself_in_every_message">Ota yksityisyys mukaasi.\nOle itsesi jokaisessa viestissä.</string>
   <string name="RegistrationActivity_enter_your_phone_number_to_get_started">Syötä puhelinnumerosi, jotta pääset alkuun</string>
+  <string name="RegistrationActivity_enter_your_phone_number">Syötä puhelinnumerosi</string>
   <string name="RegistrationActivity_you_will_receive_a_verification_code">Saat vahvistuskoodin. Matkapuhelinoperaattorisi hinnat voivat olla voimassa.</string>
   <string name="RegistrationActivity_enter_the_code_we_sent_to_s">Syötä koodi, jonka lähetimme numeroon %s</string>
   <string name="RegistrationActivity_phone_number_description">Puhelinnumero</string>
@@ -1623,6 +1630,7 @@ Vastaanotetiin avaintenvaihtoviesti, joka kuuluu väärälle protokollaversiolle
   <string name="ConversationUpdateItem_join_call">Liity puheluun</string>
   <string name="ConversationUpdateItem_return_to_call">Palaa puheluun</string>
   <string name="ConversationUpdateItem_call_is_full">Puhelu on täynnä</string>
+  <string name="ConversationUpdateItem_invite_friends">Kutsu ystäviä</string>
   <!--audio_view-->
   <string name="audio_view__play_pause_accessibility_description">Pelaa … Tauko</string>
   <string name="audio_view__download_accessibility_description">Lataa</string>
@@ -2088,7 +2096,6 @@ Vastaanotetiin avaintenvaihtoviesti, joka kuuluu väärälle protokollaversiolle
   <!--conversation_list_fragment-->
   <string name="conversation_list_fragment__fab_content_description">Uusi keskustelu</string>
   <string name="conversation_list_fragment__open_camera_description">Avaa kamera</string>
-  <string name="conversation_list_fragment__give_your_inbox_something_to_write_home_about_get_started_by_messaging_a_friend">Anna postilaatikollesi jotain, mistä se voisi olla ylpeä. Aloita lähettämällä viesti ystävälle.</string>
   <!--conversation_secure_verified-->
   <string name="conversation_secure_verified__menu_reset_secure_session">Alusta suojattu istunto</string>
   <!--conversation_muted-->
@@ -2125,8 +2132,6 @@ Vastaanotetiin avaintenvaihtoviesti, joka kuuluu väärälle protokollaversiolle
   <string name="verify_display_fragment_context_menu__copy_to_clipboard">Kopioi leikepöydälle</string>
   <string name="verify_display_fragment_context_menu__compare_with_clipboard">Vertaa leikepöytään</string>
   <!--reminder_header-->
-  <string name="reminder_header_sms_default_title">Käytä oletuksena tekstiviesteille?</string>
-  <string name="reminder_header_sms_default_text">Napauta, jos haluat tehdä Signalista oletustekstiviestisovelluksesi.</string>
   <string name="reminder_header_sms_import_title">Tuo järjestelmän tekstiviestit</string>
   <string name="reminder_header_sms_import_text">Napauta, jos haluat kopioida puhelimesi tekstiviestit Signalin salattuun tietokantaan.</string>
   <string name="reminder_header_push_title">Ota käyttöön Signal-viestit ja -puhelut</string>
@@ -2222,7 +2227,7 @@ Vastaanotetiin avaintenvaihtoviesti, joka kuuluu väärälle protokollaversiolle
   <string name="KbsReminderDialog__incorrect_pin_try_again">Väärä PIN-koodi. Yritä uudelleen.</string>
   <!--AccountLockedFragment-->
   <string name="AccountLockedFragment__account_locked">Tili lukittu</string>
-  <string name="AccountLockedFragment__your_account_has_been_locked_to_protect_your_privacy">Tilisi on lukittu yksityisyytesi ja turvallisuutesi suojaamiseksi. Kun %1$d päivää on kulunut ilman toimintaa tililläsi, voit rekisteröidä tämän puhelinnumeron uudelleen ilman, että tarvitset PIN-koodia. Kaikki sisältö pyyhitään.</string>
+  <string name="AccountLockedFragment__your_account_has_been_locked_to_protect_your_privacy">Tilisi on lukittu yksityisyytesi ja tietoturvasi suojaamiseksi. Kun %1$d päivää on kulunut ilman toimintaa tililläsi, voit rekisteröidä tämän puhelinnumeron uudelleen ilman, että tarvitset PIN-koodia. Kaikki sisältö pyyhitään.</string>
   <string name="AccountLockedFragment__next">Seuraava</string>
   <string name="AccountLockedFragment__learn_more">Lue lisää</string>
   <!--KbsLockFragment-->
@@ -2237,8 +2242,8 @@ Vastaanotetiin avaintenvaihtoviesti, joka kuuluu väärälle protokollaversiolle
   <string name="RegistrationLockFragment__forgot_your_pin">Unohditko PIN-koodisi?</string>
   <string name="RegistrationLockFragment__not_many_tries_left">Ei monta yritystä jäljellä!</string>
   <plurals name="RegistrationLockFragment__for_your_privacy_and_security_there_is_no_way_to_recover">
-    <item quantity="one">Yksityisyytesi ja turvallisuutesi vuoksi PIN-koodia ei voida palauttaa. Jos et muista PIN-koodiasi, voit rekisteröityä uudelleen tekstiviestillä %1$d päivän toimettomuuden jälkeen. Tässä tapauksessa tilisi pyyhkiytyy ja kaikki sisältö poistetaan.</item>
-    <item quantity="other">Yksityisyytesi ja turvallisuutesi vuoksi PIN-koodia ei voida palauttaa. Jos et muista PIN-koodiasi, voit rekisteröityä uudelleen tekstiviestillä %1$d päivän toimettomuuden jälkeen. Tässä tapauksessa tilisi pyyhkiytyy ja kaikki sisältö poistetaan.</item>
+    <item quantity="one">Yksityisyytesi ja tietoturvasi vuoksi PIN-koodia ei voida palauttaa. Jos et muista PIN-koodiasi, voit rekisteröityä uudelleen tekstiviestillä %1$d päivän toimettomuuden jälkeen. Tässä tapauksessa tilisi pyyhkiytyy ja kaikki sisältö poistetaan.</item>
+    <item quantity="other">Yksityisyytesi ja tietoturvasi vuoksi PIN-koodia ei voida palauttaa. Jos et muista PIN-koodiasi, voit rekisteröityä uudelleen tekstiviestillä %1$d päivän toimettomuuden jälkeen. Tässä tapauksessa tilisi pyyhkiytyy ja kaikki sisältö poistetaan.</item>
   </plurals>
   <plurals name="RegistrationLockFragment__incorrect_pin_d_attempts_remaining">
     <item quantity="one">Väärä PIN-koodi. %1$d yritys jäljellä.</item>
@@ -2359,7 +2364,7 @@ Vastaanotetiin avaintenvaihtoviesti, joka kuuluu väärälle protokollaversiolle
   <string name="preferences_app_protection__change_your_pin">Vaihda PIN-koodi</string>
   <string name="preferences_app_protection__pin_reminders">PIN-koodin muistutus</string>
   <string name="preferences_app_protection__pins_keep_information_stored_with_signal_encrypted">PIN-koodit pitävät Signalin luona tallennetut tiedot salattuina, jotta vain sinä pääset niihin käsiksi. Profiilisi, asetuksesi ja yhteystietosi palautuvat kun asennat Signalin uudelleen.</string>
-  <string name="preferences_app_protection__add_extra_security_by_requiring_your_signal_pin_to_register">Paranna turvallisuutta vaatimalla Signal PIN-koodisi silloin kun rekisteröit puhelinnumerosi uudelleen.</string>
+  <string name="preferences_app_protection__add_extra_security_by_requiring_your_signal_pin_to_register">Paranna tietoturvaasi vaatimalla Signal PIN-koodisi silloin kun rekisteröit puhelinnumerosi uudelleen.</string>
   <string name="preferences_app_protection__reminders_help_you_remember_your_pin">Muistutukset auttavat sinua muistamaan PIN-koodisi, koska sitä ei voida palauttaa. Sinulta kysytään harvemmin ajan myötä.</string>
   <string name="preferences_app_protection__turn_off">Poista käytöstä</string>
   <string name="preferences_app_protection__confirm_pin">Vahvista PIN</string>
@@ -2488,5 +2493,7 @@ Vastaanotetiin avaintenvaihtoviesti, joka kuuluu väärälle protokollaversiolle
   <string name="DeleteAccountFragment__launch_app_settings">Avaa sovelluksen asetukset</string>
   <!--DeleteAccountCountryPickerFragment-->
   <string name="DeleteAccountCountryPickerFragment__search_countries">Hae maa</string>
+  <!--CreateGroupActivity-->
+  <string name="CreateGroupActivity__skip">Ohita</string>
   <!--EOF-->
 </resources>

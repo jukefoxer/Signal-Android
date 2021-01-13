@@ -84,15 +84,12 @@ public class AdvancedPreferenceFragment extends CorrectedPreferenceFragment {
       return false;
     });
 
+    // JW: show internal settings
     Preference internalPreference = this.findPreference(INTERNAL_PREF);
-    internalPreference.setVisible(FeatureFlags.internalUser());
+    internalPreference.setVisible(true);
     internalPreference.setOnPreferenceClickListener(preference -> {
-      if (FeatureFlags.internalUser()) {
-        getApplicationPreferencesActivity().pushFragment(new InternalOptionsPreferenceFragment());
-        return true;
-      } else {
-        return false;
-      }
+      getApplicationPreferencesActivity().pushFragment(new InternalOptionsPreferenceFragment());
+      return true;
     });
 
     Preference deleteAccount = this.findPreference(DELETE_ACCOUNT);

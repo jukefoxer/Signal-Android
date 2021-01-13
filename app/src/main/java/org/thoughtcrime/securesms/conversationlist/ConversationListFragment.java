@@ -81,7 +81,6 @@ import org.thoughtcrime.securesms.components.RatingManager;
 import org.thoughtcrime.securesms.components.SearchToolbar;
 import org.thoughtcrime.securesms.components.recyclerview.DeleteItemAnimator;
 import org.thoughtcrime.securesms.components.registration.PulsingFloatingActionButton;
-import org.thoughtcrime.securesms.components.reminder.DefaultSmsReminder;
 import org.thoughtcrime.securesms.components.reminder.DozeReminder;
 import org.thoughtcrime.securesms.components.reminder.ExpiredBuildReminder;
 import org.thoughtcrime.securesms.components.reminder.OutdatedBuildReminder;
@@ -89,8 +88,6 @@ import org.thoughtcrime.securesms.components.reminder.PushRegistrationReminder;
 import org.thoughtcrime.securesms.components.reminder.Reminder;
 import org.thoughtcrime.securesms.components.reminder.ReminderView;
 import org.thoughtcrime.securesms.components.reminder.ServiceOutageReminder;
-import org.thoughtcrime.securesms.components.reminder.ShareReminder;
-import org.thoughtcrime.securesms.components.reminder.SystemSmsImportReminder;
 import org.thoughtcrime.securesms.components.reminder.UnauthorizedReminder;
 import org.thoughtcrime.securesms.conversation.ConversationFragment;
 import org.thoughtcrime.securesms.conversationlist.model.Conversation;
@@ -104,6 +101,7 @@ import org.thoughtcrime.securesms.dependencies.ApplicationDependencies;
 import org.thoughtcrime.securesms.events.ReminderUpdateEvent;
 import org.thoughtcrime.securesms.insights.InsightsLauncher;
 import org.thoughtcrime.securesms.jobs.ServiceOutageDetectionJob;
+import org.thoughtcrime.securesms.keyvalue.SignalStore;
 import org.thoughtcrime.securesms.lock.v2.CreateKbsPinActivity;
 import org.thoughtcrime.securesms.mediasend.MediaSendActivity;
 import org.thoughtcrime.securesms.megaphone.Megaphone;
@@ -125,7 +123,6 @@ import org.thoughtcrime.securesms.util.SnapToTopDataObserver;
 import org.thoughtcrime.securesms.util.StickyHeaderDecoration;
 import org.thoughtcrime.securesms.util.Stopwatch;
 import org.thoughtcrime.securesms.util.TextSecurePreferences;
-import org.thoughtcrime.securesms.util.Util;
 import org.thoughtcrime.securesms.util.ViewUtil;
 import org.thoughtcrime.securesms.util.WindowUtil;
 import org.thoughtcrime.securesms.util.concurrent.SimpleTask;
@@ -156,12 +153,6 @@ public class ConversationListFragment extends MainFragment implements ActionMode
   private static final String TAG = Log.tag(ConversationListFragment.class);
 
   private static final int MAXIMUM_PINNED_CONVERSATIONS = 4;
-
-  private static final int[] EMPTY_IMAGES = new int[] { R.drawable.empty_inbox_1,
-                                                        R.drawable.empty_inbox_2,
-                                                        R.drawable.empty_inbox_3,
-                                                        R.drawable.empty_inbox_4,
-                                                        R.drawable.empty_inbox_5 };
 
   private ActionMode                        actionMode;
   private RecyclerView                      list;
@@ -620,14 +611,8 @@ public class ConversationListFragment extends MainFragment implements ActionMode
         return Optional.of(new ServiceOutageReminder(context));
       } else if (OutdatedBuildReminder.isEligible()) {
         return Optional.of(new OutdatedBuildReminder(context));
-      } else if (DefaultSmsReminder.isEligible(context)) {
-        return Optional.of(new DefaultSmsReminder(this, SMS_ROLE_REQUEST_CODE));
-      } else if (Util.isDefaultSmsProvider(context) && SystemSmsImportReminder.isEligible(context)) {
-        return Optional.of((new SystemSmsImportReminder(context)));
       } else if (PushRegistrationReminder.isEligible(context)) {
         return Optional.of((new PushRegistrationReminder(context)));
-      } else if (ShareReminder.isEligible(context)) {
-        return Optional.of(new ShareReminder(context));
       } else if (DozeReminder.isEligible(context)) {
         return Optional.of(new DozeReminder(context));
       } else {
@@ -854,10 +839,10 @@ public class ConversationListFragment extends MainFragment implements ActionMode
 
   private void onSubmitList(@NonNull List<Conversation> conversationList) {
     defaultAdapter.submitList(conversationList);
-    onPostSubmitList();
+    onPostSubmitList(conversationList.size());
   }
 
-  private void updateEmptyState(boolean isConversationEmpty) {
+  void updateEmptyState(boolean isConversationEmpty) {
     if (isConversationEmpty) {
       Log.i(TAG, "Received an empty data set.");
       list.setVisibility(View.INVISIBLE);
@@ -865,8 +850,8 @@ public class ConversationListFragment extends MainFragment implements ActionMode
       fab.startPulse(3 * 1000);
       cameraFab.startPulse(3 * 1000);
 
-      ImageView emptyImage = emptyState.get().findViewById(R.id.empty);
-      emptyImage.setImageResource(EMPTY_IMAGES[(int) (Math.random() * EMPTY_IMAGES.length)]);
+      SignalStore.onboarding().setShowNewGroup(true);
+      SignalStore.onboarding().setShowInviteFriends(true);
     } else {
       list.setVisibility(View.VISIBLE);
       fab.stopPulse();
@@ -878,7 +863,11 @@ public class ConversationListFragment extends MainFragment implements ActionMode
     }
   }
 
-  protected void onPostSubmitList() {
+  protected void onPostSubmitList(int conversationCount) {
+    if (conversationCount >= 6 && (SignalStore.onboarding().shouldShowInviteFriends() || SignalStore.onboarding().shouldShowNewGroup())) {
+      SignalStore.onboarding().clearAll();
+      ApplicationDependencies.getMegaphoneRepository().markFinished(Megaphones.Event.ONBOARDING);
+    }
   }
 
   @Override

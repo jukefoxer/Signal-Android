@@ -137,13 +137,13 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
                             .addBlocking("ring-rtc", this::initializeRingRtc)
                             .addBlocking("mark-registration", () -> RegistrationUtil.maybeMarkRegistrationComplete(this))
                             .addBlocking("lifecycle-observer", () -> ProcessLifecycleOwner.get().getLifecycle().addObserver(this))
+                            .addBlocking("message-retriever", this::initializeMessageRetrieval)
                             .addBlocking("dynamic-theme", () -> DynamicTheme.setDefaultDayNightMode(this))
                             .addBlocking("vector-compat", () -> {
                               if (Build.VERSION.SDK_INT < 21) {
                                 AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
                               }
                             })
-                            .addNonBlocking(this::initializeMessageRetrieval)
                             .addNonBlocking(this::initializeRevealableMessageManager)
                             .addNonBlocking(this::initializeGcmCheck)
                             .addNonBlocking(this::initializeSignedPreKeyCheck)
@@ -161,6 +161,8 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
                             .addPostRender(() -> NotificationChannels.create(this))
                             .execute();
 
+    ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+
     Log.d(TAG, "onCreate() took " + (System.currentTimeMillis() - startTime) + " ms");
     Tracer.getInstance().end("Application#onCreate()");
   }
@@ -172,6 +174,7 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
     Log.i(TAG, "App is now visible.");
 
     ApplicationDependencies.getFrameRateTracker().begin();
+    ApplicationDependencies.getMegaphoneRepository().onAppForegrounded();
 
     SignalExecutors.BOUNDED.execute(() -> {
       FeatureFlags.refreshIfNecessary();
@@ -180,7 +183,6 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
       GroupV1MigrationJob.enqueueRoutineMigrationsIfNecessary(this);
       executePendingContactSync();
       KeyCachingService.onAppForegrounded(this);
-      ApplicationDependencies.getMegaphoneRepository().onAppForegrounded();
       ApplicationDependencies.getShakeToReport().enable();
       checkBuildExpiration();
     });
@@ -199,6 +201,9 @@ public class ApplicationContext extends MultiDexApplication implements DefaultLi
   }
 
   public ExpiringMessageManager getExpiringMessageManager() {
+    if (expiringMessageManager == null) {
+      initializeExpiringMessageManager();
+    }
     return expiringMessageManager;
   }
 

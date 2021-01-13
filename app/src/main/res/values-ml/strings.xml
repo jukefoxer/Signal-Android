@@ -350,7 +350,7 @@
   <string name="CreateProfileActivity_problem_setting_profile">പ്രൊഫൈൽ ക്രമീകരിക്കുന്നതിൽ പ്രശ്‌നമുണ്ട്</string>
   <string name="CreateProfileActivity_profile_photo">പ്രൊഫൈൽ ഫോട്ടോ</string>
   <string name="CreateProfileActivity_set_up_your_profile">നിങ്ങളുടെ പ്രൊഫൈൽ സജ്ജമാക്കുക</string>
-  <string name="CreateProfileActivity_signal_profiles_are_end_to_end_encrypted">നിങ്ങളുടെ പ്രൊഫൈൽ  ആദ്യാവസാന എന്‍ക്രിപ്ഷന്‍ ചെയ്തിരിക്കുന്നു. നിങ്ങൾ പുതിയ സംഭാഷണങ്ങൾ ആരംഭിക്കുമ്പോഴോ സ്വീകരിക്കുമ്പോഴോ പുതിയ ഗ്രൂപ്പുകളിൽ ചേരുമ്പോഴോ നിങ്ങളുടെ പ്രൊഫൈലും അതിലെ മാറ്റങ്ങളും നിങ്ങളുടെ കോൺടാക്റ്റുകൾക്ക് ദൃശ്യമാകും.</string>
+  <string name="CreateProfileActivity_signal_profiles_are_end_to_end_encrypted">നിങ്ങളുടെ പ്രൊഫൈൽ  ഏൻഡ് ടു ഏൻഡ് എൻക്രിപ്റ്റഡാണ്. നിങ്ങൾ പുതിയ സംഭാഷണങ്ങൾ ആരംഭിക്കുമ്പോഴോ സ്വീകരിക്കുമ്പോഴോ പുതിയ ഗ്രൂപ്പുകളിൽ ചേരുമ്പോഴോ നിങ്ങളുടെ പ്രൊഫൈലും അതിലെ മാറ്റങ്ങളും നിങ്ങളുടെ കോൺടാക്റ്റുകൾക്ക് ദൃശ്യമാകും.</string>
   <string name="CreateProfileActivity_set_avatar_description">അവതാർ സജ്ജമാക്കുക</string>
   <!--ChooseBackupFragment-->
   <string name="ChooseBackupFragment__restore_from_backup">ബാക്കപ്പിൽ നിന്ന് റിസ്റ്റോർ ചെയ്യണോ?</string>
@@ -599,6 +599,7 @@
   <string name="AddGroupDetailsFragment__create_group">ഗ്രൂപ്പ് സൃഷ്ടിക്കുക</string>
   <string name="AddGroupDetailsFragment__create">സൃഷ്ടിക്കുക</string>
   <string name="AddGroupDetailsFragment__members">അംഗങ്ങൾ</string>
+  <string name="AddGroupDetailsFragment__you_can_add_or_invite_friends_after_creating_this_group">ഈ ഗ്രൂപ്പ് സൃഷ്ടിച്ചതിനുശേഷം നിങ്ങൾക്ക് സുഹൃത്തുക്കളെ ചേർക്കാനോ ക്ഷണിക്കാനോ കഴിയും.</string>
   <string name="AddGroupDetailsFragment__group_name_required">ഗ്രൂപ്പിന്റെ പേര് (ആവശ്യമാണ്)</string>
   <string name="AddGroupDetailsFragment__group_name_optional">ഗ്രൂപ്പിന്റെ പേര് (നിര്‍ബന്ധമല്ല)</string>
   <string name="AddGroupDetailsFragment__this_field_is_required">ഈ ഫീൽഡ് പൂരിപ്പിക്കേണ്ടതുണ്ട്.</string>
@@ -697,10 +698,10 @@
   <string name="ManageRecipientActivity_add_to_a_group">ഒരു ഗ്രൂപ്പിലേക്ക് ചേർക്കുക</string>
   <string name="ManageRecipientActivity_view_all_groups">എല്ലാ ഗ്രൂപ്പുകളും കാണുക</string>
   <string name="ManageRecipientActivity_see_all">എല്ലാം കാണുക</string>
-  <string name="ManageRecipientActivity_no_groups_in_common">പൊതുവായി ഗ്രൂപ്പുകളൊന്നുമില്ല</string>
+  <string name="ManageRecipientActivity_no_groups_in_common">സാമാന്യമായി ഗ്രൂപ്പുകളൊന്നുമില്ല</string>
   <plurals name="ManageRecipientActivity_d_groups_in_common">
-    <item quantity="one">പൊതുവായുള്ള %d ഗ്രൂപ്പ്</item>
-    <item quantity="other">പൊതുവായി %d ഗ്രൂപ്പുകൾ</item>
+    <item quantity="one">സാമാന്യമായി %d ഗ്രൂപ്പ് ഉണ്ട്</item>
+    <item quantity="other">സാമാന്യമായി %d ഗ്രൂപ്പുകൾ ഉണ്ട്</item>
   </plurals>
   <string name="ManageRecipientActivity_edit_name_and_picture">പേരും ചിത്രവും എഡിറ്റുചെയ്യുക</string>
   <string name="ManageRecipientActivity_message_description">സന്ദേശം</string>
@@ -767,6 +768,15 @@
   <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_update_signal">Signal അപ്ഡേറ്റ് ചെയ്യുക</string>
   <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_update_linked_device_message">നിങ്ങളുടെ ലിങ്കുചെയ്‌ത ഒന്നോ അതിലധികമോ ഉപകരണങ്ങൾ ഗ്രൂപ്പ് ലിങ്കുകളെ പിന്തുണയ്‌ക്കാത്ത Signal(സിഗ്നലി)ന്റെ ഒരു പതിപ്പ് പ്രവർത്തിപ്പിക്കുന്നു. ഈ ഗ്രൂപ്പിൽ ചേരുന്നതിന് നിങ്ങളുടെ ലിങ്കുചെയ്‌ത ഉപകരണത്തിൽ (ഉപകരണങ്ങളിൽ) സിഗ്നൽ അപ്‌ഡേറ്റുചെയ്യുക.</string>
   <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_group_link_is_not_valid">ഗ്രൂപ്പ് ലിങ്ക് അസാധുവാണ്</string>
+  <!--GroupInviteLinkEnableAndShareBottomSheetDialogFragment-->
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_invite_friends">സുഹൃത്തുക്കളെ ക്ഷണിക്കുക</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_share_a_link_with_friends_to_let_them_quickly_join_this_group">ഈ ഗ്രൂപ്പിൽ വേഗത്തിൽ ചേരാൻ സുഹൃത്തുക്കളെ അനുവദിക്കുന്നതിന് ഒരു ലിങ്ക് പങ്കിടുക.</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_enable_and_share_link">പ്രവർത്തനക്ഷമമാക്കി ലിങ്ക് പങ്കിടുക</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_share_link">ലിങ്ക് പങ്കിടുക</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_unable_to_enable_group_link_please_try_again_later">ഗ്രൂപ്പ് ലിങ്ക് പ്രവർത്തനക്ഷമമാക്കാനായില്ല. പിന്നീട് വീണ്ടും ശ്രമിക്കുക</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_encountered_a_network_error">ഒരു നെറ്റ്‌വർക്ക് പിശക് നേരിട്ടു.</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_you_dont_have_the_right_to_enable_group_link">ഗ്രൂപ്പ് ലിങ്ക് പ്രവർത്തനക്ഷമമാക്കാൻ നിങ്ങൾക്ക് അവകാശമില്ല. ഒരു അഡ്‌മിനോട് ചോദിക്കുക.</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_you_are_not_currently_a_member_of_the_group">നിങ്ങൾ നിലവിൽ ഗ്രൂപ്പിൽ അംഗമല്ല.</string>
   <!--GV2 Request confirmation dialog-->
   <string name="RequestConfirmationDialog_add_s_to_the_group">ഗ്രൂപ്പിലേക്ക് \"%1$s\"-നെ ചേർക്കണോ?</string>
   <string name="RequestConfirmationDialog_deny_request_from_s">“%1$s” ൽ നിന്നുള്ള അഭ്യർത്ഥന നിരസിക്കണോ?</string>
@@ -864,6 +874,10 @@
   <string name="Megaphones_verify_your_signal_pin">നിങ്ങളുടെ Signal PIN പരിശോധിക്കുക</string>
   <string name="Megaphones_well_occasionally_ask_you_to_verify_your_pin">നിങ്ങളുടെ PIN സ്ഥിരീകരിക്കാൻ ഞങ്ങൾ ഇടയ്ക്കിടെ നിങ്ങളോട് ആവശ്യപ്പെടുന്നതിനാൽ നിങ്ങൾ അത് ഓർക്കും.</string>
   <string name="Megaphones_verify_pin">PIN പരിശോധിക്കുക</string>
+  <string name="Megaphones_get_started">ആരംഭിക്കുക</string>
+  <string name="Megaphones_new_group">പുതിയ ഗ്രൂപ്പ്</string>
+  <string name="Megaphones_invite_friends">സുഹൃത്തുക്കളെ ക്ഷണിക്കുക</string>
+  <string name="Megaphones_use_sms">SMS ഉപയോഗിക്കുക</string>
   <!--NotificationBarManager-->
   <string name="NotificationBarManager_signal_call_in_progress">Signal കോൾ പുരോഗതിയിലാണ്</string>
   <string name="NotificationBarManager__establishing_signal_call">Signal കോൾ സ്ഥാപിക്കുന്നു</string>
@@ -934,6 +948,7 @@
   <!--GV2 specific-->
   <string name="MessageRecord_you_created_the_group">നിങ്ങൾ ഗ്രൂപ്പ് സൃഷ്ടിച്ചു.</string>
   <string name="MessageRecord_group_updated">ഗ്രൂപ്പ് അപ്‌ഡേറ്റുചെയ്‌തു.</string>
+  <string name="MessageRecord_invite_friends_to_this_group">ഒരു ഗ്രൂപ്പ് ലിങ്ക് വഴി സുഹൃത്തുക്കളെ ഈ ഗ്രൂപ്പിലേക്ക് ക്ഷണിക്കുക</string>
   <!--GV2 member additions-->
   <string name="MessageRecord_you_added_s">നിങ്ങൾ %1$s-നെ ചേർത്തു.</string>
   <string name="MessageRecord_s_added_s">%1$s %2$s-നെ ചേർത്തു</string>
@@ -1223,6 +1238,7 @@
   <string name="WebRtcCallView__start_call">കോൾ ആരംഭിക്കുക</string>
   <string name="WebRtcCallView__join_call">കോളിൽ ചേരുക</string>
   <string name="WebRtcCallView__call_is_full">കോൾ നിറഞ്ഞു</string>
+  <string name="WebRtcCallView__the_maximum_number_of_d_participants_has_been_Reached_for_this_call">ഈ കോളില്‍ പങ്കെടുക്കാന്നാവുന്നവരുടെ പരമാവധി എണ്ണമായ %1$d ആയിരിക്കുന്നു. പിന്നീട് വീണ്ടും ശ്രമിക്കുക.</string>
   <string name="WebRtcCallView__s_group_call">\"%1$s\" ഗ്രൂപ്പ് കോൾ</string>
   <string name="WebRtcCallView__view_participants_list">പങ്കെടുക്കുന്നവരെ കാണുക</string>
   <string name="WebRtcCallView__your_video_is_off">നിങ്ങളുടെ വീഡിയോ ഓഫാണ്</string>
@@ -1282,8 +1298,10 @@
   <string name="RegistrationActivity_continue_last_attempt">തുടരുക (അവസാന ശ്രമം!)</string>
   <string name="RegistrationActivity_take_privacy_with_you_be_yourself_in_every_message">സ്വകാര്യത നിങ്ങൾക്കൊപ്പം കൊണ്ടുപോകുക.\nഎല്ലാ സന്ദേശത്തിലും നിങ്ങൾ നിങ്ങളെപ്പോലെ ആകുക.</string>
   <string name="RegistrationActivity_enter_your_phone_number_to_get_started">ആരംഭിക്കുന്നതിന് വേണ്ടി നിങ്ങളുടെ ഫോൺ നമ്പർ നൽകുക</string>
+  <string name="RegistrationActivity_enter_your_phone_number">നിങ്ങളുടെ ഫോൺ നമ്പർ നൽകുക</string>
   <string name="RegistrationActivity_you_will_receive_a_verification_code">നിങ്ങൾക്ക് ഒരു സ്ഥിരീകരണ കോഡ് ലഭിക്കും. കാരിയർ നിരക്കുകൾ ബാധകമായേക്കാം.</string>
   <string name="RegistrationActivity_enter_the_code_we_sent_to_s">ഞങ്ങൾ അയച്ച കോഡ് %s-ലേക്ക്  നൽകുക</string>
+  <string name="RegistrationActivity_make_sure_your_phone_has_a_cellular_signal">നിങ്ങളുടെ SMS അല്ലെങ്കിൽ കോൾ സ്വീകരിക്കുന്നതിന് നിങ്ങളുടെ ഫോണിന് സെല്ലുലാർ സിഗ്നൽ ഉണ്ടെന്ന് ഉറപ്പാക്കുക</string>
   <string name="RegistrationActivity_phone_number_description">ഫോൺ നമ്പർ</string>
   <string name="RegistrationActivity_country_code_description">രാജ്യ കോഡ്</string>
   <string name="RegistrationActivity_call">വിളിക്കുക</string>
@@ -1430,6 +1448,10 @@ grūpp ap‌ḍē</string>
   <string name="UsernameEditFragment_username_is_invalid">യൂസേർനേമ് അസാധുവാണ്.</string>
   <string name="UsernameEditFragment_usernames_must_be_between_a_and_b_characters">യൂസേർനേമ്കൾ %1$d മുതൽ %2$d വരെ പ്രതീകങ്ങൾ ആയിരിക്കണം.</string>
   <string name="UsernameEditFragment_usernames_on_signal_are_optional">Signal-ഇലെ (സിഗ്നലിലെ) യൂസർനെയ്മുകൾ (ഉപയോക്തൃനാമങ്ങൾ) ഓപ്‌ഷണലാണ്. നിങ്ങൾ ഒരു യൂസർനെയിം സൃഷ്ടിക്കാൻ തിരഞ്ഞെടുക്കുകയാണെങ്കിൽ, മറ്റ് സിഗ്നൽ ഉപയോക്താക്കൾക്ക് ഈ യൂസർനെയിം ഉപയോഗിച്ച് നിങ്ങളെ കണ്ടെത്താനും നിങ്ങളുടെ ഫോൺ നമ്പർ അറിയാതെ നിങ്ങളെ ബന്ധപ്പെടാനും കഴിയും.</string>
+  <plurals name="UserNotificationMigrationJob_d_contacts_are_on_signal">
+    <item quantity="one">Signal-ൽ‌ %d കോൺ‌ടാക്റ്റ് ഉണ്ട്!</item>
+    <item quantity="other">Signal-ൽ‌ %d കോൺ‌ടാക്റ്റുകൾ‌ ഉണ്ട്!</item>
+  </plurals>
   <!--VerifyIdentityActivity-->
   <string name="VerifyIdentityActivity_your_contact_is_running_an_old_version_of_signal">നിങ്ങളുടെ കോൺ‌ടാക്റ്റ് Signal-ന്റെ പഴയ പതിപ്പ് പ്രവർത്തിപ്പിക്കുന്നു. നിങ്ങളുടെ സുരക്ഷാ നമ്പർ പരിശോധിക്കുന്നതിനുമുമ്പ് അപ്‌ഡേറ്റ് ചെയ്യാൻ അവരോട് ആവശ്യപ്പെടുക.</string>
   <string name="VerifyIdentityActivity_your_contact_is_running_a_newer_version_of_Signal">നിങ്ങളുടെ കോൺ‌ടാക്റ്റ് Signal-ന്റെ ഏറ്റവും പുതിയ പതിപ്പ് പ്രവർത്തിപ്പിക്കുന്നു ഇത് പൊരുത്തപ്പെടാത്ത QR കോഡ് ഫോർ‌മാറ്റാണ്. താരതമ്യം ചെയ്യാൻ അപ്‌ഡേറ്റുചെയ്യുക.</string>
@@ -1557,6 +1579,7 @@ grūpp ap‌ḍē</string>
   <string name="WebRtcCallScreen_new_safety_number_title">പുതിയ സേഫ്റ്റി നമ്പർ </string>
   <string name="WebRtcCallScreen_accept">സ്വീകരിക്കുക</string>
   <string name="WebRtcCallScreen_end_call">കോൾ അവസാനിപ്പിക്കുക</string>
+  <string name="WebRtcCallScreen_swipe_up_to_change_views">ദര്‍ശനരീതി മാറ്റുന്നതിന് മുകളിലേക്ക് സ്വൈപ്പുചെയ്യുക</string>
   <!--WebRtcCallScreen V2-->
   <string name="WebRtcCallScreen__decline">നിരസിക്കുക</string>
   <string name="WebRtcCallScreen__answer">ഉത്തരം</string>
@@ -1668,6 +1691,7 @@ grūpp ap‌ḍē</string>
   <string name="ConversationUpdateItem_join_call">കോളിൽ ചേരുക</string>
   <string name="ConversationUpdateItem_return_to_call">കോളിലേക്ക് മടങ്ങുക</string>
   <string name="ConversationUpdateItem_call_is_full">കോൾ നിറഞ്ഞു</string>
+  <string name="ConversationUpdateItem_invite_friends">സുഹൃത്തുക്കളെ ക്ഷണിക്കുക</string>
   <!--audio_view-->
   <string name="audio_view__play_pause_accessibility_description">പ്ലേ … പോസ്</string>
   <string name="audio_view__download_accessibility_description">ഡൌൺലോഡ്</string>
@@ -2122,7 +2146,7 @@ grūpp ap‌ḍē</string>
   <!--conversation_list-->
   <string name="conversation_list_settings_shortcut">ഷോർറ്റ്കറ്റ് ക്രമീകരിക്കുന്നു</string>
   <string name="conversation_list_search_description">തിരയൽ</string>
-  <string name="conversation_list__pinned">പിൻ ചെയ്‌തു</string>
+  <string name="conversation_list__pinned">പിൻ ചെയ്‌തവ</string>
   <string name="conversation_list__chats">ചാറ്റുകൾ</string>
   <string name="conversation_list__you_can_only_pin_up_to_d_chats">നിങ്ങൾക്ക് %1$d ചാറ്റുകൾ വരെ മാത്രമേ പിൻ ചെയ്യാൻ കഴിയൂ</string>
   <!--conversation_list_item_view-->
@@ -2133,7 +2157,7 @@ grūpp ap‌ḍē</string>
   <!--conversation_list_fragment-->
   <string name="conversation_list_fragment__fab_content_description">പുതിയ സംഭാഷണം</string>
   <string name="conversation_list_fragment__open_camera_description">ക്യാമറ തുറക്കുക</string>
-  <string name="conversation_list_fragment__give_your_inbox_something_to_write_home_about_get_started_by_messaging_a_friend">നിങ്ങളുടെ ഇൻ‌ബോക്സിന് വീട്ടിലേക്ക് എന്തെങ്കിലും എഴുതാൻ ഉപയോഗിക്കൂ. ഒരു സുഹൃത്തിനു മെസേജ് ചെയ്തുകൊണ്ട് തുടങ്ങൂ.</string>
+  <string name="conversation_list_fragment__no_chats_yet_get_started_by_messaging_a_friend">ഇതുവരെ ചാറ്റുകളൊന്നുമില്ല.\nഒരു സുഹൃത്തിന് സന്ദേശമയച്ചുകൊണ്ട് ആരംഭിക്കുക.</string>
   <!--conversation_secure_verified-->
   <string name="conversation_secure_verified__menu_reset_secure_session">സുരക്ഷിത സെഷൻ പുനഃക്രമീകരിക്കുക</string>
   <!--conversation_muted-->
@@ -2170,8 +2194,6 @@ grūpp ap‌ḍē</string>
   <string name="verify_display_fragment_context_menu__copy_to_clipboard">ക്ലിപ്പ്ബോർഡിലേയ്ക്ക് പകർത്തുക</string>
   <string name="verify_display_fragment_context_menu__compare_with_clipboard">ക്ലിപ്പ്ബോർഡുമായി താരതമ്യം ചെയ്യുക</string>
   <!--reminder_header-->
-  <string name="reminder_header_sms_default_title">സ്ഥിരസ്ഥിതി SMS അപ്ലിക്കേഷനായി ഉപയോഗിക്കുക</string>
-  <string name="reminder_header_sms_default_text">നിങ്ങളുടെ സ്ഥിരസ്ഥിതി SMS അപ്ലിക്കേഷൻ സിഗ്നൽ ആക്കാൻ ടാപ്പുചെയ്യുക.</string>
   <string name="reminder_header_sms_import_title">സിസ്റ്റം SMS ഇറക്കുമതി ചെയ്യുക</string>
   <string name="reminder_header_sms_import_text">Signal-ന്റെ എൻ‌ക്രിപ്റ്റ് ചെയ്ത ഡാറ്റാബേസിലേക്ക് നിങ്ങളുടെ ഫോണിലേ SMS സന്ദേശങ്ങൾ പകർത്താൻ ടാപ്പുചെയ്യുക.</string>
   <string name="reminder_header_push_title">Signal സന്ദേശങ്ങളും കോളുകളും പ്രാപ്തമാക്കുക</string>
@@ -2368,6 +2390,7 @@ grūpp ap‌ḍē</string>
   <string name="BackupDialog_to_enable_backups_choose_a_folder">ബാക്കപ്പുകൾ പ്രവർത്തനക്ഷമമാക്കാൻ, ഒരു ഫോൾഡർ തിരഞ്ഞെടുക്കുക. ബാക്കപ്പുകൾ ഇവിടെ സൂക്ഷിക്കപ്പെടും.</string>
   <string name="BackupDialog_choose_folder">ഫോൾഡർ തിരഞ്ഞെടുക്കുക </string>
   <string name="BackupDialog_copied_to_clipboard">ക്ലിപ്പ്ബോർഡിലേക്ക് പകർത്തി</string>
+  <string name="BackupDialog_no_file_picker_available">ഫയൽ പിക്കറൊന്നും ലഭ്യമല്ല.</string>
   <string name="BackupDialog_enter_backup_passphrase_to_verify">സ്ഥിരീകരിക്കുന്നതിന് നിങ്ങളുടെ ബാക്കപ്പ് പാസ്‌ഫ്രെയ്‌സ് നൽകുക</string>
   <string name="BackupDialog_verify">പരിശോധിക്കുക</string>
   <string name="BackupDialog_you_successfully_entered_your_backup_passphrase">നിങ്ങളുടെ ബാക്കപ്പ് പാസ്‌ഫ്രെയ്‌സ് വിജയകരമായി നൽകി</string>
@@ -2507,15 +2530,15 @@ grūpp ap‌ḍē</string>
   <string name="ReviewCardDialogFragment__review_request">അഭ്യർത്ഥന അവലോകനം ചെയ്യുക</string>
   <string name="ReviewCardDialogFragment__d_group_members_have_the_same_name">%1$d ഗ്രൂപ്പ് അംഗങ്ങൾക്ക് സമാന പേരുണ്ട്, ചുവടെയുള്ള അംഗങ്ങളെ അവലോകനം ചെയ്ത് നടപടിയെടുക്കാൻ തിരഞ്ഞെടുക്കുക.</string>
   <string name="ReviewCardDialogFragment__if_youre_not_sure">അഭ്യർത്ഥന ആരാണ് നിങ്ങൾക്ക് അയച്ചതെന്ന് ഉറപ്പില്ലെങ്കിൽ, ചുവടെയുള്ള കോൺടാക്റ്റുകൾ അവലോകനം ചെയ്ത് നടപടിയെടുക്കുക. </string>
-  <string name="ReviewCardDialogFragment__no_other_groups_in_common">പൊതുവായി മറ്റ് ഗ്രൂപ്പുകളൊന്നുമില്ല.</string>
-  <string name="ReviewCardDialogFragment__no_groups_in_common">പൊതുവായി ഗ്രൂപ്പുകളൊന്നുമില്ല.</string>
+  <string name="ReviewCardDialogFragment__no_other_groups_in_common">സാമാന്യമായി മറ്റ് ഗ്രൂപ്പുകളൊന്നുമില്ല.</string>
+  <string name="ReviewCardDialogFragment__no_groups_in_common">സാമാന്യമായി ഗ്രൂപ്പുകളൊന്നുമില്ല.</string>
   <plurals name="ReviewCardDialogFragment__d_other_groups_in_common">
-    <item quantity="one">%d ഗ്രൂപ്പ് പൊതുവായി ഉണ്ട്</item>
-    <item quantity="other">%d ഗ്രൂപ്പുകൾ പൊതുവായി ഉണ്ട് </item>
+    <item quantity="one">സാമാന്യമായി %d ഗ്രൂപ്പ് ഉണ്ട്</item>
+    <item quantity="other">സാമാന്യമായി %d ഗ്രൂപ്പുകൾ ഉണ്ട്</item>
   </plurals>
   <plurals name="ReviewCardDialogFragment__d_groups_in_common">
-    <item quantity="one">%d ഗ്രൂപ്പ് പൊതുവായി ഉണ്ട്</item>
-    <item quantity="other">%d ഗ്രൂപ്പുകൾ പൊതുവായി ഉണ്ട് </item>
+    <item quantity="one">സാമാന്യമായി %d ഗ്രൂപ്പ് ഉണ്ട്</item>
+    <item quantity="other">സാമാന്യമായി %d ഗ്രൂപ്പുകൾ ഉണ്ട്</item>
   </plurals>
   <string name="ReviewCardDialogFragment__remove_s_from_group">ഗ്രൂപ്പിൽ നിന്ന് %1$s-നെ നീക്കംചെയ്യണോ?</string>
   <string name="ReviewCardDialogFragment__remove">ഒഴിവാക്കുക</string>
@@ -2556,5 +2579,7 @@ grūpp ap‌ḍē</string>
   <string name="DeleteAccountFragment__launch_app_settings">ആപ്പ് ക്രമീകരണങ്ങൾ തുറക്കുക</string>
   <!--DeleteAccountCountryPickerFragment-->
   <string name="DeleteAccountCountryPickerFragment__search_countries">രാജ്യങ്ങൾ തിരയുക</string>
+  <!--CreateGroupActivity-->
+  <string name="CreateGroupActivity__skip">ഒഴിവാക്കുക</string>
   <!--EOF-->
 </resources>

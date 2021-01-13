@@ -600,6 +600,7 @@
   <string name="AddGroupDetailsFragment__create_group">Opret gruppe</string>
   <string name="AddGroupDetailsFragment__create">Opret</string>
   <string name="AddGroupDetailsFragment__members">Medlemmer</string>
+  <string name="AddGroupDetailsFragment__you_can_add_or_invite_friends_after_creating_this_group">Efter oprettelse af denne gruppe kan du tilføje eller invitere venner.</string>
   <string name="AddGroupDetailsFragment__group_name_required">Gruppenavn (påkrævet)</string>
   <string name="AddGroupDetailsFragment__group_name_optional">Gruppenavn (frivilligt)</string>
   <string name="AddGroupDetailsFragment__this_field_is_required">Dette felt er påkrævet</string>
@@ -768,6 +769,15 @@
   <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_update_signal">Opdatér Signal</string>
   <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_update_linked_device_message">En eller flere af din(e) forbundne enhed(er) kører en version af Signal, der ikke understøtter gruppelinks. Opdatér Signal for at deltage i gruppen</string>
   <string name="GroupJoinUpdateRequiredBottomSheetDialogFragment_group_link_is_not_valid">Gruppelink er ikke gyldigt</string>
+  <!--GroupInviteLinkEnableAndShareBottomSheetDialogFragment-->
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_invite_friends">Invitér venner</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_share_a_link_with_friends_to_let_them_quickly_join_this_group">Del et link med venner, så de hurtigt kan deltage i denne gruppe.</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_enable_and_share_link">Aktivér og del link</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_share_link">Del link</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_unable_to_enable_group_link_please_try_again_later">Det lykkedes ikke at aktivere gruppelinket, prøv igen senere</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_encountered_a_network_error">Registreret en netværksfejl</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_you_dont_have_the_right_to_enable_group_link">Du har ingen rettigheder til at aktivere gruppelinket. Spørg en administrator.</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_you_are_not_currently_a_member_of_the_group">Du er i øjeblikket ikke medlem af gruppen.</string>
   <!--GV2 Request confirmation dialog-->
   <string name="RequestConfirmationDialog_add_s_to_the_group">Føj \"%1$s\" til gruppen?</string>
   <string name="RequestConfirmationDialog_deny_request_from_s">Afvis anmodning fra \"%1$s\"?</string>
@@ -865,6 +875,10 @@
   <string name="Megaphones_verify_your_signal_pin">Verificer din Signal PIN</string>
   <string name="Megaphones_well_occasionally_ask_you_to_verify_your_pin">Vi vil indimellem bede dig om at verificere din PIN, så du ikke glemmer den</string>
   <string name="Megaphones_verify_pin">Verificer PIN</string>
+  <string name="Megaphones_get_started">Kom igang</string>
+  <string name="Megaphones_new_group">Opret ny gruppe</string>
+  <string name="Megaphones_invite_friends">Invitér venner</string>
+  <string name="Megaphones_use_sms">Brug SMS</string>
   <!--NotificationBarManager-->
   <string name="NotificationBarManager_signal_call_in_progress">Signal opkald i gang</string>
   <string name="NotificationBarManager__establishing_signal_call">Foretager Signalopkald</string>
@@ -935,6 +949,7 @@
   <!--GV2 specific-->
   <string name="MessageRecord_you_created_the_group">Du oprettede gruppen</string>
   <string name="MessageRecord_group_updated">Gruppe opdateret</string>
+  <string name="MessageRecord_invite_friends_to_this_group">Inviter venner til denne gruppe via et gruppelink</string>
   <!--GV2 member additions-->
   <string name="MessageRecord_you_added_s">Du tilføjede %1$s</string>
   <string name="MessageRecord_s_added_s">%1$s tilføjede %2$s</string>
@@ -1289,8 +1304,10 @@ nummer (%s) er ugyldigt</string>
   <string name="RegistrationActivity_continue_last_attempt">Fortsæt (sidste forsøg!)</string>
   <string name="RegistrationActivity_take_privacy_with_you_be_yourself_in_every_message">Tag privatlivet med dig. \nSkriv hvad du ønsker i enhver besked</string>
   <string name="RegistrationActivity_enter_your_phone_number_to_get_started">Indtast dit telefonnummer for at komme i gang</string>
+  <string name="RegistrationActivity_enter_your_phone_number">Indtast dit telefonnummer</string>
   <string name="RegistrationActivity_you_will_receive_a_verification_code">Du modtager en verifikationskode. Takster fra din udbyder kan blive pålagt</string>
   <string name="RegistrationActivity_enter_the_code_we_sent_to_s">Indtast verifikationskoden sendt til %s</string>
+  <string name="RegistrationActivity_make_sure_your_phone_has_a_cellular_signal">Sørg for, at din telefon har et mobilsignal til at modtage SMS eller opkald</string>
   <string name="RegistrationActivity_phone_number_description">Telefonnummer</string>
   <string name="RegistrationActivity_country_code_description">Landekode</string>
   <string name="RegistrationActivity_call">Ring op</string>
@@ -1438,6 +1455,10 @@ Modtog en nøgle besked, for en ugyldig protokol-version
   <string name="UsernameEditFragment_username_is_invalid">Brugernavn er invalid</string>
   <string name="UsernameEditFragment_usernames_must_be_between_a_and_b_characters">Brugernavne skal være mellem %1$d og %2$d karakters længde</string>
   <string name="UsernameEditFragment_usernames_on_signal_are_optional">Brugernavne på Signal er valgfrie. Hvis du vælger at oprette et brugernavn, kan andre Signal-brugere finde dig via dette brugernavn, og kontakte dig uden at kende dit telefonnummer</string>
+  <plurals name="UserNotificationMigrationJob_d_contacts_are_on_signal">
+    <item quantity="one">%d kontakt anvender Signal!</item>
+    <item quantity="other">%d kontakter anvender Signal!</item>
+  </plurals>
   <!--VerifyIdentityActivity-->
   <string name="VerifyIdentityActivity_your_contact_is_running_an_old_version_of_signal">Din kontakt har en gammel version af Signal installeret. Bed ham venligst om at opdatere inden i udveksler sikkerhedsnummer</string>
   <string name="VerifyIdentityActivity_your_contact_is_running_a_newer_version_of_Signal">Din kontakt bruger en nyere version af Signal, med en inkompatibel QR kode. Opdatér venligst din app for at sammenligne</string>
@@ -1677,6 +1698,7 @@ Modtog en nøgle besked, for en ugyldig protokol-version
   <string name="ConversationUpdateItem_join_call">Deltag i samtalen</string>
   <string name="ConversationUpdateItem_return_to_call">Tilbage til opkald</string>
   <string name="ConversationUpdateItem_call_is_full">Samtalen er fuld</string>
+  <string name="ConversationUpdateItem_invite_friends">Invitér venner</string>
   <!--audio_view-->
   <string name="audio_view__play_pause_accessibility_description">Play … Pause</string>
   <string name="audio_view__download_accessibility_description">Download</string>
@@ -2142,7 +2164,7 @@ Modtog en nøgle besked, for en ugyldig protokol-version
   <!--conversation_list_fragment-->
   <string name="conversation_list_fragment__fab_content_description">Ny samtale</string>
   <string name="conversation_list_fragment__open_camera_description">Åbn kamera</string>
-  <string name="conversation_list_fragment__give_your_inbox_something_to_write_home_about_get_started_by_messaging_a_friend">Giv din indbakke noget at skrive hjem om. Kom i gang - skriv til en ven</string>
+  <string name="conversation_list_fragment__no_chats_yet_get_started_by_messaging_a_friend">Ingen chats endnu.\nKom i gang ved at sende en besked til en ven.</string>
   <!--conversation_secure_verified-->
   <string name="conversation_secure_verified__menu_reset_secure_session">Gendan sikker forbindelse</string>
   <!--conversation_muted-->
@@ -2179,8 +2201,6 @@ Modtog en nøgle besked, for en ugyldig protokol-version
   <string name="verify_display_fragment_context_menu__copy_to_clipboard">Kopiér til udklipsholder</string>
   <string name="verify_display_fragment_context_menu__compare_with_clipboard">Sammenlign med udklipsholder</string>
   <!--reminder_header-->
-  <string name="reminder_header_sms_default_title">Anvend som standard SMS app</string>
-  <string name="reminder_header_sms_default_text">Tap for at gøre Signal til din standard SMS app</string>
   <string name="reminder_header_sms_import_title">Importér system SMS\'er</string>
   <string name="reminder_header_sms_import_text">Tap for at kopiere din telefons SMS beskeder, til Signal´s krypterede database</string>
   <string name="reminder_header_push_title">Aktivér Signalbeskeder og -opkald</string>
@@ -2376,6 +2396,7 @@ Modtog en nøgle besked, for en ugyldig protokol-version
   <string name="BackupDialog_to_enable_backups_choose_a_folder">For at aktivere backup´s, vælg en mappe. Backup´s vil blive gemt i denne mappe</string>
   <string name="BackupDialog_choose_folder">Vælg mappe</string>
   <string name="BackupDialog_copied_to_clipboard">Kopieret til udklipsholder</string>
+  <string name="BackupDialog_no_file_picker_available">Ingen filvælger tilgængelig.</string>
   <string name="BackupDialog_enter_backup_passphrase_to_verify">Skriv dit kodeord for backup for verificering</string>
   <string name="BackupDialog_verify">Verificér</string>
   <string name="BackupDialog_you_successfully_entered_your_backup_passphrase">Dit kodeord for backup er oprettet</string>
@@ -2565,5 +2586,7 @@ Der er %d dage tilbage</string>
   <string name="DeleteAccountFragment__launch_app_settings">Åben appindstillinger</string>
   <!--DeleteAccountCountryPickerFragment-->
   <string name="DeleteAccountCountryPickerFragment__search_countries">Søg efter lande</string>
+  <!--CreateGroupActivity-->
+  <string name="CreateGroupActivity__skip">Spring over</string>
   <!--EOF-->
 </resources>
