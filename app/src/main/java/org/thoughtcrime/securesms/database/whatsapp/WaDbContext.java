@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.util.Log;
 
+import org.thoughtcrime.securesms.database.NoExternalStorageException;
+
 import java.io.File;
 
 /**
@@ -28,10 +30,6 @@ public class WaDbContext extends ContextWrapper {
         }
 
         File result = new File(dbfile);
-
-        if (!result.getParentFile().exists()) {
-            result.getParentFile().mkdirs();
-        }
 
         if (Log.isLoggable("DEBUG_CONTEXT", Log.WARN)) {
             Log.w("DEBUG_CONTEXT", "getDatabasePath(" + name + ") = " + result.getAbsolutePath());

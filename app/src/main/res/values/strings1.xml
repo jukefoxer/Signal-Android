@@ -58,6 +58,7 @@
   <string name="ImportFragment_importing">Importing</string>
   <string name="ImportFragment_import_plaintext_backup_elipse">Importing plaintext backup...</string>
   <string name="ImportFragment_no_plaintext_backup_found">No plaintext backup found!</string>
+  <string name="ImportFragment_no_whatsapp_backup_found">No WhatsApp Backup found! Make sure msgstore.db is in the root directory of the phone\'s internal storage.</string>
   <string name="ImportFragment_error_importing_backup">Error importing backup!</string>
   <string name="ImportFragment_import_complete">Import complete!</string>
 
@@ -67,6 +68,11 @@
       importing again will result in duplicated messages.
   </string>
   <string name="ImportFragment_import_whatsapp_backup_elipse">Importing whatsapp backup...</string>
+  <string name="import_fragment__import_whatsapp_backup">Import Whatsapp backup</string>
+  <string name="import_fragment__import_whatsapp_backup_file">Import a Whatsapp db file. place mstore.db at ...</string>
+  <string name="import_fragment__import_whatsapp_import_media">Import media messages</string>
+  <string name="import_fragment__import_whatsapp_import_groups">Import group chats if Signal group with the same name exists</string>
+  <string name="import_fragment__import_whatsapp_avoid_duplicates">Avoid duplicate messages</string>
 
   <string name="ImportExportFragment_signal_needs_the_sms_permission_in_order_to_import_sms_messages">Signal needs the SMS permission in order to import SMS messages, but it has been permanently denied. Please continue to app settings, select \"Permissions\", and enable \"SMS\".</string>
   <string name="ImportExportFragment_signal_needs_the_sms_permission_in_order_to_import_sms_messages_toast">Signal needs the SMS permission in order to import SMS messages</string>

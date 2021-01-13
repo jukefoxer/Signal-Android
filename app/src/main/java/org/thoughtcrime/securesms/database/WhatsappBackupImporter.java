@@ -1,7 +1,9 @@
 package org.thoughtcrime.securesms.database;
 
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 
 import com.google.android.mms.pdu_alt.PduHeaders;
 
@@ -44,27 +46,27 @@ public class WhatsappBackupImporter {
 
     private static final String TAG = org.thoughtcrime.securesms.database.PlaintextBackupImporter.class.getSimpleName();
 
-    private static android.database.sqlite.SQLiteDatabase openWhatsappDb(Context context) {
+    private static android.database.sqlite.SQLiteDatabase openWhatsappDb(Context context) throws NoExternalStorageException {
         try {
             android.database.sqlite.SQLiteOpenHelper db = new WaDbOpenHelper(context);
             android.database.sqlite.SQLiteDatabase newdb = db.getReadableDatabase();
             return newdb;
-        }catch(Exception e2){
-            Log.w(TAG, e2.getMessage());
+        } catch(Exception e2){
+            throw new NoExternalStorageException();
         }
-        return null;
     }
 
-    public static void importWhatsappFromSd(Context context)
+    public static void importWhatsappFromSd(Context context, ProgressDialog progressDialog, boolean importGroups, boolean avoidDuplicates, boolean importMedia)
             throws NoExternalStorageException, IOException
     {
-        Log.w(TAG, "importWhatsapp()");
+        Log.w(TAG, "importWhatsapp(): importGroup: " + importGroups + ", avoidDuplicates: " + avoidDuplicates);
         android.database.sqlite.SQLiteDatabase whatsappDb = openWhatsappDb(context);
         SmsDatabase smsDb                   = (SmsDatabase) DatabaseFactory.getSmsDatabase(context);
         MmsDatabase mmsDb                   = (MmsDatabase) DatabaseFactory.getMmsDatabase(context);
         AttachmentDatabase attachmentDb     = DatabaseFactory.getAttachmentDatabase(context);
         SQLiteDatabase smsDbTransaction = smsDb.beginTransaction();
-
+        int numMessages = getNumMessages(whatsappDb, importMedia);
+        progressDialog.setMax(numMessages);
         try {
             ThreadDatabase threads         = DatabaseFactory.getThreadDatabase(context);
             GroupDatabase groups           = DatabaseFactory.getGroupDatabase(context);
@@ -72,16 +74,23 @@ public class WhatsappBackupImporter {
             Set<Long>      modifiedThreads = new HashSet<>();
             WhatsappBackup.WhatsappBackupItem item;
 
+            int msgCount = 0;
             while ((item = backup.getNext()) != null) {
+                msgCount++;
+                progressDialog.setProgress(msgCount);
                 Recipient recipient = getRecipient(context, item);
+                if (isGroupMessage(item) && !importGroups) continue;
                 long threadId = getThreadId(item, groups, threads, recipient);
 
                 if (threadId == -1) continue;
 
                 if (isMms(item)) {
+                    if (!importMedia) continue;
+                    if (avoidDuplicates && wasMsgAlreadyImported(smsDbTransaction, MmsDatabase.TABLE_NAME, MmsDatabase.DATE_SENT, threadId, recipient, item)) continue;
                     List<Attachment> attachments = WhatsappBackup.getMediaAttachments(whatsappDb, item);
                     if (attachments != null && attachments.size() > 0) insertMms(mmsDb, attachmentDb, item, recipient, threadId, attachments);
                 } else {
+                    if (avoidDuplicates && wasMsgAlreadyImported(smsDbTransaction, SmsDatabase.TABLE_NAME, SmsDatabase.DATE_SENT, threadId, recipient, item)) continue;
                     insertSms(smsDb, smsDbTransaction, item, recipient, threadId);
                 }
                 modifiedThreads.add(threadId);
@@ -100,6 +109,41 @@ public class WhatsappBackupImporter {
             smsDb.endTransaction(smsDbTransaction);
         }
 
+    }
+
+    private static boolean wasMsgAlreadyImported(SQLiteDatabase db, String tableName, String dateField, long threadId, Recipient recipient, WhatsappBackup.WhatsappBackupItem item) {
+        String[] cols  = new String[] {"COUNT(*)"};
+        String   query = THREAD_ID + " = ? AND " + dateField + " = ? AND " + RECIPIENT_ID + " = ?";
+        String[] args  = new String[]{String.valueOf(threadId), String.valueOf(item.getDate()), String.valueOf(recipient.getId().serialize())};
+
+        try (Cursor cursor = db.query(tableName, cols, query, args, null, null, null)) {
+            if (cursor != null) {
+                if (cursor.moveToFirst() && cursor.getInt(0) > 0) {
+                    cursor.close();
+                    return true;
+                }
+                cursor.close();
+            }
+        }
+        return false;
+    }
+
+    private static int getNumMessages(android.database.sqlite.SQLiteDatabase whatsappDb, boolean importMedia) {
+        String whereClause = "";
+        if (!importMedia) whereClause = " WHERE data!=''";
+        try {
+            Cursor c = whatsappDb.rawQuery("SELECT COUNT(*) FROM messages" + whereClause, null);
+            if (c != null) {
+                if (c.moveToFirst()) {
+                    int count = c.getInt(0);
+                    return count;
+                }
+                c.close();
+            }
+        }catch(Exception e2){
+            Log.w(TAG, e2.getMessage());
+        }
+        return 0;
     }
 
     private static Recipient getRecipient(Context context, WhatsappBackup.WhatsappBackupItem item) {
@@ -154,7 +198,7 @@ public class WhatsappBackupImporter {
         contentValues.put(SUBSCRIPTION_ID, -1);
         contentValues.put(EXPIRES_IN, Long.MAX_VALUE);
         contentValues.put(VIEW_ONCE, 0);
-        contentValues.put(READ, 0);
+        contentValues.put(READ, 1);
         contentValues.put(UNIDENTIFIED, 0);
 
         SQLiteDatabase transaction = mmsDb.beginTransaction();
