@@ -599,6 +599,7 @@
   <string name="AddGroupDetailsFragment__create_group">Loo grupp</string>
   <string name="AddGroupDetailsFragment__create">Loo</string>
   <string name="AddGroupDetailsFragment__members">Liikmed</string>
+  <string name="AddGroupDetailsFragment__you_can_add_or_invite_friends_after_creating_this_group">Sul on võimalik lisada või kutsuda sõpru pärast grupi loomist.</string>
   <string name="AddGroupDetailsFragment__group_name_required">Grupi nimi (kohustuslik)</string>
   <string name="AddGroupDetailsFragment__group_name_optional">Grupi nimi (valikuline)</string>
   <string name="AddGroupDetailsFragment__this_field_is_required">See väli on kohustuslik.</string>
@@ -772,7 +773,9 @@
   <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_share_a_link_with_friends_to_let_them_quickly_join_this_group">Jaga linki sõpradega, et võimaldada neil kiiresti selle grupiga liituda.</string>
   <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_enable_and_share_link">Luba ja jaga linki</string>
   <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_share_link">Jaga linki</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_unable_to_enable_group_link_please_try_again_later">Grupilingi lubamine ei õnnestunud. Palun proovi hiljem uuesti.</string>
   <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_encountered_a_network_error">Esines võrgutõrge.</string>
+  <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_you_dont_have_the_right_to_enable_group_link">Sul pole grupilingi lubamise õigust. Palu administraatorilt abi.</string>
   <string name="GroupInviteLinkEnableAndShareBottomSheetDialogFragment_you_are_not_currently_a_member_of_the_group">Sa ei ole hetkel selle grupi liige.</string>
   <!--GV2 Request confirmation dialog-->
   <string name="RequestConfirmationDialog_add_s_to_the_group">Lisad “%1$s” gruppi?</string>
@@ -1301,8 +1304,10 @@
   <string name="RegistrationActivity_continue_last_attempt">Jätka (viimane katse!)</string>
   <string name="RegistrationActivity_take_privacy_with_you_be_yourself_in_every_message">Võta privaatsus endaga kaasa.\nJää iga sõnumiga iseendaks.</string>
   <string name="RegistrationActivity_enter_your_phone_number_to_get_started">Sisesta alustamiseks oma telefoninumber</string>
+  <string name="RegistrationActivity_enter_your_phone_number">Sisesta enda telefoninumber</string>
   <string name="RegistrationActivity_you_will_receive_a_verification_code">Sa saad kinnituskoodi. Rakenduda võivad operaatoritasud.</string>
   <string name="RegistrationActivity_enter_the_code_we_sent_to_s">Sisesta kood, mulle saatsime numbrile %s</string>
+  <string name="RegistrationActivity_make_sure_your_phone_has_a_cellular_signal">Tee kindlaks, et su telefon oleks levis, et saada SMS-i või kõnet.</string>
   <string name="RegistrationActivity_phone_number_description">Telefoninumber</string>
   <string name="RegistrationActivity_country_code_description">Riigikood</string>
   <string name="RegistrationActivity_call">Helista</string>
@@ -1450,6 +1455,10 @@
   <string name="UsernameEditFragment_username_is_invalid">Kasutajanimi on sobimatu.</string>
   <string name="UsernameEditFragment_usernames_must_be_between_a_and_b_characters">Kasutajanimede pikkus peab olema %1$d ja %2$d tähemärgi vahel.</string>
   <string name="UsernameEditFragment_usernames_on_signal_are_optional">Kasutajanimed on Signalis vabatahtlikud. Kui otsustad endale kasutajanime luua, siis saavad teised Signali kasutajad leida sind kasutajanime järgi ja võtta ühendust sinu telefoninumbrit teadmata.</string>
+  <plurals name="UserNotificationMigrationJob_d_contacts_are_on_signal">
+    <item quantity="one">%d kontakt on Signalis!</item>
+    <item quantity="other">%d kontakti on Signalis!</item>
+  </plurals>
   <!--VerifyIdentityActivity-->
   <string name="VerifyIdentityActivity_your_contact_is_running_an_old_version_of_signal">Sinu kontakt kasutab vana Signali versiooni. Palun palu neil uuendada, enne kui kinnitad oma turvanumbrit.</string>
   <string name="VerifyIdentityActivity_your_contact_is_running_a_newer_version_of_Signal">Sinu kontakt kasutab uuemat Signali versiooni ühildumatu QR-koodi vorminguga. Võrdlemiseks palun uuenda.</string>

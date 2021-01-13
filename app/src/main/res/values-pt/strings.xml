@@ -1300,8 +1300,10 @@ especificou (%s) é inválido.</string>
   <string name="RegistrationActivity_continue_last_attempt">Continuar (última tentativa!)</string>
   <string name="RegistrationActivity_take_privacy_with_you_be_yourself_in_every_message">Leve a privacidade consigo.\Seja você mesmo em todas as mensagens.</string>
   <string name="RegistrationActivity_enter_your_phone_number_to_get_started">Para começar introduza o seu número de telefone</string>
+  <string name="RegistrationActivity_enter_your_phone_number">Introduza o sue número de telefone</string>
   <string name="RegistrationActivity_you_will_receive_a_verification_code">Irá receber um código de verificação. Poderão existir custos por parte da sua operadora.</string>
   <string name="RegistrationActivity_enter_the_code_we_sent_to_s">Introduza o código que enviamos para %s</string>
+  <string name="RegistrationActivity_make_sure_your_phone_has_a_cellular_signal">Confirme que o seu telemóvel tem sinal de rede para receber SMS ou chamadas</string>
   <string name="RegistrationActivity_phone_number_description">Número de telefone</string>
   <string name="RegistrationActivity_country_code_description">Código do país</string>
   <string name="RegistrationActivity_call">Telefonar</string>
@@ -1449,6 +1451,10 @@ Mensagem de troca de chaves inválida para esta versão do protocolo.
   <string name="UsernameEditFragment_username_is_invalid">Nome de utilizador inválido.</string>
   <string name="UsernameEditFragment_usernames_must_be_between_a_and_b_characters">Os nomes de utilizadores devem ter entre %1$d e %2$d caracteres.</string>
   <string name="UsernameEditFragment_usernames_on_signal_are_optional">Os nomes de utilizadores no Signal são opcionais. Se escolher criar um nome de utilizador, os outros utilizadores do Signal serão capazes de encontrá-lo através desse nome de utilizador e contactá-lo sem saber o seu número de telemóvel.</string>
+  <plurals name="UserNotificationMigrationJob_d_contacts_are_on_signal">
+    <item quantity="one">%d contacto está no Signal!</item>
+    <item quantity="other">%d contactos estão no Signal!</item>
+  </plurals>
   <!--VerifyIdentityActivity-->
   <string name="VerifyIdentityActivity_your_contact_is_running_an_old_version_of_signal">O seu contacto está a utilizar uma versão antiga do Signal. Por favor peça-lhe para actualizar antes de verificar o seu número de segurança.</string>
   <string name="VerifyIdentityActivity_your_contact_is_running_a_newer_version_of_Signal">O seu contacto está a utilizar uma versão mais recente do Signal, com um formato de código QR incompatível. Por favor, actualize para comparar.</string>

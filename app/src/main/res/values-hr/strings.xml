@@ -1073,11 +1073,11 @@
   <string name="MessageRecord_the_group_group_avatar_has_been_changed">Slika grupe je promijenjena.</string>
   <!--GV2 attribute access level change-->
   <string name="MessageRecord_you_changed_who_can_edit_group_info_to_s">Promijenili ste tko sve može urediti detalje o grupi na \"%1$s\".</string>
-  <string name="MessageRecord_s_changed_who_can_edit_group_info_to_s">%1$s je promijenio tko sve može uređivati detalje o grupi na \"%2$s\".</string>
+  <string name="MessageRecord_s_changed_who_can_edit_group_info_to_s">%1$s je promijenio/la tko sve može uređivati detalje o grupi na \"%2$s\".</string>
   <string name="MessageRecord_who_can_edit_group_info_has_been_changed_to_s">Promijenjeno je tko sve može urediti detalje o grupi na \"%1$s\".</string>
   <!--GV2 membership access level change-->
   <string name="MessageRecord_you_changed_who_can_edit_group_membership_to_s">Promijenili ste tko može uređivati članstvo grupe na \"%1$s\".</string>
-  <string name="MessageRecord_s_changed_who_can_edit_group_membership_to_s">%1$s je promijenio tko može uređivati članstvo grupe na \"%2$s\".</string>
+  <string name="MessageRecord_s_changed_who_can_edit_group_membership_to_s">%1$s je promijenio/la tko može uređivati članstvo grupe na \"%2$s\".</string>
   <string name="MessageRecord_who_can_edit_group_membership_has_been_changed_to_s">Promijenjeno je tko sve može urediti članstvo grupe na \"%1$s\".</string>
   <!--GV2 group link invite access level change-->
   <string name="MessageRecord_you_turned_on_the_group_link_with_admin_approval_off">Isključili ste grupnu poveznicu s administratorskim odobrenjem.</string>
@@ -1366,8 +1366,10 @@ broj telefona</string>
   <string name="RegistrationActivity_continue_last_attempt">Nastavi (posljednji pokušaj!)</string>
   <string name="RegistrationActivity_take_privacy_with_you_be_yourself_in_every_message">Ponesite privatnost sa sobom.\nBudite svoji u svakoj poruci.</string>
   <string name="RegistrationActivity_enter_your_phone_number_to_get_started">Unesite broj telefona za početak</string>
+  <string name="RegistrationActivity_enter_your_phone_number">Unesite vaš broj telefona</string>
   <string name="RegistrationActivity_you_will_receive_a_verification_code">Primiti će te potvrdni kôd. Mogu se primijeniti naknade operatera.</string>
   <string name="RegistrationActivity_enter_the_code_we_sent_to_s">Unesite kôd koji smo poslali na %s</string>
+  <string name="RegistrationActivity_make_sure_your_phone_has_a_cellular_signal">Provjerite ima li vaš telefon uspostavljenu mobilnu vezu za primanje SMS-a ili poziva</string>
   <string name="RegistrationActivity_phone_number_description">Broj telefona</string>
   <string name="RegistrationActivity_country_code_description">Kôd države</string>
   <string name="RegistrationActivity_call">Nazovi</string>
@@ -1515,6 +1517,11 @@ broj telefona</string>
   <string name="UsernameEditFragment_username_is_invalid">Korisničko ime je nevažeće.</string>
   <string name="UsernameEditFragment_usernames_must_be_between_a_and_b_characters">Korisnička imena moraju imati između %1$d i %2$d znakova.</string>
   <string name="UsernameEditFragment_usernames_on_signal_are_optional">Korisnička imena na Signalu su neobavezna. Ako odlučite stvoriti korisničko ime, drugi korisnici Signala će vas moći pronaći prema tom korisničkom imenu i kontaktirati vas bez poznavanja vašeg broja telefona.</string>
+  <plurals name="UserNotificationMigrationJob_d_contacts_are_on_signal">
+    <item quantity="one">%d kontakt je na Signalu!</item>
+    <item quantity="few">%d kontakta su na Signalu!</item>
+    <item quantity="other">%d kontakata je na Signalu!</item>
+  </plurals>
   <!--VerifyIdentityActivity-->
   <string name="VerifyIdentityActivity_your_contact_is_running_an_old_version_of_signal">Vaš kontakt koristi staru verziju Signala. Zamolite ih da ažuriraju aplikaciju prije provjere sigurnosnog broja.</string>
   <string name="VerifyIdentityActivity_your_contact_is_running_a_newer_version_of_Signal">Vaš kontakt koristi noviju verziju Signala s nekompatibilnim formatom QR kôda. Molimo ažurirajte za usporedbu.</string>

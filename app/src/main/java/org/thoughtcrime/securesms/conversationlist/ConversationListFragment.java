@@ -72,6 +72,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.signal.core.util.concurrent.SignalExecutors;
 import org.signal.core.util.logging.Log;
+import org.thoughtcrime.securesms.ImportExportActivity; // JW
 import org.thoughtcrime.securesms.MainFragment;
 import org.thoughtcrime.securesms.MainNavigator;
 import org.thoughtcrime.securesms.NewConversationActivity;
@@ -307,11 +308,17 @@ public class ConversationListFragment extends MainFragment implements ActionMode
       case R.id.menu_settings:          handleDisplaySettings(); return true;
       case R.id.menu_clear_passphrase:  handleClearPassphrase(); return true;
       case R.id.menu_mark_all_read:     handleMarkAllRead();     return true;
+      case R.id.menu_import_export:     handleImportExport();    return true; // JW: added
       case R.id.menu_invite:            handleInvite();          return true;
       case R.id.menu_insights:          handleInsights();        return true;
     }
 
     return false;
+  }
+
+  // JW: added
+  private void handleImportExport() {
+    startActivity(new Intent(requireActivity(), ImportExportActivity.class));
   }
 
   @Override
@@ -832,10 +839,10 @@ public class ConversationListFragment extends MainFragment implements ActionMode
 
   private void onSubmitList(@NonNull List<Conversation> conversationList) {
     defaultAdapter.submitList(conversationList);
-    onPostSubmitList();
+    onPostSubmitList(conversationList.size());
   }
 
-  private void updateEmptyState(boolean isConversationEmpty) {
+  void updateEmptyState(boolean isConversationEmpty) {
     if (isConversationEmpty) {
       Log.i(TAG, "Received an empty data set.");
       list.setVisibility(View.INVISIBLE);
@@ -856,7 +863,11 @@ public class ConversationListFragment extends MainFragment implements ActionMode
     }
   }
 
-  protected void onPostSubmitList() {
+  protected void onPostSubmitList(int conversationCount) {
+    if (conversationCount >= 6 && (SignalStore.onboarding().shouldShowInviteFriends() || SignalStore.onboarding().shouldShowNewGroup())) {
+      SignalStore.onboarding().clearAll();
+      ApplicationDependencies.getMegaphoneRepository().markFinished(Megaphones.Event.ONBOARDING);
+    }
   }
 
   @Override
