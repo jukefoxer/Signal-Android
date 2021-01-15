@@ -199,8 +199,8 @@ public class WhatsappBackupImporter {
         contentValues.put(DATE_RECEIVED, item.getDate());
         contentValues.put(PART_COUNT, 1);
         contentValues.put(SUBSCRIPTION_ID, -1);
-        contentValues.put(EXPIRES_IN, Long.MAX_VALUE);
-        contentValues.put(VIEW_ONCE, 0);
+        contentValues.put(EXPIRES_IN, -1);
+        contentValues.put(VIEW_ONCE, -1);
         contentValues.put(READ, 1);
         contentValues.put(UNIDENTIFIED, 0);
 
