@@ -31,9 +31,6 @@ import static org.thoughtcrime.securesms.database.MmsDatabase.MESSAGE_TYPE;
 import static org.thoughtcrime.securesms.database.MmsDatabase.PART_COUNT;
 import static org.thoughtcrime.securesms.database.MmsDatabase.STATUS;
 import static org.thoughtcrime.securesms.database.MmsDatabase.TABLE_NAME;
-import static org.thoughtcrime.securesms.database.MmsDatabase.VIEW_ONCE;
-import static org.thoughtcrime.securesms.database.MmsSmsColumns.DATE_SERVER;
-import static org.thoughtcrime.securesms.database.MmsSmsColumns.EXPIRES_IN;
 import static org.thoughtcrime.securesms.database.MmsSmsColumns.READ;
 import static org.thoughtcrime.securesms.database.MmsSmsColumns.RECIPIENT_ID;
 import static org.thoughtcrime.securesms.database.MmsSmsColumns.SUBSCRIPTION_ID;
@@ -186,7 +183,6 @@ public class WhatsappBackupImporter {
         List<Attachment> quoteAttachments = new LinkedList<>();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DATE_SENT, item.getDate());
-        contentValues.put(DATE_SERVER, item.getDate());
         contentValues.put(RECIPIENT_ID, recipient.getId().serialize());
         if (item.getType() == 1) {
             contentValues.put(MESSAGE_BOX, BASE_INBOX_TYPE);
@@ -199,8 +195,6 @@ public class WhatsappBackupImporter {
         contentValues.put(DATE_RECEIVED, item.getDate());
         contentValues.put(PART_COUNT, 1);
         contentValues.put(SUBSCRIPTION_ID, -1);
-        contentValues.put(EXPIRES_IN, -1);
-        contentValues.put(VIEW_ONCE, -1);
         contentValues.put(READ, 1);
         contentValues.put(UNIDENTIFIED, 0);
 
