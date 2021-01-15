@@ -115,15 +115,16 @@ public class WhatsappBackupImporter {
         String[] cols  = new String[] {"COUNT(*)"};
         String   query = THREAD_ID + " = ? AND " + dateField + " = ? AND " + RECIPIENT_ID + " = ?";
         String[] args  = new String[]{String.valueOf(threadId), String.valueOf(item.getDate()), String.valueOf(recipient.getId().serialize())};
-
-        try (Cursor cursor = db.query(tableName, cols, query, args, null, null, null)) {
+        Cursor cursor = null;
+        try {
+            cursor = db.query(tableName, cols, query, args, null, null, null);
             if (cursor != null) {
                 if (cursor.moveToFirst() && cursor.getInt(0) > 0) {
-                    cursor.close();
                     return true;
                 }
-                cursor.close();
             }
+        } finally {
+            if (cursor != null) cursor.close();
         }
         return false;
     }
@@ -131,17 +132,19 @@ public class WhatsappBackupImporter {
     private static int getNumMessages(android.database.sqlite.SQLiteDatabase whatsappDb, boolean importMedia) {
         String whereClause = "";
         if (!importMedia) whereClause = " WHERE data!=''";
+        Cursor c = null;
         try {
-            Cursor c = whatsappDb.rawQuery("SELECT COUNT(*) FROM messages" + whereClause, null);
+            c = whatsappDb.rawQuery("SELECT COUNT(*) FROM messages" + whereClause, null);
             if (c != null) {
                 if (c.moveToFirst()) {
                     int count = c.getInt(0);
                     return count;
                 }
-                c.close();
             }
-        }catch(Exception e2){
+        } catch(Exception e2){
             Log.w(TAG, e2.getMessage());
+        } finally {
+            if (c != null) c.close();
         }
         return 0;
     }

@@ -47,8 +47,9 @@ public class WhatsappBackup {
 
     public static List<Attachment> getMediaAttachments(SQLiteDatabase whatsappDb, WhatsappBackupItem item) {
         List<Attachment> attachments = new LinkedList<>();
+        Cursor c = null;
         try {
-            Cursor c = whatsappDb.rawQuery("SELECT * FROM message_media WHERE message_row_id=" + item.getWaMessageId() +" LIMIT 1", null);
+            c = whatsappDb.rawQuery("SELECT * FROM message_media WHERE message_row_id=" + item.getWaMessageId() +" LIMIT 1", null);
             if (c != null) {
                 if (c.moveToFirst()) {
                     do {
@@ -75,18 +76,20 @@ public class WhatsappBackup {
                     }
                     while (c.moveToNext());
                 }
-                c.close();
             }
-        }catch(Exception e2){
+        } catch(Exception e2) {
             Log.w(TAG, e2.getMessage());
+        } finally {
+            if (c != null) c.close();
         }
         return attachments;
     }
 
     public WhatsappBackup.WhatsappBackupItem getNext() {
         WhatsappBackup.WhatsappBackupItem item = null;
+        Cursor c = null;
         try {
-            Cursor c = whatsappDb.rawQuery("SELECT * FROM messages LIMIT "+ dbOffset + ", 1", null);
+            c = whatsappDb.rawQuery("SELECT * FROM messages LIMIT "+ dbOffset + ", 1", null);
             if (c != null) {
                 if (c.moveToFirst()) {
                     do {
@@ -121,10 +124,11 @@ public class WhatsappBackup {
                     }
                     while (c.moveToNext());
                 }
-                c.close();
             }
-        }catch(Exception e2){
+        } catch(Exception e2){
             Log.w(TAG, e2.getMessage());
+        } finally {
+            if (c != null) c.close();
         }
 
         dbOffset++;
@@ -133,9 +137,9 @@ public class WhatsappBackup {
     }
 
     private String getGroupName(String keyRemoteJid) {
+        Cursor c = null;
         try {
-
-            Cursor c = whatsappDb.rawQuery("SELECT subject FROM chat_list WHERE key_remote_jid='" + keyRemoteJid + "' LIMIT 1", null);
+            c = whatsappDb.rawQuery("SELECT subject FROM chat_list WHERE key_remote_jid='" + keyRemoteJid + "' LIMIT 1", null);
             if (c != null) {
                 if (c.moveToFirst()) {
                     do {
@@ -144,10 +148,11 @@ public class WhatsappBackup {
                     }
                     while (c.moveToNext());
                 }
-                c.close();
             }
-        }catch(Exception e2) {
+        } catch(Exception e2) {
             Log.w(TAG, e2.getMessage());
+        } finally {
+            if (c != null) c.close();
         }
         return null;
     }
