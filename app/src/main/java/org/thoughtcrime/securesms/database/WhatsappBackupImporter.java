@@ -31,9 +31,6 @@ import static org.thoughtcrime.securesms.database.MmsDatabase.MESSAGE_TYPE;
 import static org.thoughtcrime.securesms.database.MmsDatabase.PART_COUNT;
 import static org.thoughtcrime.securesms.database.MmsDatabase.STATUS;
 import static org.thoughtcrime.securesms.database.MmsDatabase.TABLE_NAME;
-import static org.thoughtcrime.securesms.database.MmsDatabase.VIEW_ONCE;
-import static org.thoughtcrime.securesms.database.MmsSmsColumns.DATE_SERVER;
-import static org.thoughtcrime.securesms.database.MmsSmsColumns.EXPIRES_IN;
 import static org.thoughtcrime.securesms.database.MmsSmsColumns.READ;
 import static org.thoughtcrime.securesms.database.MmsSmsColumns.RECIPIENT_ID;
 import static org.thoughtcrime.securesms.database.MmsSmsColumns.SUBSCRIPTION_ID;
@@ -115,15 +112,16 @@ public class WhatsappBackupImporter {
         String[] cols  = new String[] {"COUNT(*)"};
         String   query = THREAD_ID + " = ? AND " + dateField + " = ? AND " + RECIPIENT_ID + " = ?";
         String[] args  = new String[]{String.valueOf(threadId), String.valueOf(item.getDate()), String.valueOf(recipient.getId().serialize())};
-
-        try (Cursor cursor = db.query(tableName, cols, query, args, null, null, null)) {
+        Cursor cursor = null;
+        try {
+            cursor = db.query(tableName, cols, query, args, null, null, null);
             if (cursor != null) {
                 if (cursor.moveToFirst() && cursor.getInt(0) > 0) {
-                    cursor.close();
                     return true;
                 }
-                cursor.close();
             }
+        } finally {
+            if (cursor != null) cursor.close();
         }
         return false;
     }
@@ -131,17 +129,19 @@ public class WhatsappBackupImporter {
     private static int getNumMessages(android.database.sqlite.SQLiteDatabase whatsappDb, boolean importMedia) {
         String whereClause = "";
         if (!importMedia) whereClause = " WHERE data!=''";
+        Cursor c = null;
         try {
-            Cursor c = whatsappDb.rawQuery("SELECT COUNT(*) FROM messages" + whereClause, null);
+            c = whatsappDb.rawQuery("SELECT COUNT(*) FROM messages" + whereClause, null);
             if (c != null) {
                 if (c.moveToFirst()) {
                     int count = c.getInt(0);
                     return count;
                 }
-                c.close();
             }
-        }catch(Exception e2){
+        } catch(Exception e2){
             Log.w(TAG, e2.getMessage());
+        } finally {
+            if (c != null) c.close();
         }
         return 0;
     }
@@ -183,7 +183,6 @@ public class WhatsappBackupImporter {
         List<Attachment> quoteAttachments = new LinkedList<>();
         ContentValues contentValues = new ContentValues();
         contentValues.put(DATE_SENT, item.getDate());
-        contentValues.put(DATE_SERVER, item.getDate());
         contentValues.put(RECIPIENT_ID, recipient.getId().serialize());
         if (item.getType() == 1) {
             contentValues.put(MESSAGE_BOX, BASE_INBOX_TYPE);
@@ -196,8 +195,6 @@ public class WhatsappBackupImporter {
         contentValues.put(DATE_RECEIVED, item.getDate());
         contentValues.put(PART_COUNT, 1);
         contentValues.put(SUBSCRIPTION_ID, -1);
-        contentValues.put(EXPIRES_IN, Long.MAX_VALUE);
-        contentValues.put(VIEW_ONCE, 0);
         contentValues.put(READ, 1);
         contentValues.put(UNIDENTIFIED, 0);
 

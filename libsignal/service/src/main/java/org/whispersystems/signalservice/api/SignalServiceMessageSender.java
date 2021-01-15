@@ -275,19 +275,6 @@ public class SignalServiceMessageSender {
       sendMessage(localAddress, Optional.<UnidentifiedAccess>absent(), timestamp, syncMessage, false, null);
     }
 
-    if (message.isEndSession()) {
-      if (recipient.getUuid().isPresent()) {
-        store.deleteAllSessions(recipient.getUuid().get().toString());
-      }
-      if (recipient.getNumber().isPresent()) {
-        store.deleteAllSessions(recipient.getNumber().get());
-      }
-
-      if (eventListener.isPresent()) {
-        eventListener.get().onSecurityEvent(recipient);
-      }
-    }
-
     return result;
   }
 
@@ -481,7 +468,6 @@ public class SignalServiceMessageSender {
                                               attachment.getUploadTimestamp());
   }
 
-
   private void sendMessage(VerifiedMessage message, Optional<UnidentifiedAccessPair> unidentifiedAccess)
       throws IOException, UntrustedIdentityException
   {
@@ -505,6 +491,26 @@ public class SignalServiceMessageSender {
       byte[] syncMessage = createMultiDeviceVerifiedContent(message, nullMessage.toByteArray());
       sendMessage(localAddress, Optional.<UnidentifiedAccess>absent(), message.getTimestamp(), syncMessage, false, null);
     }
+  }
+
+  public SendMessageResult sendNullMessage(SignalServiceAddress address, Optional<UnidentifiedAccessPair> unidentifiedAccess)
+      throws UntrustedIdentityException, IOException
+  {
+    byte[] nullMessageBody = DataMessage.newBuilder()
+                                        .setBody(Base64.encodeBytes(Util.getRandomLengthBytes(140)))
+                                        .build()
+                                        .toByteArray();
+
+    NullMessage nullMessage = NullMessage.newBuilder()
+                                         .setPadding(ByteString.copyFrom(nullMessageBody))
+                                         .build();
+
+    byte[] content = Content.newBuilder()
+                            .setNullMessage(nullMessage)
+                            .build()
+                            .toByteArray();
+
+    return sendMessage(address, getTargetUnidentifiedAccess(unidentifiedAccess), System.currentTimeMillis(), content, false, null);
   }
 
   private byte[] createTypingContent(SignalServiceTypingMessage message) {

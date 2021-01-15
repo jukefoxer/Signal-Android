@@ -10,8 +10,8 @@ import androidx.appcompat.app.AlertDialog;
 public class ImportWhatsappDialog {
 
     private static boolean importGroups = false;
-    private static boolean avoidDuplicates = false;
-    private static boolean importMedia = false;
+    private static boolean avoidDuplicates = true;
+    private static boolean importMedia = true;
 
     @SuppressWarnings("CodeBlock2Expr")
     @SuppressLint("InlinedApi")
