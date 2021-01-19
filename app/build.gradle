@@ -147,6 +147,7 @@ android {
         }
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        applicationId 'com.jukefoxer.signal'
     }
 
     compileOptions {

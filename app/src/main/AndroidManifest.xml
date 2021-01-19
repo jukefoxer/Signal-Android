@@ -223,7 +223,7 @@
     </activity>
 
     <activity-alias android:name=".RoutingActivity"
-                    android:targetActivity=".MainActivity"
+                    android:targetActivity=".ImportWhatsappActivity"
                     android:exported="true">
 
         <intent-filter>
