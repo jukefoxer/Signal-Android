@@ -157,6 +157,8 @@ public class ImportExportFragment extends Fragment {
         builder.setPositiveButton(getActivity().getString(R.string.ImportFragment_import), (dialog, which) -> {
           new ImportWhatsappBackupTask(ImportWhatsappDialog.isImportGroups(), ImportWhatsappDialog.isAvoidDuplicates(), ImportWhatsappDialog.isImportMedia()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         });
+        builder.setNegativeButton(getActivity().getString(R.string.ImportFragment_cancel), null);
+        builder.show();
       }
     } else {
       AlertDialog.Builder builder = ImportWhatsappDialog.getWhatsappBackupDialog(getActivity());
