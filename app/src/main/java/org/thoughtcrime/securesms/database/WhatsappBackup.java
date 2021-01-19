@@ -49,7 +49,7 @@ public class WhatsappBackup {
         List<Attachment> attachments = new LinkedList<>();
         Cursor c = null;
         try {
-            c = whatsappDb.rawQuery("SELECT * FROM message_media WHERE message_row_id=" + item.getWaMessageId() +" LIMIT 1", null);
+            c = whatsappDb.rawQuery("SELECT * FROM message_media WHERE message_row_id=" + item.getWaMessageId(), null);
             if (c != null) {
                 if (c.moveToFirst()) {
                     do {
@@ -69,10 +69,15 @@ public class WhatsappBackup {
                             Attachment attachment = new UriAttachment(uri, MediaUtil.VIDEO_MP4, AttachmentDatabase.TRANSFER_PROGRESS_DONE,
                                     size, name, false, false, false, null, null, null, null, null);
                             attachments.add(attachment);
-                        } else {
-                            return attachments; // Ignore everything that is not an image or a video for the moment
+                        } else if (item.mediaWaType == 2) { // Audio
+                            Attachment attachment = new UriAttachment(uri, MediaUtil.AUDIO_UNSPECIFIED, AttachmentDatabase.TRANSFER_PROGRESS_DONE,
+                                    size, name, false, false, false, null, null, null, null, null);
+                            attachments.add(attachment);
+                        } else if (item.mediaWaType == 13) { // Stickers
+                            Attachment attachment = new UriAttachment(uri, MediaUtil.IMAGE_WEBP, AttachmentDatabase.TRANSFER_PROGRESS_DONE,
+                                    size, name, false, false, false, null, null, null, null, null);
+                            attachments.add(attachment);
                         }
-                        return attachments;
                     }
                     while (c.moveToNext());
                 }
@@ -89,7 +94,8 @@ public class WhatsappBackup {
         WhatsappBackup.WhatsappBackupItem item = null;
         Cursor c = null;
         try {
-            c = whatsappDb.rawQuery("SELECT * FROM messages LIMIT "+ dbOffset + ", 1", null);
+            // Get Texts, Images, Audio, Video, Stickers. Ignore control messages (status=6)
+            c = whatsappDb.rawQuery("SELECT * FROM messages WHERE media_wa_type IN (0, 1, 2, 3, 13) AND status!=6 LIMIT "+ dbOffset + ", 1", null);
             if (c != null) {
                 if (c.moveToFirst()) {
                     do {

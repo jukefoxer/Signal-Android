@@ -75,14 +75,15 @@ public class WhatsappBackupImporter {
             while ((item = backup.getNext()) != null) {
                 msgCount++;
                 progressDialog.setProgress(msgCount);
+                if (item.getAddress() != null && item.getAddress().equals("status")) continue; // Ignore status messages
                 Recipient recipient = getRecipient(context, item);
-                if (isGroupMessage(item) && !importGroups) continue;
+                if (isGroupMessage(item) && !importGroups) continue; // ignore group messages if group import is deactivated
                 long threadId = getThreadId(item, groups, threads, recipient);
 
-                if (threadId == -1) continue;
+                if (threadId == -1) continue; // Ignore if no valid thread can be found
 
                 if (isMms(item)) {
-                    if (!importMedia) continue;
+                    if (!importMedia) continue; // Ignore if media message and media import is deactivated
                     if (avoidDuplicates && wasMsgAlreadyImported(smsDbTransaction, MmsDatabase.TABLE_NAME, MmsDatabase.DATE_SENT, threadId, recipient, item)) continue;
                     List<Attachment> attachments = WhatsappBackup.getMediaAttachments(whatsappDb, item);
                     if (attachments != null && attachments.size() > 0) insertMms(mmsDb, attachmentDb, item, recipient, threadId, attachments);
@@ -127,11 +128,11 @@ public class WhatsappBackupImporter {
     }
 
     private static int getNumMessages(android.database.sqlite.SQLiteDatabase whatsappDb, boolean importMedia) {
-        String whereClause = "";
-        if (!importMedia) whereClause = " WHERE data!=''";
+        String selectStatement = "SELECT COUNT(*) FROM messages WHERE media_wa_type IN (0, 1, 2, 3, 13) AND status!=6";
+        if (!importMedia) selectStatement = "SELECT COUNT(*) FROM messages WHERE media_wa_type IN (0) AND status!=6";
         Cursor c = null;
         try {
-            c = whatsappDb.rawQuery("SELECT COUNT(*) FROM messages" + whereClause, null);
+            c = whatsappDb.rawQuery(selectStatement, null);
             if (c != null) {
                 if (c.moveToFirst()) {
                     int count = c.getInt(0);
@@ -193,7 +194,7 @@ public class WhatsappBackupImporter {
         contentValues.put(THREAD_ID, threadId);
         contentValues.put(STATUS, MmsDatabase.Status.DOWNLOAD_INITIALIZED);
         contentValues.put(DATE_RECEIVED, item.getDate());
-        contentValues.put(PART_COUNT, 1);
+        contentValues.put(PART_COUNT, attachments.size());
         contentValues.put(SUBSCRIPTION_ID, -1);
         contentValues.put(READ, 1);
         contentValues.put(UNIDENTIFIED, 0);
@@ -232,7 +233,7 @@ public class WhatsappBackupImporter {
         if (item.getGroupName() == null) return null;
         List<GroupDatabase.GroupRecord> groupRecords = groups.getGroupsContainingMember(recipient.getId(), false);
         for (GroupDatabase.GroupRecord group : groupRecords) {
-            if (group.getTitle().equals(item.getGroupName())) {
+            if (group.getTitle() != null && group.getTitle().equals(item.getGroupName())) {
                 return group.getRecipientId();
             }
         }
