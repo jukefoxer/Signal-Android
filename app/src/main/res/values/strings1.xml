@@ -115,4 +115,21 @@
   <string name="export_fragment__export_a_plaintext_backup_compatible_with">Export a plaintext backup compatible with \'SMS Backup &amp; Restore\' to storage</string>
   <!-- RegistrationActivity -->
   <string name="registration_activity__restore_encrypted_backup">Restore encrypted backup</string>
+
+  <!-- WhatsApp Importer Activity -->
+  <string name="whatsapp_to_signal_importer">WhatsApp to Signal Importer</string>
+  <string name="status">Status</string>
+  <string name="permissions">Permissions:</string>
+  <string name="not_granted">Not Granted</string>
+  <string name="grant">Grant</string>
+  <string name="database_file">Database file:</string>
+  <string name="msgstore_db_not_found_please_put_in_the_root_directory_of_the_internal_phone_storage_not_on_the_sd_card">msgstore.db not found. Please put in the root directory of the internal phone storage (not on the SD card).</string>
+  <string name="merge_with_existing_signal_backup">Merge with existing Signal Backup</string>
+  <string name="select_backup_file">Select Backup File</string>
+  <string name="import_whatsapp_messages">Import WhatsApp Messages</string>
+  <string name="signal_backup_password_30_digits">Signal Backup Password (30 digits)</string>
+  <string name="grat_storage_manager_permission">Grant Permission</string>
+  <string name="please_grant_storage_manager_permission">Please grant this app the permission to manage all storage. Otherwise it can not open the backup files.</string>
+  <string name="ImportFragment_ok">Ok</string>
+
 </resources>
