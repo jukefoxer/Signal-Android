@@ -53,6 +53,7 @@ import org.whispersystems.signalservice.api.push.SignalServiceAddress;
 import org.whispersystems.signalservice.api.push.exceptions.AuthorizationFailedException;
 import org.whispersystems.signalservice.api.push.exceptions.NonSuccessfulResponseCodeException;
 import org.whispersystems.signalservice.api.push.exceptions.PushNetworkException;
+import org.whispersystems.signalservice.api.push.exceptions.ServerRejectedException;
 import org.whispersystems.signalservice.api.push.exceptions.UnregisteredUserException;
 import org.whispersystems.signalservice.api.util.CredentialsProvider;
 import org.whispersystems.signalservice.internal.configuration.SignalServiceConfiguration;
@@ -148,9 +149,10 @@ public class SignalServiceMessageSender {
                                     Optional<SignalServiceMessagePipe> unidentifiedPipe,
                                     Optional<EventListener> eventListener,
                                     ClientZkProfileOperations clientZkProfileOperations,
-                                    ExecutorService executor)
+                                    ExecutorService executor,
+                                    boolean automaticNetworkRetry)
   {
-    this(urls, new StaticCredentialsProvider(uuid, e164, password, null), store, signalAgent, isMultiDevice, pipe, unidentifiedPipe, eventListener, clientZkProfileOperations, executor, 0);
+    this(urls, new StaticCredentialsProvider(uuid, e164, password, null), store, signalAgent, isMultiDevice, pipe, unidentifiedPipe, eventListener, clientZkProfileOperations, executor, 0, automaticNetworkRetry);
   }
 
   public SignalServiceMessageSender(SignalServiceConfiguration urls,
@@ -163,9 +165,10 @@ public class SignalServiceMessageSender {
                                     Optional<EventListener> eventListener,
                                     ClientZkProfileOperations clientZkProfileOperations,
                                     ExecutorService executor,
-                                    long maxEnvelopeSize)
+                                    long maxEnvelopeSize,
+                                    boolean automaticNetworkRetry)
   {
-    this.socket           = new PushServiceSocket(urls, credentialsProvider, signalAgent, clientZkProfileOperations);
+    this.socket           = new PushServiceSocket(urls, credentialsProvider, signalAgent, clientZkProfileOperations, automaticNetworkRetry);
     this.store            = store;
     this.localAddress     = new SignalServiceAddress(credentialsProvider.getUuid(), credentialsProvider.getE164());
     this.pipe             = new AtomicReference<>(pipe);
@@ -273,6 +276,20 @@ public class SignalServiceMessageSender {
     if (result.getSuccess() != null && result.getSuccess().isNeedsSync()) {
       byte[] syncMessage = createMultiDeviceSentTranscriptContent(content, Optional.of(recipient), timestamp, Collections.singletonList(result), false);
       sendMessage(localAddress, Optional.<UnidentifiedAccess>absent(), timestamp, syncMessage, false, null);
+    }
+
+    // TODO [greyson][session] Delete this when we delete the button
+    if (message.isEndSession()) {
+      if (recipient.getUuid().isPresent()) {
+        store.deleteAllSessions(recipient.getUuid().get().toString());
+      }
+      if (recipient.getNumber().isPresent()) {
+        store.deleteAllSessions(recipient.getNumber().get());
+      }
+
+      if (eventListener.isPresent()) {
+        eventListener.get().onSecurityEvent(recipient);
+      }
     }
 
     return result;
@@ -1312,6 +1329,9 @@ public class SignalServiceMessageSender {
         } else if (e.getCause() instanceof PushNetworkException) {
           Log.w(TAG, e);
           results.add(SendMessageResult.networkFailure(recipient));
+        } else if (e.getCause() instanceof ServerRejectedException) {
+          Log.w(TAG, e);
+          throw ((ServerRejectedException) e.getCause());
         } else {
           throw new IOException(e);
         }
