@@ -121,6 +121,14 @@
             android:inputType="textPersonName"
             android:hint="@string/signal_backup_password_30_digits" />
 
+        <EditText
+            android:id="@+id/phoneNumberEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="phone"
+            android:hint="@string/import_whatsapp_phone_number" />
+
         <Button
             android:id="@+id/selectFolderButton"
             android:layout_width="match_parent"

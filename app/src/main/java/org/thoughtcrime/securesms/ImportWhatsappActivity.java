@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -25,6 +26,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 
 import net.sqlcipher.database.SQLiteDatabase;
 
@@ -45,6 +51,7 @@ import org.thoughtcrime.securesms.notifications.NotificationChannels;
 import org.thoughtcrime.securesms.permissions.Permissions;
 import org.thoughtcrime.securesms.util.BackupUtil;
 import org.thoughtcrime.securesms.util.StorageUtil;
+import org.thoughtcrime.securesms.util.TextSecurePreferences;
 
 import java.io.File;
 import java.io.IOException;
@@ -197,10 +204,22 @@ public class ImportWhatsappActivity extends Activity {
 
     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
       grantButton.setOnClickListener(v -> {
+        checkPermissions();
+      });
+      boolean permGranted = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+      if (!permGranted) {
+        Permissions.with(ImportWhatsappActivity.this)
+                .request(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
+                .ifNecessary()
+                .withPermanentDenialDialog(getString(R.string.ImportExportFragment_signal_needs_the_storage_permission_in_order_to_read_from_external_storage_but_it_has_been_permanently_denied))
+                .onAllGranted(() -> checkPermissions())
+                .onAnyDenied(() -> updatePermissionsGranted(false))
+                .execute();
+      } else if (!Environment.isExternalStorageManager()) {
         Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
         ImportWhatsappActivity.this.startActivity(intent);
-      });
-      updatePermissionsGranted(Environment.isExternalStorageManager());
+      }
+      updatePermissionsGranted(Environment.isExternalStorageManager() && permGranted);
 
     } else {
       grantButton.setOnClickListener(v -> {
@@ -254,6 +273,7 @@ public class ImportWhatsappActivity extends Activity {
   }
 
   private void importWhatsApp() {
+    if (!checkPhoneNumber()) return;
     CheckBox groupsCheckbox = findViewById(R.id.import_groups_checkbox);
     CheckBox mediaCheckbox = findViewById(R.id.import_media_checkbox);
     CheckBox avoidDuplicatesCheckbox = findViewById(R.id.avoid_duplicates_checkbox);
@@ -265,6 +285,27 @@ public class ImportWhatsappActivity extends Activity {
     }
     if (numDaysToImport < 1) numDaysToImport = -1;
     new ImportWhatsappActivity.ImportWhatsappBackupTask(groupsCheckbox.isChecked(), avoidDuplicatesCheckbox.isChecked(), mediaCheckbox.isChecked(), numDaysToImport).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+  }
+
+  private boolean checkPhoneNumber() {
+    EditText phoneEditText = findViewById(R.id.phoneNumberEditText);
+    String numberString = phoneEditText.getText().toString();
+    try {
+      PhoneNumberUtil util     = PhoneNumberUtil.getInstance();
+      if (!numberString.startsWith("+")) {
+        throw new RuntimeException();
+      }
+      Phonenumber.PhoneNumber parsedNumber = util.parse(numberString, null);
+
+      String e164 = util.format(parsedNumber, PhoneNumberUtil.PhoneNumberFormat.E164);
+      TextSecurePreferences.setLocalNumber(this, e164);
+      return true;
+    } catch (Exception e) {
+      runOnUiThread(() -> {
+        Toast.makeText(this, R.string.WhatsApp_phone_number_error, Toast.LENGTH_LONG).show();
+      });
+    }
+    return false;
   }
 
   private String getDateTimeString(long timestampMs) {
@@ -435,10 +476,12 @@ public class ImportWhatsappActivity extends Activity {
                   Toast.LENGTH_LONG).show();
           break;
         case SUCCESS:
-          Toast.makeText(context,
-                  context.getString(R.string.ImportFragment_import_complete),
-                  Toast.LENGTH_LONG).show();
-
+          AlertDialog.Builder builder = new AlertDialog.Builder(ImportWhatsappActivity.this);
+          builder.setIcon(R.drawable.ic_emoji_smiley_24);
+          builder.setTitle(getString(R.string.ImportFragment_import_complete));
+          builder.setMessage(getString(R.string.WhatsApp_success));
+          builder.setPositiveButton(getString(R.string.ImportFragment_ok), (dialog, which) -> {});
+          builder.show();
           break;
       }
     }
