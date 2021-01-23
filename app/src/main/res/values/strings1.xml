@@ -64,8 +64,8 @@
   <string name="ImportFragment_no_whatsapp_backup_found">No WhatsApp Backup found! Make sure msgstore.db is in the root directory of the phone\'s internal storage.</string>
   <string name="ImportFragment_import_whatsapp_backup">Import Whatsapp backup?</string>
   <string name="ImportFragment_this_will_import_messages_from_whatsapp_backup">This will import
-      messages from a Whatsapp msgstore.db backup file. If you\'ve previously imported this backup,
-      importing again will result in duplicated messages.
+      messages from a Whatsapp msgstore.db backup file. If you\'ve previously imported a backup,
+      you should check the box \'avoid duplicates\'..
   </string>
   <string name="ImportFragment_import_whatsapp_backup_elipse">Importing whatsapp backup...</string>
   <string name="ImportFragment_import_signal_backup_elipse">Importing existing Signal backup...</string>
