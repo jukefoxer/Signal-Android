@@ -68,6 +68,8 @@
       importing again will result in duplicated messages.
   </string>
   <string name="ImportFragment_import_whatsapp_backup_elipse">Importing whatsapp backup...</string>
+  <string name="ImportFragment_import_signal_backup_elipse">Importing existing Signal backup...</string>
+  <string name="ImportFragment_invalid_passphrase">Please enter a valid 30 digit passphrase!</string>
   <string name="import_fragment__import_whatsapp_backup">Import Whatsapp backup</string>
   <string name="import_fragment__import_whatsapp_backup_file">Import a Whatsapp db file. place mstore.db at ...</string>
   <string name="import_fragment__import_whatsapp_import_media">Import media messages</string>
@@ -119,7 +121,7 @@
   <!-- WhatsApp Importer Activity -->
   <string name="whatsapp_to_signal_importer">WhatsApp to Signal Importer</string>
   <string name="status">Status</string>
-  <string name="merge_backups">Merge with existing Backup</string>
+  <string name="merge_backups">Merge with existing Signal Backup</string>
   <string name="import_whatsapp_options">Options</string>
   <string name="permissions">Permissions:</string>
   <string name="not_granted">Not Granted</string>
@@ -133,11 +135,13 @@
   <string name="no_signal_backup_found">No Signal backup found! Please export a full Signal backup first.</string>
   <string name="select_backup_file">Select Backup File</string>
   <string name="import_whatsapp_messages">Import WhatsApp Messages</string>
+  <string name="import_whatsapp_select_backup_folder">Select Backup Folder</string>
   <string name="signal_backup_password_30_digits">Backup Passphrase (30 digits)</string>
   <string name="grat_storage_manager_permission">Grant Permission</string>
   <string name="please_grant_storage_manager_permission">Please grant this app the permission to manage all storage. Otherwise it can not open the backup files.</string>
   <string name="ImportFragment_ok">Ok</string>
   <string name="WhatsApp_exporting">Exporting backup</string>
   <string name="WhatsApp_exporting_backup_elipse">Exporting new backup...</string>
+  <string name="WhatsApp_import_x_days">Only import the last X days</string>
 
 </resources>

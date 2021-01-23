@@ -19,12 +19,12 @@
             android:layout_height="wrap_content"
             android:text="@string/whatsapp_to_signal_importer"
             android:textAppearance="@style/Registration.BigLabel"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="10dp"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider" />
 
@@ -86,7 +86,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="10dp"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider" />
 
@@ -102,7 +102,7 @@
             android:text="@string/merge_with_existing_signal_backup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp" />
+            android:layout_margin="0dp" />
 
         <TextView
             android:id="@+id/backupInfoLabel"
@@ -119,12 +119,18 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:visibility="gone"
-            android:text="@string/signal_backup_password_30_digits" />
+            android:hint="@string/signal_backup_password_30_digits" />
+
+        <Button
+            android:id="@+id/selectFolderButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/import_whatsapp_select_backup_folder" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="10dp"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider" />
 
@@ -147,7 +153,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:layout_margin="10dp" />
+                android:layout_margin="0dp" />
 
             <CheckBox
                 android:id="@+id/import_groups_checkbox"
@@ -155,7 +161,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:layout_margin="10dp" />
+                android:layout_margin="0dp" />
 
             <CheckBox
                 android:id="@+id/avoid_duplicates_checkbox"
@@ -163,12 +169,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:layout_margin="10dp" />
+                android:layout_margin="0dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <CheckBox
+                android:id="@+id/import_x_days"
+                android:text="@string/WhatsApp_import_x_days"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:layout_margin="0dp" />
+
+            <EditText
+                android:id="@+id/numDaysEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:enabled="false"
+                android:text="30"
+                android:ems="3"
+                android:inputType="number" />
+
+
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="10dp"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider" />
 

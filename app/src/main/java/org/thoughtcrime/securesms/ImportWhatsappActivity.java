@@ -87,22 +87,38 @@ public class ImportWhatsappActivity extends Activity {
     mergeCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
       updateBackupDir();
     });
+    CheckBox lastDaysCheckbox = findViewById(R.id.import_x_days);
+    lastDaysCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+      updateDaysEditText();
+    });
+    Button chooseFolderButton = findViewById(R.id.selectFolderButton);
+    chooseFolderButton.setOnClickListener(v ->  showChooseBackupLocationDialog());
+  }
+
+  private void updateDaysEditText() {
+    runOnUiThread(() -> {
+      CheckBox numDaysCheckbox = findViewById(R.id.import_x_days);
+      if (numDaysCheckbox.isChecked()) {
+        findViewById(R.id.numDaysEditText).setEnabled(true);
+      } else {
+        findViewById(R.id.numDaysEditText).setEnabled(false);
+      }
+    });
   }
 
   private void updateBackupDir() {
     runOnUiThread(() -> {
       CheckBox mergeCheckbox = findViewById(R.id.merge_backup_checkbox);
       if (mergeCheckbox.isChecked()) {
+        findViewById(R.id.passphraseEditText).setVisibility(View.VISIBLE);
+        findViewById(R.id.backupInfoLabel).setVisibility(View.VISIBLE);
         if (SignalStore.settings().getSignalBackupDirectory() != null) {
-          findViewById(R.id.passphraseEditText).setVisibility(View.VISIBLE);
-          findViewById(R.id.backupInfoLabel).setVisibility(View.VISIBLE);
           findLatestBackup();
         } else {
           showChooseBackupLocationDialog();
         }
       } else {
         findViewById(R.id.passphraseEditText).setVisibility(View.GONE);
-        findViewById(R.id.backupInfoLabel).setVisibility(View.GONE);
       }
       updateImportButton();
     });
@@ -110,20 +126,14 @@ public class ImportWhatsappActivity extends Activity {
 
   @Override
   public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    if (Build.VERSION.SDK_INT >= 29                         &&
-            requestCode == REQUEST_BACKUP_DIR &&
-            resultCode == Activity.RESULT_OK                    &&
-            data != null                                        &&
-            data.getData() != null)
+    if (requestCode == REQUEST_BACKUP_DIR &&
+            resultCode == Activity.RESULT_OK)
     {
-      Uri backupDirectoryUri = data.getData();
-      SignalStore.settings().setSignalBackupDirectory(backupDirectoryUri);
+      if (data != null && data.getData() != null) {
+        Uri backupDirectoryUri = data.getData();
+        SignalStore.settings().setSignalBackupDirectory(backupDirectoryUri);
+      }
       updateBackupDir();
-    } else if (Build.VERSION.SDK_INT >= 29 && requestCode == REQUEST_BACKUP_DIR) {
-      runOnUiThread(() -> {
-        CheckBox mergeCheckbox = findViewById(R.id.merge_backup_checkbox);
-        mergeCheckbox.setChecked(false);
-      });
     }
   }
 
@@ -157,7 +167,7 @@ public class ImportWhatsappActivity extends Activity {
   public void updateImportButton() {
     runOnUiThread(() -> {
       CheckBox mergeCheckbox = findViewById(R.id.merge_backup_checkbox);
-      if (permissionsGranted && (!mergeCheckbox.isChecked() || existingBackupInfo != null)) {
+      if (permissionsGranted && (!mergeCheckbox.isChecked() || existingBackupInfo != null) && SignalStore.settings().getSignalBackupDirectory() != null) {
         findViewById(R.id.importButton).setEnabled(true);
       } else {
         findViewById(R.id.importButton).setEnabled(false);
@@ -225,19 +235,36 @@ public class ImportWhatsappActivity extends Activity {
   private void doImport() {
     CheckBox mergeCheckbox = findViewById(R.id.merge_backup_checkbox);
     if (mergeCheckbox.isChecked()) {
-      EditText passphraseEditText = findViewById(R.id.passphraseEditText);
-      String passphrase = passphraseEditText.getText().toString();
-      restoreAsynchronously(this, existingBackupInfo, passphrase);
+      String passphrase = getPassphrase();
+      if (passphrase!= null) restoreAsynchronously(this, existingBackupInfo, passphrase);
     } else {
-      importWhatsApp();
+      String passphrase = getPassphrase();
+      if (passphrase!= null) importWhatsApp();
     }
+  }
+
+  private String getPassphrase() {
+    EditText passphraseEditText = findViewById(R.id.passphraseEditText);
+    String pw = passphraseEditText.getText().toString().replace(" ", "");
+    if (pw.length() != 30) {
+      Toast.makeText(this, R.string.ImportFragment_invalid_passphrase, Toast.LENGTH_LONG).show();
+      return null;
+    }
+    return pw;
   }
 
   private void importWhatsApp() {
     CheckBox groupsCheckbox = findViewById(R.id.import_groups_checkbox);
     CheckBox mediaCheckbox = findViewById(R.id.import_media_checkbox);
     CheckBox avoidDuplicatesCheckbox = findViewById(R.id.avoid_duplicates_checkbox);
-    new ImportWhatsappActivity.ImportWhatsappBackupTask(groupsCheckbox.isChecked(), avoidDuplicatesCheckbox.isChecked(), mediaCheckbox.isChecked()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    CheckBox numDaysCheckbox = findViewById(R.id.import_x_days);
+    EditText numDaysEditText = findViewById(R.id.numDaysEditText);
+    int numDaysToImport = -1;
+    if (numDaysCheckbox.isChecked()) {
+      numDaysToImport = Integer.parseInt(numDaysEditText.getText().toString());
+    }
+    if (numDaysToImport < 1) numDaysToImport = -1;
+    new ImportWhatsappActivity.ImportWhatsappBackupTask(groupsCheckbox.isChecked(), avoidDuplicatesCheckbox.isChecked(), mediaCheckbox.isChecked(), numDaysToImport).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
   }
 
   private String getDateTimeString(long timestampMs) {
@@ -245,7 +272,7 @@ public class ImportWhatsappActivity extends Activity {
     TimeZone tz = TimeZone.getDefault();
     calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.getTimeInMillis()));
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-    java.util.Date currenTimeZone=new java.util.Date((long)1379487711*1000);
+    java.util.Date currenTimeZone=new java.util.Date(timestampMs);
     return sdf.format(currenTimeZone);
   }
 
@@ -260,6 +287,7 @@ public class ImportWhatsappActivity extends Activity {
       if (existingBackupInfo != null) {
         findViewById(R.id.importButton).setEnabled(true);
         TextView backupInfoText = findViewById(R.id.backupInfoLabel);
+        backupInfoText.setVisibility(View.VISIBLE);
         String infoText = getString(R.string.signal_backup_found) + " " + getDateTimeString(existingBackupInfo.getTimestamp());
         backupInfoText.setText(infoText);
         backupInfoText.setTextColor(Color.GREEN);
@@ -267,8 +295,12 @@ public class ImportWhatsappActivity extends Activity {
         SignalStore.settings().clearSignalBackupDirectory();
         findViewById(R.id.importButton).setEnabled(false);
         TextView backupInfoText = findViewById(R.id.backupInfoLabel);
+        backupInfoText.setVisibility(View.VISIBLE);
         backupInfoText.setText(R.string.no_signal_backup_found);
         backupInfoText.setTextColor(Color.RED);
+        CheckBox mergeCheckbox = findViewById(R.id.merge_backup_checkbox);
+        mergeCheckbox.setChecked(false);
+        showChooseBackupLocationDialog();
       }
     });
   }
@@ -278,6 +310,7 @@ public class ImportWhatsappActivity extends Activity {
                                      @NonNull BackupUtil.BackupInfo backup,
                                      @NonNull String passphrase)
   {
+
     new AsyncTask<Void, Void, ImportWhatsappActivity.BackupImportResult>() {
       @Override
       protected ImportWhatsappActivity.BackupImportResult doInBackground(Void... voids) {
@@ -310,7 +343,22 @@ public class ImportWhatsappActivity extends Activity {
       }
 
       @Override
+      protected void onPreExecute() {
+        progressDialog = new ProgressDialog(ImportWhatsappActivity.this);
+        progressDialog.setTitle(ImportWhatsappActivity.this.getString(R.string.ImportFragment_importing));
+        progressDialog.setMessage(ImportWhatsappActivity.this.getString(R.string.ImportFragment_import_signal_backup_elipse));
+        progressDialog.setCancelable(false);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
+      }
+
+
+      @Override
       protected void onPostExecute(@NonNull ImportWhatsappActivity.BackupImportResult result) {
+
+        if (progressDialog != null)
+          progressDialog.dismiss();
 
         switch (result) {
           case SUCCESS:
@@ -346,11 +394,13 @@ public class ImportWhatsappActivity extends Activity {
     private final boolean importGroups;
     private final boolean importMedia;
     private final boolean avoidDuplicates;
+    private final int numDaysToImport;
 
-    public ImportWhatsappBackupTask(boolean importGroups, boolean avoidDuplicates, boolean importMedia) {
+    public ImportWhatsappBackupTask(boolean importGroups, boolean avoidDuplicates, boolean importMedia, int numDaysToImport) {
       this.importGroups = importGroups;
       this.avoidDuplicates = avoidDuplicates;
       this.importMedia = importMedia;
+      this.numDaysToImport = numDaysToImport;
     }
 
     @Override
@@ -396,7 +446,7 @@ public class ImportWhatsappActivity extends Activity {
     @Override
     protected Integer doInBackground(Void... params) {
       try {
-        WhatsappBackupImporter.importWhatsappFromSd(ImportWhatsappActivity.this, progressDialog, importGroups, avoidDuplicates, importMedia);
+        WhatsappBackupImporter.importWhatsappFromSd(ImportWhatsappActivity.this, progressDialog, importGroups, avoidDuplicates, importMedia, numDaysToImport);
         runOnUiThread(() ->  {
           progressDialog.setIndeterminate(true);
           progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);

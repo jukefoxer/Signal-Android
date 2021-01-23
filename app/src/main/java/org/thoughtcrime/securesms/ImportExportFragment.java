@@ -305,7 +305,7 @@ public class ImportExportFragment extends Fragment {
     @Override
     protected Integer doInBackground(Void... params) {
       try {
-        WhatsappBackupImporter.importWhatsappFromSd(getActivity(), progressDialog, importGroups, avoidDuplicates, importMedia);
+        WhatsappBackupImporter.importWhatsappFromSd(getActivity(), progressDialog, importGroups, avoidDuplicates, importMedia, -1);
         return SUCCESS;
       } catch (NoExternalStorageException e) {
         Log.w(TAG, e);
