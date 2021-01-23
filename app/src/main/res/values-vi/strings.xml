@@ -195,8 +195,6 @@
   <string name="ConversationItem_this_message_was_deleted">Tin nhắn này đã bị xóa.</string>
   <string name="ConversationItem_you_deleted_this_message">Bạn đã xóa tin nhắn này.</string>
   <!--ConversationActivity-->
-  <!-- Removed by excludeNonTranslatables <string name="ConversationActivity_reset_secure_session_question">Đặt lại phiên bảo mật?</string> -->
-  <!-- Removed by excludeNonTranslatables <string name="ConversationActivity_this_may_help_if_youre_having_encryption_problems">Thao tác này có thể giúp bạn khi đang có vấn đề về mã hoá cuộc trò chuyện. Các tin nhắn sẽ được giữ lại.</string> -->
   <string name="ConversationActivity_reset">Đặt lại</string>
   <string name="ConversationActivity_add_attachment">Thêm tệp đính kèm</string>
   <string name="ConversationActivity_select_contact_info">Chọn thông tin liên lạc</string>
@@ -302,6 +300,11 @@
   <string name="ConversationFragment__tap_to_review">Nhấn để xem lại</string>
   <string name="ConversationFragment__review_requests_carefully">Kiểm tra yêu cầu một cách cẩn thận</string>
   <string name="ConversationFragment__signal_found_another_contact_with_the_same_name">Signal tìm thấy một liên hệ cùng tên.</string>
+  <string name="ConversationFragment_contact_us">Liên hệ với chúng tôi</string>
+  <string name="ConversationFragment_verify">Kiểm chứng</string>
+  <string name="ConversationFragment_not_now">Để sau</string>
+  <string name="ConversationFragment_your_safety_number_with_s_changed">Mã an toàn của bạn với %s thay đổi</string>
+  <string name="ConversationFragment_your_safety_number_with_s_changed_likey_because_they_reinstalled_signal">Số an toàn của bạn với %s đã thay đổi, khả năng cao là vì họ đã cài lại Signal hoặc đổi thiết bị. Nhấn Xác minh để xác nhận lại số an toàn mới. Việc này là không bắt buộc.</string>
   <!--ConversationListActivity-->
   <string name="ConversationListActivity_there_is_no_browser_installed_on_your_device">Bạn chưa cài trình duyệt nào trên điện thoại.</string>
   <!--ConversationListFragment-->
@@ -380,6 +383,9 @@
   <string name="DateUtils_minutes_ago">%dph</string>
   <string name="DateUtils_today">Hôm nay</string>
   <string name="DateUtils_yesterday">Hôm qua</string>
+  <!--DecryptionFailedDialog-->
+  <string name="DecryptionFailedDialog_chat_session_refreshed">Đã tải lại phiên trò chuyện</string>
+  <string name="DecryptionFailedDialog_signal_uses_end_to_end_encryption">Signal dùng công nghệ mã hóa đầu cuối vì vậy ứng dụng đôi lúc có thể khởi động lại phiên trò truyện của bạn. Điều này không ảnh hưởng tới độ bảo mật của cuộc hội thoại nhưng bạn có thể bỏ lỡ tin nhắn từ người này. Bạn có thể nhờ họ gửi lại tin nhắn đó.</string>
   <!--DeliveryStatus-->
   <string name="DeliveryStatus_sending">Đang gửi</string>
   <string name="DeliveryStatus_sent">Đã gửi</string>
@@ -885,6 +891,7 @@
   <string name="MessageRecord_disappearing_message_time_set_to_s">Tin nhắn sẽ tự hủy sau %1$s.</string>
   <string name="MessageRecord_this_group_was_updated_to_a_new_group">Nhóm này đã được cập nhật thành Nhóm Mới.</string>
   <string name="MessageRecord_you_couldnt_be_added_to_the_new_group_and_have_been_invited_to_join">Bạn không thể được thêm vào Nhóm Mới và đã được mời tham dự.</string>
+  <string name="MessageRecord_chat_session_refreshed">Đã tải lại phiên trò chuyện</string>
   <plurals name="MessageRecord_members_couldnt_be_added_to_the_new_group_and_have_been_invited">
     <item quantity="other">%1$s thành viên không thể được thêm vào Nhóm Mới và đã được mời để tham gia.</item>
   </plurals>
@@ -1210,6 +1217,10 @@ mã quốc gia bạn</string>
 điện thoại của bạn</string>
   <string name="RegistrationActivity_invalid_number">Số không hợp lệ</string>
   <string name="RegistrationActivity_the_number_you_specified_s_is_invalid">Số bạn cung cấp (%s) không hợp lệ.</string>
+  <string name="RegistrationActivity_a_verification_code_will_be_sent_to">Một mã xác nhận sẽ được gủi đến:</string>
+  <string name="RegistrationActivity_you_will_receive_a_call_to_verify_this_number">Bạn sẽ nhận được một cuộc gọi để xác nhận số điện thoại này.</string>
+  <string name="RegistrationActivity_is_your_phone_number_above_correct">Số điện thoại của bạn ở trên đã chính xác chưa?</string>
+  <string name="RegistrationActivity_edit_number">Sửa số</string>
   <string name="RegistrationActivity_missing_google_play_services">Thiếu Dịch vụ Google Play</string>
   <string name="RegistrationActivity_this_device_is_missing_google_play_services">Thiết bị này thiếu Dịch vụ Google Play. Bạn vẫn có thể dùng Signal, nhưng thiết đặt này có thể giảm độ tin cậy và hiệu năng ứng dụng.\n\nNếu bạn không phải người dùng nâng cao, hoặc không dùng ROM Android tự chế, hoặc cho rằng đây là lỗi không đáng có, hãy liên lạc support@signal.org để nhờ hỗ trợ.</string>
   <string name="RegistrationActivity_i_understand">Tôi đã hiểu</string>
@@ -1362,6 +1373,7 @@ Nhận thông tin trao đổi mã khóa về phiên bản giao thức không h�
   <string name="ThreadRecord_contact">Liên hệ</string>
   <string name="ThreadRecord_file">Tệp</string>
   <string name="ThreadRecord_video">Video</string>
+  <string name="ThreadRecord_chat_session_refreshed">Đã tải lại phiên trò chuyện</string>
   <!--UpdateApkReadyListener-->
   <string name="UpdateApkReadyListener_Signal_update">Cập nhật Signal</string>
   <string name="UpdateApkReadyListener_a_new_version_of_signal_is_available_tap_to_update">Đã có phiên bản mới của Signal, nhấn để cập nhật</string>
@@ -1401,7 +1413,6 @@ Nhận thông tin trao đổi mã khóa về phiên bản giao thức không h�
   <!--ViewOnceMessageActivity-->
   <!--AudioView-->
   <!--MessageDisplayHelper-->
-  <!-- Removed by excludeNonTranslatables <string name="MessageDisplayHelper_bad_encrypted_message">Tin nhắn mã hóa kém</string> -->
   <string name="MessageDisplayHelper_message_encrypted_for_non_existing_session">Tin nhắn mã hoá cho phiên không tồn tại</string>
   <!--MmsMessageRecord-->
   <string name="MmsMessageRecord_bad_encrypted_mms_message">Tin nhắn MMS mã hoá kém</string>
@@ -1888,6 +1899,8 @@ Nhận thông tin trao đổi mã khóa về phiên bản giao thức không h�
   <string name="preferences__use_signal_for_viewing_and_storing_all_incoming_multimedia_messages">Dùng Signal cho tất cả tin nhắn đến đa phương tiện</string>
   <string name="preferences__pref_enter_sends_title">Phím Enter gửi đi</string>
   <string name="preferences__pressing_the_enter_key_will_send_text_messages">Nhấn phím Enter sẽ gửi tin nhắn đi</string>
+  <string name="preferences__pref_use_address_book_photos">Sử dụng hình ảnh trong danh bạ</string>
+  <string name="preferences__display_contact_photos_from_your_address_book_if_available">Hiển thị hình ảnh của liên lạc từ danh bạ nếu có</string>
   <string name="preferences__generate_link_previews">Tạo xem trước liên kết</string>
   <string name="preferences__retrieve_link_previews_from_websites_for_messages">Thêm xem trước liên kết trang web vào trong tin nhắn bạn gửi.</string>
   <string name="preferences__choose_identity">Chọn danh tính</string>
@@ -1940,7 +1953,7 @@ Nhận thông tin trao đổi mã khóa về phiên bản giao thức không h�
   <string name="preferences__mmsc_password">Mật khẩu MMSC</string>
   <string name="preferences__sms_delivery_reports">Báo cáo đã gửi SMS</string>
   <string name="preferences__request_a_delivery_report_for_each_sms_message_you_send">Yêu cầu báo cáo đã gửi cho từng tin nhắn SMS gửi đi</string>
-  <!-- Removed by excludeNonTranslatables <string name="preferences__chats">Trò chuyện và đa phương tiện</string> -->
+  <string name="preferences__data_and_storage">Dữ liệu và lưu trữ</string>
   <string name="preferences__storage">Lưu trữ</string>
   <string name="preferences__conversation_length_limit">Giới hạn độ dài cuộc trò chuyện</string>
   <string name="preferences__keep_messages">Giữ tin nhắn</string>
@@ -2005,6 +2018,13 @@ Nhận thông tin trao đổi mã khóa về phiên bản giao thức không h�
   <string name="preferences_app_protection__app_access">Truy cập ứng dụng</string>
   <string name="preferences_app_protection__communication">Giao tiếp</string>
   <string name="preferences_chats__chats">Trò chuyện</string>
+  <string name="preferences_data_and_storage__manage_storage">Quản lí bộ nhớ</string>
+  <string name="preferences_data_and_storage__calls">Cuộc gọi</string>
+  <string name="preferences_data_and_storage__use_less_data_for_calls">Sử dụng ít lưu lượng data hơn khi gọi</string>
+  <string name="preferences_data_and_storage__never">Không bao giờ</string>
+  <string name="preferences_data_and_storage__wifi_and_cellular">Wifi và Mạng di động</string>
+  <string name="preferences_data_and_storage__cellular_only">Chỉ dùng mạng di động</string>
+  <string name="preference_data_and_storage__using_less_data_may_improve_calls_on_bad_networks">Sử dụng ít lưu lượng data có thể cải thiện chất lượng cuộc gọi trong môi trường mạng kém</string>
   <string name="preferences_notifications__messages">Tin nhắn</string>
   <string name="preferences_notifications__events">Sự kiện</string>
   <string name="preferences_notifications__in_chat_sounds">Âm thanh khi đang trò chuyện</string>
@@ -2475,8 +2495,9 @@ Nhận thông tin trao đổi mã khóa về phiên bản giao thức không h�
   <string name="CallParticipantsListUpdatePopupWindow__s_and_s_left">Còn lại %1$s và %2$s</string>
   <string name="CallParticipantsListUpdatePopupWindow__s_s_and_s_left">Còn lại %1$s, %2$s và %3$s</string>
   <string name="CallParticipantsListUpdatePopupWindow__s_s_and_d_others_left">Còn lại %1$s, %2$s và %3$d người khác</string>
-  <!-- Removed by excludeNonTranslatables <string name="CallParticipantsListUpdatePopupWindow__you_on_another_device">Bạn (trên một thiết bị khác)</string> -->
-  <!-- Removed by excludeNonTranslatables <string name="CallParticipantsListUpdatePopupWindow__s_on_another_device">%1$s (trên một thiết bị khác)</string> -->
+  <string name="CallParticipant__you">Bạn</string>
+  <string name="CallParticipant__you_on_another_device">Bạn (trên một thiết bị khác)</string>
+  <string name="CallParticipant__s_on_another_device">%1$s (trên một thiết bị khác)</string>
   <!--DeleteAccountFragment-->
   <string name="DeleteAccountFragment__deleting_your_account_will">Xoá tài khoản của bạn sẽ:</string>
   <string name="DeleteAccountFragment__enter_your_phone_number">Nhập số điện thoại của bạn</string>

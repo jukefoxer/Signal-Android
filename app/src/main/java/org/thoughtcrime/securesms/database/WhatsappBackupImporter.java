@@ -53,7 +53,7 @@ public class WhatsappBackupImporter {
         }
     }
 
-    public static void importWhatsappFromSd(Context context, ProgressDialog progressDialog, boolean importGroups, boolean avoidDuplicates, boolean importMedia)
+    public static void importWhatsappFromSd(Context context, ProgressDialog progressDialog, boolean importGroups, boolean avoidDuplicates, boolean importMedia, int numDaysToImport)
             throws NoExternalStorageException, IOException
     {
         Log.w(TAG, "importWhatsapp(): importGroup: " + importGroups + ", avoidDuplicates: " + avoidDuplicates);
@@ -62,12 +62,12 @@ public class WhatsappBackupImporter {
         MmsDatabase mmsDb                   = (MmsDatabase) DatabaseFactory.getMmsDatabase(context);
         AttachmentDatabase attachmentDb     = DatabaseFactory.getAttachmentDatabase(context);
         SQLiteDatabase smsDbTransaction = smsDb.beginTransaction();
-        int numMessages = getNumMessages(whatsappDb, importMedia);
+        int numMessages = getNumMessages(whatsappDb, importMedia, numDaysToImport);
         progressDialog.setMax(numMessages);
         try {
             ThreadDatabase threads         = DatabaseFactory.getThreadDatabase(context);
             GroupDatabase groups           = DatabaseFactory.getGroupDatabase(context);
-            WhatsappBackup backup          = new WhatsappBackup(whatsappDb);
+            WhatsappBackup backup          = new WhatsappBackup(whatsappDb, numDaysToImport);
             Set<Long>      modifiedThreads = new HashSet<>();
             WhatsappBackup.WhatsappBackupItem item;
 
@@ -127,9 +127,10 @@ public class WhatsappBackupImporter {
         return false;
     }
 
-    private static int getNumMessages(android.database.sqlite.SQLiteDatabase whatsappDb, boolean importMedia) {
+    private static int getNumMessages(android.database.sqlite.SQLiteDatabase whatsappDb, boolean importMedia, int numDaysToImport) {
         String selectStatement = "SELECT COUNT(*) FROM messages WHERE media_wa_type IN (0, 1, 2, 3, 13) AND status!=6";
         if (!importMedia) selectStatement = "SELECT COUNT(*) FROM messages WHERE media_wa_type IN (0) AND status!=6";
+        if (numDaysToImport > 0) selectStatement = selectStatement + " AND timestamp>" + (System.currentTimeMillis() - numDaysToImport * 86400000L);
         Cursor c = null;
         try {
             c = whatsappDb.rawQuery(selectStatement, null);

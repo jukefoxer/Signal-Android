@@ -18,31 +18,17 @@ import java.util.List;
 public class WhatsappBackup {
 
     public static final String TAG = WhatsappBackup.class.getSimpleName();
-
-    private static final String PROTOCOL       = "protocol";
-    private static final String ADDRESS        = "address";
-    private static final String CONTACT_NAME   = "contact_name";
-    private static final String DATE           = "date";
-    private static final String READABLE_DATE  = "readable_date";
-    private static final String TYPE           = "type";
-    private static final String SUBJECT        = "subject";
-    private static final String BODY           = "body";
-    private static final String SERVICE_CENTER = "service_center";
-    private static final String READ           = "read";
-    private static final String STATUS         = "status";
-    private static final String TOA            = "toa";
-    private static final String SC_TOA         = "sc_toa";
-    private static final String LOCKED         = "locked";
-    private static final String TRANSPORT      = "transport"; // JW: added
-    private static final String GROUP_NAME     = "group_name"; // SW: added
+    public static final String BASIC_MSG_IMPORT_QUERY = "SELECT * FROM messages WHERE media_wa_type IN (0, 1, 2, 3, 13) AND status!=6";
 
     private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
 
     private final android.database.sqlite.SQLiteDatabase whatsappDb;
+    private final int numDaysToImport;
     private long dbOffset = 0l;
 
-    public WhatsappBackup(android.database.sqlite.SQLiteDatabase whatsappDb)  {
+    public WhatsappBackup(SQLiteDatabase whatsappDb, int numDaysToImport)  {
         this.whatsappDb = whatsappDb;
+        this.numDaysToImport = numDaysToImport;
     }
 
     public static List<Attachment> getMediaAttachments(SQLiteDatabase whatsappDb, WhatsappBackupItem item) {
@@ -95,7 +81,13 @@ public class WhatsappBackup {
         Cursor c = null;
         try {
             // Get Texts, Images, Audio, Video, Stickers. Ignore control messages (status=6)
-            c = whatsappDb.rawQuery("SELECT * FROM messages WHERE media_wa_type IN (0, 1, 2, 3, 13) AND status!=6 LIMIT "+ dbOffset + ", 1", null);
+            if (numDaysToImport > 0) {
+                long fromTime = System.currentTimeMillis() - numDaysToImport * 86400000L;
+                c = whatsappDb.rawQuery(BASIC_MSG_IMPORT_QUERY + " AND timestamp>" + fromTime + " LIMIT "+ dbOffset + ", 1", null);
+            } else {
+                c = whatsappDb.rawQuery(BASIC_MSG_IMPORT_QUERY + " LIMIT "+ dbOffset + ", 1", null);
+            }
+
             if (c != null) {
                 if (c.moveToFirst()) {
                     do {

@@ -2,8 +2,11 @@ package org.thoughtcrime.securesms;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -12,6 +15,7 @@ public class ImportWhatsappDialog {
     private static boolean importGroups = false;
     private static boolean avoidDuplicates = true;
     private static boolean importMedia = true;
+    private static int numDays = -1;
 
     @SuppressWarnings("CodeBlock2Expr")
     @SuppressLint("InlinedApi")
@@ -35,6 +39,33 @@ public class ImportWhatsappDialog {
             ImportWhatsappDialog.importMedia = isChecked;
         });
 
+        CheckBox numDaysCheckbox = checkBoxView.findViewById(R.id.import_x_days);
+        numDaysCheckbox.setChecked(numDays != -1);
+        numDaysCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            EditText numDaysEditText = checkBoxView.findViewById(R.id.numDaysEditText);
+            if (isChecked) {
+                numDaysEditText.setEnabled(true);
+                ImportWhatsappDialog.numDays = Integer.parseInt(numDaysEditText.getText().toString());
+                if (ImportWhatsappDialog.numDays < 1) ImportWhatsappDialog.numDays = -1;
+            } else {
+                numDaysEditText.setEnabled(true);
+                ImportWhatsappDialog.numDays = -1;
+            }
+        });
+
+        EditText numDaysEditText = checkBoxView.findViewById(R.id.numDaysEditText);
+        numDaysEditText.setText("" + 30);
+        numDaysEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                try {
+                    ImportWhatsappDialog.numDays = Integer.parseInt(numDaysEditText.getText().toString());
+                    if (ImportWhatsappDialog.numDays < 1) ImportWhatsappDialog.numDays = -1;
+                } catch (Exception e) {}
+                return false;
+            }
+        });
+
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setIcon(R.drawable.ic_warning);
         builder.setTitle(activity.getString(R.string.ImportFragment_import_whatsapp_backup));
@@ -53,5 +84,9 @@ public class ImportWhatsappDialog {
 
     public static boolean isImportMedia() {
         return importMedia;
+    }
+
+    public static int getNumDays() {
+        return numDays;
     }
 }

@@ -19,17 +19,16 @@
             android:layout_height="wrap_content"
             android:text="@string/whatsapp_to_signal_importer"
             android:textAppearance="@style/Registration.BigLabel"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="10dp"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider" />
 
         <TextView
-            android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/status"
@@ -78,7 +77,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/filFoundLabel"
+                android:id="@+id/dbFoundLabel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
@@ -87,48 +86,68 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="10dp"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider" />
 
-        <LinearLayout
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/merge_backups"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <CheckBox
+            android:id="@+id/merge_backup_checkbox"
+            android:text="@string/merge_with_existing_signal_backup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp" />
+
+        <TextView
+            android:id="@+id/backupInfoLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:weightSum="3"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:layout_gravity="center"
-                android:text="@string/merge_with_existing_signal_backup"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/selectBackupButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="@string/select_backup_file" />
-        </LinearLayout>
-
+            android:text="@string/no_signal_backup_found"
+            android:visibility="gone"
+            android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/editTextTextPersonName"
+            android:id="@+id/passphraseEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:text="@string/signal_backup_password_30_digits" />
+            android:hint="@string/signal_backup_password_30_digits" />
+
+        <EditText
+            android:id="@+id/phoneNumberEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="phone"
+            android:hint="@string/import_whatsapp_phone_number" />
+
+        <Button
+            android:id="@+id/selectFolderButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/import_whatsapp_select_backup_folder" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="10dp"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/import_whatsapp_options"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -141,26 +160,58 @@
                 android:text="@string/import_fragment__import_whatsapp_import_media"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp" />
+                android:checked="true"
+                android:layout_margin="0dp" />
 
             <CheckBox
                 android:id="@+id/import_groups_checkbox"
                 android:text="@string/import_fragment__import_whatsapp_import_groups"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp" />
+                android:checked="false"
+                android:layout_margin="0dp" />
 
             <CheckBox
                 android:id="@+id/avoid_duplicates_checkbox"
                 android:text="@string/import_fragment__import_whatsapp_avoid_duplicates"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp" />
+                android:checked="true"
+                android:layout_margin="0dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <CheckBox
+                android:id="@+id/import_x_days"
+                android:text="@string/WhatsApp_import_x_days"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:layout_margin="0dp" />
+
+            <EditText
+                android:id="@+id/numDaysEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:enabled="false"
+                android:ems="3"
+                android:inputType="number" />
+
+
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_marginVertical="20dp"
+            android:layout_marginVertical="10dp"
             android:layout_height="1dp"
             android:background="?android:attr/listDivider" />
 
