@@ -14,24 +14,24 @@ This fork of the Signal App aims at providing a method to import one's WhatsApp 
 
 * Import 1-to-1 text conversation threads.
 * Import group chat conversations if a group chat with the same name is set up in the Signal App.
-* Importing images and videos messages from WhatsApp chats.
+* Importing audio images, stickers and videos messages from WhatsApp chats.
 
 ### What doesn't work
 
-* Multimedia messages other than images and videos are currently not imported.
+* Contact cards and locations are currently not imported.
 * It's pretty slow (10 seconds per 1000 messages).
 
 ### How to do it
 
-* Extract your unencrypted msgstore.db from your WhatsApp installation. There are several methods to do so. WhatsAppDump seems to offer a possibility that doesn't require rooting the device. A more detailed description of how to do so might be added here in the future.
+* Extract your unencrypted msgstore.db from your WhatsApp installation. There are several methods to do so. You can try WhatsApp-Key-Database-Extractor by Yuvraj: https://github.com/YuvrajRaghuvanshiS/WhatsApp-Key-Database-Extractor
 * Copy the msgstore.db file to the top level directory of your internal storage
-* Make an encrypted Backup of your Signal Messages using the built-in feature of the Signal App.
-* Build and install this version of the Signal App and import the encrypted Backup of your signal messages.
+* Make an encrypted Backup of your Signal Messages using the built-in feature of the Signal App. You should make sure that the version of your Signal app and the version of the importer match. Otherwise there could be incompatibilities.
+* Build and install this version of the Signal App.
 * You might have to go to the app permission settings and give it the permission to manage all of the external storage.
-* Go to Backup => Import WhatsApp to start the import.
+* Got to backups -> import. Select the options you want, and click on import...
 * Be patient until it finishes.
-* If you're happy with the WhatsApp import create another encrypted backup of all Signal messages.
-* Install the original Signal app again and import the encrypted Backup.
+* Export a new backup if you're happy with the result.
+* Import that new Backup in your existing Signal app (you might have to reinstall it to do so, as the main Signal app only allows to recover backups after a new installation).
 
 # Legal things
 ## Cryptography Notice
