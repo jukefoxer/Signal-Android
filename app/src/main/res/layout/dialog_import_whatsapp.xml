@@ -53,7 +53,6 @@
             android:layout_gravity="center"
             android:layout_margin="20dp"
             android:enabled="false"
-            android:text="30"
             android:ems="3"
             android:inputType="number" />
     </LinearLayout>

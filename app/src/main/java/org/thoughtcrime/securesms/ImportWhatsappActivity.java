@@ -100,6 +100,8 @@ public class ImportWhatsappActivity extends Activity {
     });
     Button chooseFolderButton = findViewById(R.id.selectFolderButton);
     chooseFolderButton.setOnClickListener(v ->  showChooseBackupLocationDialog());
+    EditText numDaysEditText = findViewById(R.id.numDaysEditText);
+    numDaysEditText.setText("" + 30);
   }
 
   private void updateDaysEditText() {

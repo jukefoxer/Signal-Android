@@ -54,6 +54,7 @@ public class ImportWhatsappDialog {
         });
 
         EditText numDaysEditText = checkBoxView.findViewById(R.id.numDaysEditText);
+        numDaysEditText.setText("" + 30);
         numDaysEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
