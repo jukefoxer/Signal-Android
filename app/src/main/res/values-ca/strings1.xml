@@ -22,4 +22,8 @@ de seguretat.</string>
   <string name="export_fragment__export_an_encrypted_backup_to_the_sd_card">Exporta una còpia de seguretat\nencriptada a la targeta SD.</string>
   <string name="import_fragment__restore_encrypted_backup">Recupera la còpia de seguretat xifrada</string>
   <string name="import_fragment__restore_a_previously_exported_encrypted_signal_backup">Recupera una còpia de seguretat xifrada del Signal exportada prèviament</string>
+  <string name="import_fragment__import_system_sms_database">Importa la base de dades d\'SMS del sistema</string>
+  <string name="import_fragment__import_the_database_from_the_default_system">Importa la base de dades del programa de missatgeria predeterminat del sistema</string>
+  <string name="import_fragment__import_plaintext_backup">Importa la còpia de seguretat en text net</string>
+  <string name="import_fragment__import_a_plaintext_backup_file">Importa una còpia de seguretat en text pla. Compatible amb la «Còpia de seguretat i restauració amb SMS».</string>
 </resources>

@@ -363,8 +363,8 @@ dependencyVerification {
         ['com.googlecode.ez-vcard:ez-vcard:0.9.11',
          '7e24ad50b222d2f70ac91bdccfa3c0f6200b078d797cb784837f75e77bb4210f'],
 
-        ['com.googlecode.libphonenumber:libphonenumber:8.12.6',
-         'c118abe8954172149c98e727c8630eda4954e048582a9e5007e3479681453e94'],
+        ['com.googlecode.libphonenumber:libphonenumber:8.12.16',
+         '5a81a02dc6586d333765f5388bd53c81703449ee760667e505ce5f42544bee63'],
 
         ['com.jpardogo.materialtabstrip:library:1.0.9',
          'c6ef812fba4f74be7dc4a905faa4c2908cba261a94c13d4f96d5e67e4aad4aaa'],
@@ -441,8 +441,8 @@ dependencyVerification {
         ['org.signal:argon2:13.1',
          '0f686ccff0d4842bfcc74d92e8dc780a5f159b9376e37a1189fabbcdac458bef'],
 
-        ['org.signal:ringrtc-android:2.8.9',
-         '696a989ee2fafa6a8a4e12e3dabdcf1dcb36c32e25006c4605180497b81a2fec'],
+        ['org.signal:ringrtc-android:2.8.10',
+         'ccc04ef045a022906bc63d7e6796e8bcd7cdca128c2f17538f6b104538a2434b'],
 
         ['org.signal:zkgroup-android:0.7.0',
          '52b172565bd01526e93ebf1796b834bdc449d4fe3422c1b827e49cb8d4f13fbd'],
