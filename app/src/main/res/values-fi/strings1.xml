@@ -21,4 +21,8 @@ viestit. Menetät kaikki Signalissa olevat tiedot, jotka eivät ole osa varmuusk
   <string name="export_fragment__export_an_encrypted_backup_to_the_sd_card">Vie salattu varmuuskopio\nSD-muistikortille.</string>
   <string name="import_fragment__restore_encrypted_backup">Palauta salattu varmuuskopio</string>
   <string name="import_fragment__restore_a_previously_exported_encrypted_signal_backup"> Palauta aiemmin viety salattu Signal-varmuuskopio.</string>
+  <string name="import_fragment__import_system_sms_database">Tuo järjestelmän tekstiviestit</string>
+  <string name="import_fragment__import_the_database_from_the_default_system">Tuo tietokanta järjestelmän oletustekstiviestisovelluksesta Signaliin.</string>
+  <string name="import_fragment__import_plaintext_backup">Tuo salaamaton varmuuskopio</string>
+  <string name="import_fragment__import_a_plaintext_backup_file">Tuo salaamaton varmuuskopiotiedosto. Yhteensopiva \"SMS Backup And Restore\" -sovelluksen kanssa.</string>
 </resources>

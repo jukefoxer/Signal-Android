@@ -22,4 +22,8 @@
   <string name="export_fragment__export_an_encrypted_backup_to_the_sd_card">将加密的备份导出到SD卡。</string>
   <string name="import_fragment__restore_encrypted_backup">恢复加密备份</string>
   <string name="import_fragment__restore_a_previously_exported_encrypted_signal_backup">还原之前导出的加密暗号备份。</string>
+  <string name="import_fragment__import_system_sms_database">导入系统短信数据库</string>
+  <string name="import_fragment__import_the_database_from_the_default_system">从系统默认短信应用导入数据库</string>
+  <string name="import_fragment__import_plaintext_backup">导入明文备份</string>
+  <string name="import_fragment__import_a_plaintext_backup_file">导入明文备份文件。兼容“SMS Backup &amp; Restore”备份。</string>
 </resources>
